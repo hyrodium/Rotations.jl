@@ -353,11 +353,11 @@ all_types = (RotMatrix{3}, Quat, SPQuat, AngleAxis, RodriguesVec,
         r = rand(RotMatrix{2})
         show(io, MIME("text/plain"), r)
         str = String(take!(io))
-        @test startswith(str, "2×2 RotMatrix{2,Float64,4}:")
+        @test startswith(str, "2×2 RotMatrix{2,Float64,4}")
 
         rxyz = RotXYZ(1.0, 2.0, 3.0)
         show(io, MIME("text/plain"), rxyz)
         str = String(take!(io))
-        @test startswith(str, "3×3 RotXYZ{Float64}(1.0, 2.0, 3.0):")
+        @test startswith(str, "3×3 RotXYZ{Float64}") && occursin("(1.0, 2.0, 3.0):", str)
     end
 end
