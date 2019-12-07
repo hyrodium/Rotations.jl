@@ -112,7 +112,7 @@ function jacobian(::Type{Quat},  X::SPQuat)
     # do the on diagonal terms
     # f = 2*x / (alpha2 + 1) => g = 2*x, h = alpha2 + 1
     # df / dx = (dg * h - dh * g) / (h^2)
-    dQiDi = 2 * ((alpha2 + 1) - dA2dX .* vspq) / den2
+    dQiDi = 2 * ((alpha2 + 1) .- dA2dX .* vspq) / den2
 
     # do the off entries
     # f = 2x / (alpha2 + 1)
