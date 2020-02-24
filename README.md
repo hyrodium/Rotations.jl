@@ -176,3 +176,7 @@ Rotating using mutables (Base.Matrix and Base.Vector):
 Rotating using immutables (Rotations.RotMatrix and StaticArrays.SVector):
   0.006006 seconds
 ```
+
+## Acknowledgements
+
+[![FugroRoames](https://avatars.githubusercontent.com/FugroRoames?s=150)](https://github.com/FugroRoames)
