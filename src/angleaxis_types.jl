@@ -159,11 +159,7 @@ function (::Type{RV})(aa::AngleAxis) where RV <: RotationVec
 end
 
 function (::Type{Q})(rv::RotationVec) where Q <: UnitQuaternion
-    theta = rotation_angle(rv)
-    qtheta = cos(theta / 2)
-    #s = abs(1/2 * sinc((theta / 2) / pi))
-    s = (1/2 * sinc((theta / 2) / pi)) # TODO check this (I removed an abs)
-    return Q(qtheta, s * rv.sx, s * rv.sy, s * rv.sz, false)
+    return UnitQuaternion(AngleAxis(rv))
 end
 
 (::Type{RV})(q::UnitQuaternion) where {RV <: RotationVec} = RV(AngleAxis(q))
