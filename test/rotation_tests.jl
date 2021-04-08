@@ -399,7 +399,11 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         r = rand(RotMatrix{2})
         show(io, MIME("text/plain"), r)
         str = String(take!(io))
-        @test startswith(str, "2×2 RotMatrix{2,Float64,4}")
+        if VERSION ≥ v"1.6"
+            @test startswith(str, "2×2 RotMatrix2{Float64}")
+        else
+            @test startswith(str, "2×2 RotMatrix{2,Float64,4}")
+        end
 
         rxyz = RotXYZ(1.0, 2.0, 3.0)
         show(io, MIME("text/plain"), rxyz)
