@@ -241,6 +241,10 @@ for axis1 in [:X, :Y, :Z]
 
             @inline (::Type{R})(t::NTuple{9}) where {R<:$RotType} = error("Cannot construct a two-axis rotation from a matrix")
 
+            # Convert a single-axis rotation to a two-axis rotation:
+            @inline (::Type{R})(r1::$Rot1Type) where {R<:$RotType} = $RotType(r1.theta, 0)
+            @inline (::Type{R})(r2::$Rot2Type) where {R<:$RotType} = $RotType(0, r2.theta)
+
             # Composing single-axis rotations to obtain a two-axis rotation:
             @inline Base.:*(r1::$Rot1Type, r2::$Rot2Type) = $RotType(r1.theta, r2.theta)
 
@@ -521,6 +525,16 @@ for axis1 in [:X, :Y, :Z]
                 @inline function Base.getindex(r::$RotType{T}, i::Int) where T
                     Tuple(r)[i] # Slow...
                 end
+
+                # Convert a single-axis rotation to a three-axis rotation:
+                @inline (::Type{R})(r1::$Rot1Type) where {R<:$RotType} = $RotType(r1.theta, 0, 0)
+                @inline (::Type{R})(r2::$Rot2Type) where {R<:$RotType} = $RotType(0, r2.theta, 0)
+                if $Rot1Type ≠ $Rot3Type
+                    @inline (::Type{R})(r3::$Rot3Type) where {R<:$RotType} = $RotType(0, 0, r3.theta)
+                end
+
+                @inline (::Type{R})(r12::$Rot12Type) where {R<:$RotType} = $RotType(r12.theta1, r12.theta2, 0)
+                @inline (::Type{R})(r23::$Rot23Type) where {R<:$RotType} = $RotType(0, r23.theta1, r23.theta2)
 
                 # Composing single-axis rotations with two-axis rotations:
                 @inline Base.:*(r1::$Rot1Type, r2::$Rot23Type) = $RotType(r1.theta, r2.theta1, r2.theta2)
