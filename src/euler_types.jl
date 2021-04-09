@@ -504,6 +504,7 @@ for axis1 in [:X, :Y, :Z]
         for axis3 in filter(axis -> axis != axis2, [:X, :Y, :Z])
             Rot3Type = Symbol("Rot" * string(axis3))
             Rot23Type = Symbol("Rot" * string(axis2) * string(axis3))
+            Rot13Type = Symbol("Rot" * string(axis1) * string(axis3))
             RotType = Symbol("Rot" * string(axis1) * string(axis2) * string(axis3))
             InvRotType = Symbol("Rot" * string(axis3) * string(axis2) * string(axis1))
 
@@ -533,8 +534,12 @@ for axis1 in [:X, :Y, :Z]
                     @inline (::Type{R})(r3::$Rot3Type) where {R<:$RotType} = $RotType(0, 0, r3.theta)
                 end
 
+                # Convert a two-axis rotation to a three-axis rotation:
                 @inline (::Type{R})(r12::$Rot12Type) where {R<:$RotType} = $RotType(r12.theta1, r12.theta2, 0)
                 @inline (::Type{R})(r23::$Rot23Type) where {R<:$RotType} = $RotType(0, r23.theta1, r23.theta2)
+                if $Rot1Type ≠ $Rot3Type
+                    @inline (::Type{R})(r13::$Rot13Type) where {R<:$RotType} = $RotType(r13.theta1, 0, r13.theta2)
+                end
 
                 # Composing single-axis rotations with two-axis rotations:
                 @inline Base.:*(r1::$Rot1Type, r2::$Rot23Type) = $RotType(r1.theta, r2.theta1, r2.theta2)
