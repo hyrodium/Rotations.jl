@@ -508,6 +508,10 @@ for axis1 in [:X, :Y, :Z]
             RotType = Symbol("Rot" * string(axis1) * string(axis2) * string(axis3))
             InvRotType = Symbol("Rot" * string(axis3) * string(axis2) * string(axis1))
 
+            # Note that axis0 is used only if axis1==axis3
+            axis0 = setdiff!([:X, :Y, :Z], [axis1, axis2])[1]
+            Rot0Type = Symbol("Rot" * string(axis0))
+
             @eval begin
                 struct $RotType{T} <: Rotation{3,T}
                     theta1::T
@@ -531,7 +535,16 @@ for axis1 in [:X, :Y, :Z]
                 @inline (::Type{R})(r1::$Rot1Type) where {R<:$RotType} = $RotType(r1.theta, 0, 0)
                 @inline (::Type{R})(r2::$Rot2Type) where {R<:$RotType} = $RotType(0, r2.theta, 0)
                 if $Rot1Type ≠ $Rot3Type
+                    # This if block prevent redefinitions. (e.g. RotXYX(RotX(42)))
                     @inline (::Type{R})(r3::$Rot3Type) where {R<:$RotType} = $RotType(0, 0, r3.theta)
+                else
+                    if ($Rot0Type,$Rot1Type,$Rot2Type) in ((RotX, RotY, RotZ), (RotY, RotZ, RotX), (RotZ, RotX, RotY))
+                        # Even permutation (e.g. RotXYX(RotZ(42)) == RotXYX(π/2, 42, -π/2))
+                        @inline (::Type{R})(r0::$Rot0Type) where {R<:$RotType} = $RotType(π/2, r0.theta, -π/2)
+                    else
+                        # Odd permutation (e.g. RotXZX(RotY(42)) == RotXYX(-π/2, 42, π/2))
+                        @inline (::Type{R})(r0::$Rot0Type) where {R<:$RotType} = $RotType(-π/2, r0.theta, π/2)
+                    end
                 end
 
                 # Convert a two-axis rotation to a three-axis rotation:
