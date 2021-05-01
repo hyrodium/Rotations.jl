@@ -27,7 +27,8 @@ for axis in [:X, :Y, :Z]
         end
         @inline $RotType(r::$RotType{T}) where {T} = $RotType{T}(r)
 
-        @inline (::Type{R})(t::NTuple{9}) where {R<:$RotType} = error("Cannot construct a cardinal axis rotation from a matrix")
+        @inline $RotType(::NTuple{9}) = error("Cannot construct a cardinal axis rotation from a matrix")
+        @inline $RotType{T}(::NTuple{9}) where T = error("Cannot construct a cardinal axis rotation from a matrix")
 
         @inline Base.:*(r1::$RotType, r2::$RotType) = $RotType(r1.theta + r2.theta)
 
