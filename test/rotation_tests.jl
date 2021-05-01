@@ -117,6 +117,8 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
                 @test inv(r) == transpose(r)
                 @test inv(r)*r ≈ I
                 @test r*inv(r) ≈ I
+                @test r/r ≈ I
+                @test r\r ≈ I
             end
         end
     end

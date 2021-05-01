@@ -72,7 +72,7 @@ function (\)(p1::MRP, p2::MRP)
 end
 
 function (/)(p1::MRP, p2::MRP)
-    n1,n2 = norm2(p1),   norm2(p2)
+    n1,n2 = LinearAlgebra.norm2(p1),   LinearAlgebra.norm2(p2)
     θ = 1/((1+n1)*(1+n2))
     s1,s2 = (1-n1), (1-n2)
     p1,p2 = params(p1), params(p2)
@@ -197,7 +197,7 @@ end
 Jacobian of `p1\\p2` wrt `p2`
 """
 function ∇err(p1::MRP, p2::MRP)
-    n1,n2 = norm2(p1),   norm2(p2)
+    n1,n2 = LinearAlgebra.norm2(p1),   LinearAlgebra.norm2(p2)
     θ = 1/((1+n1)*(1+n2))
     s1,s2 = (1-n1), (1-n2)
     p1,p2 = params(p1), params(p2)
@@ -221,7 +221,7 @@ Jacobian of `(∂/∂p p1\\p2)'b` wrt `p2`
 """
 function ∇²err(p1::MRP, p2::MRP, b::AbstractVector)
     check_length(b, 3)
-    n1,n2 = norm2(p1),   norm2(p2)
+    n1,n2 = LinearAlgebra.norm2(p1),   LinearAlgebra.norm2(p2)
     θ = 1/((1+n1)*(1+n2))
     s1,s2 = (1-n1), (1-n2)
     p1,p2 = params(p1), params(p2)
