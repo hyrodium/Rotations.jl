@@ -412,4 +412,11 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         str = String(take!(io))
         @test startswith(str, "3×3 RotXYZ{Float64}") && occursin("(1.0, 2.0, 3.0):", str)
     end
+
+    #########################################################################
+    # Check that 137 is solved
+    #########################################################################
+    @testset "Regression test issue 137" begin
+        @test det(RotationVec(1e19, 0.0, 0.0)) ≈ 1.
+    end
 end
