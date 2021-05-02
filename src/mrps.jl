@@ -56,12 +56,12 @@ function (*)(p2::MRP, p1::MRP)
 end
 
 function (\)(p1::MRP, p2::MRP)
-    p1,p2 = params(p1), params(p2)
-    n1,n2 = p1'p1, p2'p2
+    q1,q2 = params(p1), params(p2)
+    n1,n2 = q1'q1, q2'q2
     θ = 1/((1+n1)*(1+n2))
     s1,s2 = (1-n1), (1-n2)
-    v1 = -2p1
-    v2 =  2p2
+    v1 = -2q1
+    v2 =  2q2
     s = s1*s2 - v1'v2
     v = s1*v2 + s2*v1 + v1 × v2
 
@@ -70,18 +70,17 @@ function (\)(p1::MRP, p2::MRP)
 end
 
 function (/)(p1::MRP, p2::MRP)
-    n1,n2 = LinearAlgebra.norm2(p1),   LinearAlgebra.norm2(p2)
+    q1,q2 = params(p1), params(p2)
+    n1,n2 = q1'q1, q2'q2
     θ = 1/((1+n1)*(1+n2))
     s1,s2 = (1-n1), (1-n2)
-    p1,p2 = params(p1), params(p2)
-    v1 =  2p1
-    v2 = -2p2
+    v1 =  2q1
+    v2 = -2q2
     s = s1*s2 - v1'v2
     v = s1*v2 + s2*v1 + v1 × v2
 
     M = θ/(1+θ*s)
-    MRP(v[1]*M, v[2]*M, v[3]*M)
-
+    return MRP(v*M)
 end
 
 
