@@ -8,7 +8,7 @@ import Unitful
 import Random
 
 if VERSION < v"1.2.0"
-    <(x) = Fix2(<, x)
+    Base.:<(x) = Base.Fix2(<, x)
 end
 
 # Check that there are no ambiguities beyond those present in StaticArrays
