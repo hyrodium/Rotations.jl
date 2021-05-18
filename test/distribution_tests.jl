@@ -1,4 +1,4 @@
-"""
+#=
 The following tests check the distribution of `rand(RotType)`.
 To visualize the distribution, try the following script.
 
@@ -22,7 +22,7 @@ To visualize the distribution, try the following script.
     # Cumulative distribution function
     plot(cdf_sampled, 0, 1, label=false)
     plot!(cdf_true, 0, 1, label=false)
-"""
+=#
 
 @testset "Distribution" begin
 
