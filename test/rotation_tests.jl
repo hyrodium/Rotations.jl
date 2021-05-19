@@ -102,6 +102,17 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         end
     end
 
+    ###############################
+    # Check invalid zero function
+    ###############################
+
+    @testset "Invalid \"zero\" rotation checks" begin
+        @testset "$(R)" for R in all_types
+            @test_throws ArgumentError zero(R)
+            @test_throws ArgumentError zero(one(R))
+        end
+    end
+
     ################################
     # check on the inverse function
     ################################
