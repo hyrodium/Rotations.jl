@@ -27,6 +27,16 @@ using Rotations, StaticArrays, Test
         end
     end
 
+    ###############################
+    # Check zero function
+    ###############################
+
+    @testset "zero checks" begin
+        for R in (RotMatrix{2}, Angle2d)
+            @test zero(R) == zero(one(R)) == zero(SMatrix(one(R)))
+        end
+    end
+
     ################################
     # check on the inverse function
     ################################

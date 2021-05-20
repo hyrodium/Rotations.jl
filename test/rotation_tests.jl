@@ -103,13 +103,12 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
     end
 
     ###############################
-    # Check invalid zero function
+    # Check zero function
     ###############################
 
-    @testset "Invalid \"zero\" rotation checks" begin
+    @testset "zero checks" begin
         @testset "$(R)" for R in all_types
-            @test_throws ArgumentError zero(R)
-            @test_throws ArgumentError zero(one(R))
+            @test zero(R) == zero(one(R)) == zero(SMatrix(one(R)))
         end
     end
 
