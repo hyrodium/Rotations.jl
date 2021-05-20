@@ -11,8 +11,9 @@ Base.@pure StaticArrays.Size(::Type{Rotation{N,T}}) where {N,T} = Size(N,N)
 Base.@pure StaticArrays.Size(::Type{R}) where {R<:Rotation} = Size(supertype(R))
 Base.adjoint(r::Rotation) = inv(r)
 Base.transpose(r::Rotation{N,T}) where {N,T<:Real} = inv(r)
-Base.zero(T::Type{<:Rotation}) = throw(ArgumentError("There is no additive identity for Rotation. Consider using the one($T) method instead."))
-Base.zero(r::Rotation) = throw(ArgumentError("There is no additive identity for Rotation. Consider using the one($(typeof(r))($r)) method instead."))
+Base.zero(::Rotation{N,T}) where {N,T} = @SMatrix zeros(T,N,N)
+Base.zero(::Type{<:Rotation{N}}) where N = @SMatrix zeros(N,N)
+Base.zero(::Type{<:Rotation{N,T}}) where {N,T} = @SMatrix zeros(T,N,N)
 
 # Rotation angles and axes can be obtained by converting to the AngleAxis type
 rotation_angle(r::Rotation{3}) = rotation_angle(AngleAxis(r))
