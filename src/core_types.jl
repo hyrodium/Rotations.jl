@@ -18,7 +18,10 @@ Base.zero(::Rotation{N,T}) where {N,T} = @SMatrix zeros(T,N,N)
 Base.zero(::Type{Rotation}) = error("The dimension of rotation is not specified.")
 Base.zero(::Type{<:Rotation{N}}) where N = @SMatrix zeros(N,N)
 Base.zero(::Type{<:Rotation{N,T}}) where {N,T} = @SMatrix zeros(T,N,N)
+Base.zeros(::Type{R}) where {R<:Rotation} = zeros(R, ()) # avoid StaticArray constructor
 Base.zeros(::Type{R}, dims::Base.DimOrInd...) where {R<:Rotation} = zeros(typeof(zero(R)),dims...)
+Base.zeros(::Type{R}, dims::NTuple{N, Integer}) where {R<:Rotation, N} = zeros(typeof(zero(R)),dims)
+Base.zeros(::Type{R}, dims::Tuple{}) where {R<:Rotation} = zeros(typeof(zero(R)),dims) # avoid ambiguity
 
 # Rotation angles and axes can be obtained by converting to the AngleAxis type
 rotation_angle(r::Rotation{3}) = rotation_angle(AngleAxis(r))
