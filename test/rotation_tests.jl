@@ -114,11 +114,15 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
             @test zero(R{Float64}) isa SMatrix
             @test zero(one(R)) isa SMatrix
             # zeros
-            @test zeros(R)[1] == zeros(R,3)[1] == zeros(R,3,3)[1] == zero(R)
+            @test zeros(R)[1] == zeros(R,3)[1] == zeros(R,3,3)[1] == zeros(R,(3,3,3))[1] == zero(R)
             @test zeros(R) isa Array{<:SMatrix,0}
             @test zeros(R,3) isa Array{<:SMatrix,1}
             @test zeros(R,3,3) isa Array{<:SMatrix,2}
+            @test zeros(R,(3,3,3)) isa Array{<:SMatrix,3}
         end
+
+        @test_throws ErrorException zero(Rotation)
+        @test_throws ErrorException zero(RotMatrix)
     end
 
     ################################
