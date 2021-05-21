@@ -15,6 +15,7 @@ Base.transpose(r::Rotation{N,T}) where {N,T<:Real} = inv(r)
 # Generate zero-matrix with SMatrix
 # Note that zeros(Rotation3,dims...) is not Array{<:Rotation} but Array{<:StaticMatrix{3,3}}
 Base.zero(::Rotation{N,T}) where {N,T} = @SMatrix zeros(T,N,N)
+Base.zero(::Type{Rotation}) = error("The dimension of rotation is not specified.")
 Base.zero(::Type{<:Rotation{N}}) where N = @SMatrix zeros(N,N)
 Base.zero(::Type{<:Rotation{N,T}}) where {N,T} = @SMatrix zeros(T,N,N)
 Base.zeros(::Type{R}, dims::Base.DimOrInd...) where {R<:Rotation} = zeros(typeof(zero(R)),dims...)
@@ -90,6 +91,8 @@ struct RotMatrix{N,T,L} <: Rotation{N,T} # which is <: AbstractMatrix{T}
     RotMatrix{N,T,L}(x::StaticArray) where {N,T,L} = new{N,T,L}(convert(SMatrix{N,N,T,L}, x))
 end
 RotMatrix(x::SMatrix{N,N,T,L}) where {N,T,L} = RotMatrix{N,T,L}(x)
+
+Base.zero(::Type{RotMatrix}) = error("The dimension of rotation is not specified.")
 
 # These functions (plus size) are enough to satisfy the entire StaticArrays interface:
 for N = 2:3
