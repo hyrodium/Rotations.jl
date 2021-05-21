@@ -108,7 +108,10 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
 
     @testset "zero checks" begin
         @testset "$(R)" for R in all_types
-            @test zero(R) == zero(one(R)) == zero(SMatrix(one(R)))
+            @test zero(R) == zero(R{Float64}) == zero(one(R))
+            @test zero(R) isa SMatrix
+            @test zero(R{Float64}) isa SMatrix
+            @test zero(one(R)) isa SMatrix
         end
     end
 

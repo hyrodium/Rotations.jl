@@ -33,7 +33,10 @@ using Rotations, StaticArrays, Test
 
     @testset "zero checks" begin
         for R in (RotMatrix{2}, Angle2d)
-            @test zero(R) == zero(one(R)) == zero(SMatrix(one(R)))
+            @test zero(R) == zero(R{Float64}) == zero(one(R))
+            @test zero(R) isa SMatrix
+            @test zero(R{Float64}) isa SMatrix
+            @test zero(one(R)) isa SMatrix
         end
     end
 
