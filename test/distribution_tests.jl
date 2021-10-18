@@ -26,10 +26,9 @@ To visualize the distribution, try the following script.
 
 @testset "Distribution" begin
 
-    # TODO: add RodriguesParam (#154)
     # TODO: consider to remove Euler rotations (#155)
     Type_SO3 =  (RotMatrix{3}, AngleAxis, RotationVec,
-                UnitQuaternion, MRP,
+                UnitQuaternion, MRP, RodriguesParam,
                 RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
                 RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ)
 
