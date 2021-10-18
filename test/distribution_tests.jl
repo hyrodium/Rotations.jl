@@ -52,7 +52,7 @@ To visualize the distribution, try the following script.
         cdf_sampled(t) = count(<(t), angles)/N
         cdf_true(t) = t-sinpi(t)/π
 
-        # Check CDF functions are approximately equal
+        # Check the CDFs are approximately equal
         ts = 0:0.01:1
         @test norm(cdf_true.(ts) - cdf_sampled.(ts), Inf) < 0.01
     end
@@ -71,7 +71,7 @@ To visualize the distribution, try the following script.
         cdf_sampled(t) = count(<(t), angles)/N
         cdf_true(t) = t
 
-        # Check CDF functions are approximately equal
+        # Check the CDFs are approximately equal
         ts = 0:0.01:1
         @test norm(cdf_true.(ts) - cdf_sampled.(ts), Inf) < 0.01
     end
