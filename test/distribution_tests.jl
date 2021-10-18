@@ -42,7 +42,7 @@ To visualize the distribution, try the following script.
         # Sampling
         rs = rand(RotType, N)
         q = rand(RotType)
-        angles = rotation_angle.([r*inv(q) for r in rs])/π
+        angles = rotation_angle.([r/q for r in rs])/π
 
         # Check sampled rotations are rotations
         @test all(isrotation.(rs))
@@ -61,7 +61,7 @@ To visualize the distribution, try the following script.
         # Sampling
         rs = rand(RotType, N)
         q = rand(RotType)
-        angles = rotation_angle.([r*inv(q) for r in rs])/π
+        angles = rotation_angle.([r/q for r in rs])/π
 
         # Check sampled rotations are rotations
         @test all(isrotation.(rs))
