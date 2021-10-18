@@ -37,6 +37,8 @@ struct AngleAxis{T} <: Rotation{3,T}
     end
 end
 
+params(aa::AngleAxis) = SVector{4}(aa.theta, aa.axis_x, aa.axis_y, aa.axis_z)
+
 # StaticArrays will take over *all* the constructors and put everything in a tuple...
 # but this isn't quite what we mean when we have 4 inputs (not 9).
 @inline function AngleAxis(θ::Θ, x::X, y::Y, z::Z, normalize::Bool = true) where {Θ,X,Y,Z}
@@ -139,6 +141,8 @@ struct RotationVec{T} <: Rotation{3,T}
     sz::T
 end
 
+params(aa::RotationVec) = SVector{3}(aa.sx, aa.sy, aa.sz)
+
 # StaticArrays will take over *all* the constructors and put everything in a tuple...
 # but this isn't quite what we mean when we have 4 inputs (not 9).
 @inline RotationVec(x::X, y::Y, z::Z) where {X,Y,Z} = RotationVec{promote_type(promote_type(X, Y), Z)}(x, y, z)
@@ -159,11 +163,7 @@ function (::Type{RV})(aa::AngleAxis) where RV <: RotationVec
 end
 
 function (::Type{Q})(rv::RotationVec) where Q <: UnitQuaternion
-    theta = rotation_angle(rv)
-    qtheta = cos(theta / 2)
-    #s = abs(1/2 * sinc((theta / 2) / pi))
-    s = (1/2 * sinc((theta / 2) / pi)) # TODO check this (I removed an abs)
-    return Q(qtheta, s * rv.sx, s * rv.sy, s * rv.sz, false)
+    return UnitQuaternion(AngleAxis(rv))
 end
 
 (::Type{RV})(q::UnitQuaternion) where {RV <: RotationVec} = RV(AngleAxis(q))

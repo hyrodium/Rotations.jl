@@ -3,6 +3,7 @@
 *3D rotations made easy in Julia*
 
 [![Build Status](https://github.com/JuliaGeometry/Rotations.jl/workflows/CI/badge.svg)](https://github.com/JuliaGeometry/Rotations.jl/actions?query=workflow%3ACI)
+[![Coverage](https://codecov.io/gh/JuliaGeometry/Rotations.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaGeometry/Rotations.jl)
 
 This package implements various 3D rotation parameterizations and defines
 conversions between them. At their heart, each rotation parameterization *is*
@@ -147,7 +148,7 @@ j2 = Rotations.jacobian(q, p) # How does the rotated point q*p change w.r.t. the
     A 3D rotation parameterized by a unit quaternion. Note that the constructor
     will renormalize the quaternion to be a unit quaternion, and that although
     they follow the same multiplicative *algebra* as quaternions, it is better
-    to think of `Quat` as a 3×3 matrix rather than as a quaternion *number*.
+    to think of `UnitQuaternion` as a 3×3 matrix rather than as a quaternion *number*.
 
     Previously `Quat`.
 
@@ -159,7 +160,7 @@ j2 = Rotations.jacobian(q, p) # How does the rotated point q*p change w.r.t. the
     Note: If you're differentiating a Rodrigues Vector check the result is what
     you expect at theta = 0.  The first derivative of the rotation *should*
     behave, but higher-order derivatives of it (as well as parameterization
-    conversions) should be tested.  The Stereographic Quaternion Projection is
+    conversions) should be tested.  The Stereographic Quaternion Projection (`MRP`) is
     the recommended three parameter format for differentiation.
 
     Previously `RodriguesVec`.

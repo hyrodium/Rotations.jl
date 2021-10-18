@@ -102,6 +102,29 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         end
     end
 
+    ###############################
+    # Check zero function
+    ###############################
+
+    @testset "zero checks" begin
+        @testset "$(R)" for R in all_types
+            # zero
+            @test zero(R) == zero(R{Float64}) == zero(one(R))
+            @test zero(R) isa SMatrix
+            @test zero(R{Float64}) isa SMatrix
+            @test zero(one(R)) isa SMatrix
+            # zeros
+            @test zeros(R)[1] == zeros(R,3)[1] == zeros(R,3,3)[1] == zeros(R,(3,3,3))[1] == zero(R)
+            @test zeros(R) isa Array{<:SMatrix,0}
+            @test zeros(R,3) isa Array{<:SMatrix,1}
+            @test zeros(R,3,3) isa Array{<:SMatrix,2}
+            @test zeros(R,(3,3,3)) isa Array{<:SMatrix,3}
+        end
+
+        @test_throws ErrorException zero(Rotation)
+        @test_throws ErrorException zero(RotMatrix)
+    end
+
     ################################
     # check on the inverse function
     ################################
@@ -112,13 +135,16 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         @testset "$(R)" for R in all_types
             Random.seed!(0)
             for i = 1:repeats
-                r = rand(R)
-                @test inv(r) == adjoint(r)
-                @test inv(r) == transpose(r)
-                @test inv(r)*r ≈ I
-                @test r*inv(r) ≈ I
-                @test r/r ≈ I
-                @test r\r ≈ I
+                r1 = rand(R)
+                r2 = rand(R)
+                @test inv(r1) == adjoint(r1)
+                @test inv(r1) == transpose(r1)
+                @test inv(r1)*r1 ≈ I
+                @test r1*inv(r1) ≈ I
+                @test r1/r1 ≈ I
+                @test r1\r1 ≈ I
+                @test r1/r2 ≈ r1*inv(r2)
+                @test r1\r2 ≈ inv(r1)*r2
             end
         end
     end
@@ -201,6 +227,24 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
                 r2 = R2(r1)
 
                 @test r2 ≈ m1
+            end
+        end
+    end
+
+    @testset "Convert rotations 1-axis -> 2-axis" begin
+        repeats = 100
+        @testset "convert $(R1) -> $(R2)" for R1 in one_types, R2 in two_types
+            # Check if the two-axis include one-axis
+            if string(R1)[end] in string(R2)[end-1:end]
+                Random.seed!(0)
+                for i = 1:repeats
+                    r1 = rand(R1)
+                    m1 = SMatrix(r1)
+
+                    r2 = R2(r1)
+
+                    @test r2 ≈ m1
+                end
             end
         end
     end
@@ -411,5 +455,24 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         show(io, MIME("text/plain"), rxyz)
         str = String(take!(io))
         @test startswith(str, "3×3 RotXYZ{Float64}") && occursin("(1.0, 2.0, 3.0):", str)
+    end
+
+    #########################################################################
+    # Check that 137 is solved
+    #########################################################################
+    @testset "Regression test issue 137" begin
+        @test det(RotationVec(1e19, 0.0, 0.0)) ≈ 1.
+    end
+
+    @testset "params" begin
+        p1, p2, p3, p4 = randn(4)
+        @test Rotations.params(RotX(p1)) == [p1]
+        @test Rotations.params(RotXY(p1,p2)) == [p1,p2]
+        @test Rotations.params(RotXYZ(p1,p2,p3)) == [p1,p2,p3]
+        @test Rotations.params(AngleAxis(p1,p2,p3,p4)) ≈ pushfirst!(normalize([p2,p3,p4]),p1)
+        @test Rotations.params(RotationVec(p1,p2,p3)) == [p1,p2,p3]
+        @test Rotations.params(UnitQuaternion(p1,p2,p3,p4)) ≈ normalize([p1,p2,p3,p4])
+        @test Rotations.params(MRP(p1,p2,p3)) == [p1,p2,p3]
+        @test Rotations.params(RodriguesParam(p1,p2,p3)) == [p1,p2,p3]
     end
 end
