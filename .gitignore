@@ -3,3 +3,4 @@
 *.jl.mem
 perf/benchmarkparams.json
 Manifest.toml
+docs/build
