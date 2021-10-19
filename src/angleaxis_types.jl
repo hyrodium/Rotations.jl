@@ -86,6 +86,17 @@ end
     return principal_value(AA(theta, inv_sin_t2 * (q.x + num_pert), inv_sin_t2 * q.y, inv_sin_t2 * q.z, false))
 end
 
+# Trivial type conversions for RotX, RotY and RotZ
+@inline function (::Type{AA})(r::RotX) where AA <: AngleAxis
+    return AA(r.theta, 1, 0, 0)
+end
+@inline function (::Type{AA})(r::RotY) where AA <: AngleAxis
+    return AA(r.theta, 0, 1, 0)
+end
+@inline function (::Type{AA})(r::RotZ) where AA <: AngleAxis
+    return AA(r.theta, 0, 0, 1)
+end
+
 # Using Rodrigues formula on an AngleAxis parameterization (assume unit axis length) to do the rotation
 # (implementation from: https://ceres-solver.googlesource.com/ceres-solver/+/1.10.0/include/ceres/rotation.h)
 function Base.:*(aa::AngleAxis, v::StaticVector)
