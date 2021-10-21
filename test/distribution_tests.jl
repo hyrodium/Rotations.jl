@@ -32,8 +32,7 @@ To visualize the distribution, try the following script.
                 RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
                 RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ)
 
-    # TODO: add Angle2d and RotMatrix2
-    Type_SO2 = (RotX, RotY, RotZ)
+    Type_SO2 = (RotMatrix{2}, Angle2d, RotX, RotY, RotZ)
 
     # Number of sampling
     N = 100000
@@ -61,7 +60,8 @@ To visualize the distribution, try the following script.
         # Sampling
         rs = rand(RotType, N)
         q = rand(RotType)
-        angles = rotation_angle.([r/q for r in rs])/π
+        angles = rotation_angle.([r/q for r in rs])/2π
+        angles = mod.(angles, 1)
 
         # Check sampled rotations are rotations
         @test all(isrotation.(rs))
