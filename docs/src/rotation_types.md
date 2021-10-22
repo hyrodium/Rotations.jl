@@ -2,11 +2,11 @@
 
 ## Type hierarchy
 
-```@setup abc
+```@setup hierarchy
 using InteractiveUtils
 ```
 
-```@repl abc
+```@repl hierarchy
 using Rotations, StaticArrays
 Rotation <: StaticMatrix <: AbstractMatrix
 subtypes(Rotation{2})
@@ -14,20 +14,19 @@ subtypes(Rotation{3})
 ```
 
 ## Abstract rotations
-If a matrix ``R`` satisfies ``R^\top = R^{-1}`` and ``\det(R)=1``, the matrix ``R`` is said to be *rotation matrix*.
-
+A matrix ``R`` is called *rotation matrix* if ``R`` satisfies ``R^\top = R^{-1}`` and ``\det(R)=1``.
 In `Rotations.jl`, there's an abstract type for rotations matrix, `Rotation{D}`.
 Where `D` is a size of the rotation matrix.
 
 ## 2D rotations
-* `RotMatrix{2, T, L} where {T, L}`
-    * Rotation matrix in 2 dim.
+* `RotMatrix2{T}`
+    * Rotation matrix in 2 dimensional Euclidean space.
 * `Angle2d`
     * Parametrized with rotational angle.
 
 ## 3D rotations
-* `RotMatrix{3, T, L} where {T, L}`
-    * Rotation matrix in 3 dim.
+* `RotMatrix3{T}`
+    * Rotation matrix in 3 dimensional Euclidean space.
 * `RotX`, `RotYZ`, `RotXYZ` and etc.
     * Euler angles.
 * `AngleAxis`

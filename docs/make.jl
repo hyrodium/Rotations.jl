@@ -14,19 +14,19 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
-        "Types" => "types.md",
-        "2D rotations" => [
+        "Rotation Types" => "rotation_types.md",
+        "2D Rotations" => [
             "Matrix" => "2d_matrix.md",
             "Angle" => "2d_angle.md",
             ],
-        "3D rotations" => [
+        "3D Rotations" => [
             "Matrix" => "3d_matrix.md",
-            "Euler angles" => "3d_euler.md",
-            "Angle and axis" => "3d_angleaxis.md",
+            "Euler Angles" => "3d_euler.md",
+            "Angle and Axis" => "3d_angleaxis.md",
             "Quaternion" => "3d_quaternion.md",
             "MRP" => "3d_mrp.md",
             ],
-        "Useful functions" => "functions.md",
+        "Useful Functions" => "functions.md",
         "Random" => "random.md",
         "Function Reference" => "functionreference.md",
     ],
