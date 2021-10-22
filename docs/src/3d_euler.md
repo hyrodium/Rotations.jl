@@ -9,7 +9,7 @@ In Rotations.jl, there are 12 concrete types for Euler angles.
 * Tait–Bryan angles
     * `RotXYZ`, `RotYZX`, `RotZXY`, `RotXZY`, `RotZYX`, `RotYXZ`
 
-In addition, Rotations.jl provides types that represent rotations in one or two axes.
+In addition, Rotations.jl provides concrete types that represent rotations in one or two axes.
 
 * one axis
     * `RotX`, `RotY`, `RotZ`

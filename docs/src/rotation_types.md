@@ -1,5 +1,10 @@
 # Types in Rotations.jl
 
+## Abstract rotations
+A matrix ``R`` is called *rotation matrix* if ``R`` satisfies ``R^\top = R^{-1}`` and ``\det(R)=1``.
+In `Rotations.jl`, there's an abstract type for rotations matrix, `Rotation{L}`.
+Where `L` is a size of the rotation matrix.
+
 ## Type hierarchy
 
 ```@setup hierarchy
@@ -12,11 +17,6 @@ Rotation <: StaticMatrix <: AbstractMatrix
 subtypes(Rotation{2})
 subtypes(Rotation{3})
 ```
-
-## Abstract rotations
-A matrix ``R`` is called *rotation matrix* if ``R`` satisfies ``R^\top = R^{-1}`` and ``\det(R)=1``.
-In `Rotations.jl`, there's an abstract type for rotations matrix, `Rotation{D}`.
-Where `D` is a size of the rotation matrix.
 
 ## 2D rotations
 * `RotMatrix2{T}`

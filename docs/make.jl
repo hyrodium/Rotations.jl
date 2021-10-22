@@ -24,7 +24,6 @@ makedocs(;
             "Euler Angles" => "3d_euler.md",
             "Angle and Axis" => "3d_angleaxis.md",
             "Quaternion" => "3d_quaternion.md",
-            "MRP" => "3d_mrp.md",
             ],
         "Useful Functions" => "functions.md",
         "Random" => "random.md",
