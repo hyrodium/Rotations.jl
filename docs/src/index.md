@@ -2,6 +2,12 @@
 
 3D rotations made easy in Julia
 
+!!! note "Documentation"
+    The documentation is still work in progress.
+    For more information, see also [README in the repository](https://github.com/JuliaGeometry/Rotations.jl).
+    (TBW) comments are left in areas that have not yet been documented.
+    Feel free to open pull requests and improve this document!
+
 ## Installation
 ```
 pkg> add Rotations

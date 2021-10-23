@@ -104,7 +104,7 @@ RotXY(α, β)
 RotX(α) * RotY(β) == RotXY(α, β)
 ```
 
-## Rotation around three axes
+## Rotation around three axes (Euler Angles)
 
 **Proper Euler angles**
 

@@ -43,7 +43,7 @@ n_z
 
 ```@repl
 using Rotations, LinearAlgebra
-# 1/3 Rotation around (1/√3, 1/√3, 1/√3) vector
+# 1/3 (120°) rotation around the (1/√3, 1/√3, 1/√3) vector
 R = AngleAxis(2π/3, 1/√3, 1/√3, 1/√3)
 # This matrix swaps the xyz coordinates
 R * [1,2,3]
@@ -57,6 +57,28 @@ R^3 ≈ I(3)
 A 3D rotation encoded by an angle-axis representation as `angle * axis`.
 This type is used in packages such as [OpenCV](http://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#void%20Rodrigues%28InputArray%20src,%20OutputArray%20dst,%20OutputArray%20jacobian%29).
 
-Note: If you're differentiating a Rodrigues Vector check the result is what you expect at theta = 0.
-The first derivative of the rotation *should* behave, but higher-order derivatives of it (as well as parameterization conversions) should be tested.
-The Stereographic Quaternion Projection (`MRP`) is the recommended three parameter format for differentiation.
+```math
+\begin{aligned}
+R(\bm{v})
+&= R_{\bm{n}} (\theta) & \left(\bm{n} = \frac{\bm{v}}{\|\bm{v}\|}, \theta = \|\bm{v}\| \right)
+\end{aligned}
+```
+
+!!! note "Differentiation"
+    If you're differentiating a Rodrigues Vector check the result is what you expect at theta = 0.
+    The first derivative of the rotation *should* behave, but higher-order derivatives of it (as well as parameterization conversions) should be tested.
+    The Stereographic Quaternion Projection (`MRP`) is the recommended three parameter format for differentiation.
+
+### Example
+
+```@repl
+using Rotations, LinearAlgebra
+# 1/3 (120°) rotation around the (1/√3, 1/√3, 1/√3) vector
+R = R = RotationVec(2π/3(√3), 2π/3(√3), 2π/3(√3))
+# This matrix swaps the xyz coordinates
+R * [1,2,3]
+R^2
+R^3
+# These matrices are approximately equal
+R^3 ≈ I(3)
+```

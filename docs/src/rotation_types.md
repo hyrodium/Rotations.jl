@@ -1,7 +1,14 @@
 # Types in Rotations.jl
 
 ## Abstract rotations
-A matrix ``R`` is called [*rotation matrix*](https://en.wikipedia.org/wiki/Rotation_matrix) if ``R`` satisfies ``R^\top = R^{-1}`` and ``\det(R)=1``.
+A matrix ``R`` is called [*rotation matrix*](https://en.wikipedia.org/wiki/Rotation_matrix) if ``R`` satisfies
+
+```math
+\begin{aligned}
+R^\top &= R^{-1}, & \det(R)&=1.
+\end{aligned}
+```
+
 In `Rotations.jl`, there's an abstract type for rotations matrix, `Rotation{L}`.
 Where `L` is a size of the rotation matrix.
 

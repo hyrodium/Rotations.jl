@@ -5,7 +5,7 @@ A 3D rotation parameterized by a unit quaternion.
 Note that the constructor will renormalize the quaternion to be a unit quaternion, and that although they follow the same multiplicative *algebra* as quaternions, it is better to think of `UnitQuaternion` as a 3×3 matrix rather than as a quaternion *number*.
 
 ### Example
-(TBD)
+(TBW)
 
 ## `RodriguesParams`
 A 3-parameter representation of 3D rotations that has a singularity at 180 degrees.
@@ -13,7 +13,7 @@ They can be interpreted as a projection of the unit quaternion onto the plane ta
 They are computationally efficient and do not have a sign ambiguity.
 
 ### Example
-(TBD)
+(TBW)
 
 ## `MRP` (Modified Rodrigues Parameters)
 
@@ -28,4 +28,4 @@ They are frequently used in aerospace applications since they are a 3-parameter 
 In practice, the singularity can be avoided with some switching logic between one of two equivalent MRPs (obtained by projecting the negated quaternion).
 
 ### Example
-(TBD)
+(TBW)

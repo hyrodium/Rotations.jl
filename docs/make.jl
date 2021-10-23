@@ -23,10 +23,9 @@ makedocs(;
             "Matrix" => "3d_matrix.md",
             "Euler Angles" => "3d_euler.md",
             "Angle and Axis" => "3d_angleaxis.md",
-            "Quaternion" => "3d_quaternion.md",
+            "Quaternion and Related Parameters" => "3d_quaternion.md",
             ],
-        "Useful Functions" => "functions.md",
-        "Random" => "random.md",
+        "Common Methods for Rotations" => "functions.md",
         "Function Reference" => "functionreference.md",
     ],
 )
