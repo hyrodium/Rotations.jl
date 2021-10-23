@@ -7,8 +7,14 @@ function LinearAlgebra.eigvecs(R::Rotation{3})
     n3 = normalize(rotation_axis(R))
     n1 = normalize(perpendicular_vector(n3))
     n2 = normalize(n3×n1)
-    v1 = n1*im + n2
-    v2 = n1 + n2*im
+    v1 = normalize(n1*im + n2)
+    v2 = normalize(n1 + n2*im)
     v3 = n3
     return hcat(v1,v2,v3)
+end
+
+function LinearAlgebra.eigen(R::Rotation{3})
+    λs = eigvals(R)
+    vs = eigvecs(R)
+    return Eigen(λs, vs)
 end
