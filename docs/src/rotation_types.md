@@ -1,7 +1,7 @@
 # Types in Rotations.jl
 
 ## Abstract rotations
-A matrix ``R`` is called *rotation matrix* if ``R`` satisfies ``R^\top = R^{-1}`` and ``\det(R)=1``.
+A matrix ``R`` is called [*rotation matrix*](https://en.wikipedia.org/wiki/Rotation_matrix) if ``R`` satisfies ``R^\top = R^{-1}`` and ``\det(R)=1``.
 In `Rotations.jl`, there's an abstract type for rotations matrix, `Rotation{L}`.
 Where `L` is a size of the rotation matrix.
 
@@ -18,13 +18,16 @@ subtypes(Rotation{2})
 subtypes(Rotation{3})
 ```
 
-## 2D rotations
+## Overview of each type
+For more information, see the sidebar page.
+
+### 2D rotations
 * `RotMatrix2{T}`
     * Rotation matrix in 2 dimensional Euclidean space.
 * `Angle2d`
     * Parametrized with rotational angle.
 
-## 3D rotations
+### 3D rotations
 * `RotMatrix3{T}`
     * Rotation matrix in 3 dimensional Euclidean space.
 * `RotX`, `RotYZ`, `RotXYZ` and etc.
