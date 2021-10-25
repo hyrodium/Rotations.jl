@@ -19,3 +19,20 @@ function LinearAlgebra.eigen(R::Rotation{3})
     vs = eigvecs(R)
     return Eigen(λs, vs)
 end
+
+
+# 2D
+function LinearAlgebra.eigvals(R::Rotation{2})
+    θ = rotation_angle(R)
+    return SVector(exp(-θ*im), exp(θ*im))
+end
+
+function LinearAlgebra.eigvecs(R::Rotation{2})
+    return @SMatrix [1/√2 1/√2;im/√2 -im/√2]
+end
+
+function LinearAlgebra.eigen(R::Rotation{2})
+    λs = eigvals(R)
+    vs = eigvecs(R)
+    return Eigen(λs, vs)
+end
