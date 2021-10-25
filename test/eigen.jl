@@ -46,6 +46,10 @@ end
         @test norm(v2) ≈ 1
         @test E.values == λs
         @test E.vectors == vs
-        @test eigvals(R) ≈ eigvals(collect(R))
+        if !(T in oneaxis_types) && VERSION ≥ v"1.2"
+            # This needs Julia(≥1.2) to get sorted eigenvalues in a canonical order
+            # See https://github.com/JuliaLang/julia/pull/21598
+            @test eigvals(R) ≈ eigvals(collect(R))
+        end
     end
 end
