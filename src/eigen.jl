@@ -15,6 +15,10 @@ function LinearAlgebra.eigvecs(R::Rotation{3})
 end
 
 function LinearAlgebra.eigen(R::Rotation{3})
+    return eigen(AngleAxis(R))
+end
+
+function LinearAlgebra.eigen(R::AngleAxis)
     λs = eigvals(R)
     vs = eigvecs(R)
     return Eigen(λs, vs)
