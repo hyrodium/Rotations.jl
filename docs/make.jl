@@ -10,7 +10,7 @@ makedocs(;
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
         canonical="https://JuliaGeometry.github.io/Rotations.jl",
-        assets=String[],
+        assets = ["assets/custom.css"],
     ),
     pages=[
         "Home" => "index.md",
