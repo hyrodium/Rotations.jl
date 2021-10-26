@@ -41,7 +41,7 @@ R_{z}(\alpha)
 \end{aligned}
 ```
 
-### Example
+**example**
 ```@setup one_axis
 using Rotations
 ```
@@ -91,7 +91,7 @@ R_{zx}(\alpha,\beta)
 \end{aligned}
 ```
 
-### Example
+**example**
 ```@setup two_axis
 using Rotations
 ```
@@ -132,7 +132,7 @@ R_{zxy}(\alpha, \beta, \gamma) &= R_z(\alpha) R_x(\beta) R_y(\gamma),
 \end{aligned}
 ```
 
-### Example
+**example**
 ```@setup three_axis
 using Rotations
 ```

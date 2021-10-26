@@ -4,9 +4,11 @@
 
 !!! note "Documentation"
     The documentation is still work in progress.
-    For more information, see also [README in the repository](https://github.com/JuliaGeometry/Rotations.jl).
+    For more information, see also
+    * [README in the repository](https://github.com/JuliaGeometry/Rotations.jl)
+    * [Tests in the repository](https://github.com/JuliaGeometry/Rotations.jl/tree/master/test)
     (TBW) comments are left in areas that have not yet been documented.
-    Feel free to open pull requests and improve this document!
+    Feel free to [open pull requests](https://github.com/JuliaGeometry/Rotations.jl/pulls) and improve this document!
 
 ## Installation
 ```
