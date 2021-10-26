@@ -2,6 +2,8 @@
 
 *3D rotations made easy in Julia*
 
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaGeometry.github.io/Rotations.jl/stable)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaGeometry.github.io/Rotations.jl/dev)
 [![Build Status](https://github.com/JuliaGeometry/Rotations.jl/workflows/CI/badge.svg)](https://github.com/JuliaGeometry/Rotations.jl/actions?query=workflow%3ACI)
 [![Coverage](https://codecov.io/gh/JuliaGeometry/Rotations.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaGeometry/Rotations.jl)
 
