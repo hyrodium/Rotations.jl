@@ -22,6 +22,7 @@ include("principal_value.jl")
 include("rodrigues_params.jl")
 include("error_maps.jl")
 include("rotation_error.jl")
+include("log.jl")
 include("eigen.jl")
 include("deprecated.jl")
 
