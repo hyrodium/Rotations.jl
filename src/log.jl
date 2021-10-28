@@ -13,7 +13,7 @@ end
 
 # 2d
 function Base.log(R::Angle2d)
-    θ = params(R)
+    θ, = params(R)
     return @SMatrix [0 -θ
                      θ  0]
 end
