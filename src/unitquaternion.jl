@@ -254,7 +254,7 @@ function expm(ϕ::AbstractVector)
     UnitQuaternion(cθ, ϕ[1]*M, ϕ[2]*M, ϕ[3]*M, false)
 end
 
-function log(q::Q, eps=1e-6) where Q <: UnitQuaternion
+function _log_as_quat(q::Q, eps=1e-6) where Q <: UnitQuaternion
     # Assumes unit quaternion
     θ = vecnorm(q)
     if θ > eps
@@ -267,7 +267,7 @@ end
 
 function logm(q::UnitQuaternion)
     # Assumes unit quaternion
-    2*vector(log(q))
+    2*vector(_log_as_quat(q))
 end
 
 # Composition
