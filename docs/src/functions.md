@@ -44,9 +44,14 @@ Rotations.params(MRP(R))  # Modified Rodrigues Parameters (x, y, z)
 Check the given matrix is rotation matrix.
 
 **example**
+
 (TBW)
 
 ## `rand`
+```@setup rand
+using Rotations
+```
+
 ### `rand` for ``SO(2)``
 The following types have the same algebraic structure as ``SO(2)``
 
@@ -59,20 +64,35 @@ The following types have the same algebraic structure as ``SO(2)``
 The random distribution is based on [Haar measure](https://en.wikipedia.org/wiki/Haar_measure).
 
 **example**
-```julia
-using Rotations, Plots
-Rs = [rand(RotMatrix{2}) for _ in 1:1000]
-θs = rotation_angle.(Rs)
-histogram(θs)
+```@repl rand
+R = rand(Angle2d)
 ```
 
 ### `rand` for ``SO(3)``
-(TBW)
+The following types have an algebraic structure that is homomorphic to ``SO(3)``.
+
+* `RotMatrix{3}`
+* `RotXYZ` (and other Euler angles)
+* `AngleAxis`
+* `RotationVec`
+* `UnitQuaternion`
+* `RodriguesParam`
+* `MRP`
+
+**example**
+```@repl rand
+R = rand(RotationVec)
+```
 
 The random distribution is based on [Haar measure](https://en.wikipedia.org/wiki/Haar_measure).
 
 ### `rand` for `RotXY` and etc.
-(TBW)
+There also are methods for `rand(::RotXY)` and other 2-axis rotations.
+
+**example**
+```@repl rand
+R = rand(RotXY)
+```
 
 The random distribution is **NOT** based on [Haar measure](https://en.wikipedia.org/wiki/Haar_measure) because the set of `RotXY` doesn't have group structure.
 

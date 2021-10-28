@@ -81,4 +81,9 @@ R^2
 R^3
 # These matrices are approximately equal
 R^3 ≈ I(3)
+
+α, β, γ = 1.2, -0.8, 0.1;
+RotX(α) ≈ RotationVec(α,0,0)  # These matrices are equal
+RotY(β) ≈ RotationVec(0,β,0)  # These matrices are equal
+RotZ(γ) ≈ RotationVec(0,0,γ)  # These matrices are equal
 ```

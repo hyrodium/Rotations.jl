@@ -8,4 +8,5 @@ On the other hand, all the types below are guaranteed to be "proper" rotations f
 ## `RotMatrix3`
 
 **example**
+
 (TBW)

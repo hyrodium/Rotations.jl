@@ -1,7 +1,12 @@
-# Visualizing Rotation
+# Visualize Rotation
+In general, ``3 \times 3`` matrix has ``9`` parameters, so it's hard to visualize a matrix as a point.
+However, the Lie group ``SO(3)`` and ``SU(2)`` are ``3``-dimensional space, and it is able to visualize its element as a point in our ``3``-dimensional space.
 
-3×3行列は9つのパラメータがあるから、一般には可視化は難しい。
-しかし、例えば対称行列であれば、楕円として可視化できる。
+## using `MRP`
+(TBW)
 
-3×3行列は9
+## using `RodriguesParam`
+(TBW)
 
+## using `RotationVec`
+(TBW)
