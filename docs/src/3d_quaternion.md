@@ -8,7 +8,7 @@ Note that the constructor will renormalize the quaternion to be a unit quaternio
 (TBW)
 
 ## `RodriguesParams`
-A 3-parameter representation of 3D rotations that has a singularity at 180 degrees.
+A 3-parameter representation of 3D rotations that has a singularity at ``180^{\circ}``.
 They can be interpreted as a projection of the unit quaternion onto the plane tangent to the quaternion identity.
 They are computationally efficient and do not have a sign ambiguity.
 
