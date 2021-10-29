@@ -129,7 +129,7 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
     # check on the inverse function
     ################################
 
-    @testset "Testing inverse()" begin
+    @testset "Testing inv()" begin
         repeats = 100
         I = one(RotMatrix{3,Float64})
         @testset "$(R)" for R in all_types
@@ -145,6 +145,24 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
                 @test r1\r1 ≈ I
                 @test r1/r2 ≈ r1*inv(r2)
                 @test r1\r2 ≈ inv(r1)*r2
+            end
+        end
+    end
+
+    ################################
+    # check on the norm functions
+    ################################
+
+    @testset "Testing norm() and normalize()" begin
+        repeats = 100
+        for R in all_types
+            I = one(R)
+            Random.seed!(0)
+            for i = 1:repeats
+                r = rand(R)
+                @test norm(r) ≈ norm(Matrix(r))
+                @test normalize(r) ≈ normalize(Matrix(r))
+                @test normalize(r) isa SMatrix
             end
         end
     end

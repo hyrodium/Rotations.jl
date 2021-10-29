@@ -51,7 +51,7 @@ using Rotations, StaticArrays, Test
     # check on the inverse function
     ################################
 
-    @testset "Testing inverse()" begin
+    @testset "Testing inv()" begin
         repeats = 100
         for R in [RotMatrix{2,Float64}, Angle2d{Float64}]
             I = one(R)
@@ -63,6 +63,24 @@ using Rotations, StaticArrays, Test
                 @test inv(r) == transpose(r)
                 @test inv(r)*r ≈ I
                 @test r*inv(r) ≈ I
+            end
+        end
+    end
+
+    ################################
+    # check on the norm functions
+    ################################
+
+    @testset "Testing norm() and normalize()" begin
+        repeats = 100
+        for R in [RotMatrix{2,Float64}, Angle2d{Float64}]
+            I = one(R)
+            Random.seed!(0)
+            for i = 1:repeats
+                r = rand(R)
+                @test norm(r) ≈ norm(Matrix(r))
+                @test normalize(r) ≈ normalize(Matrix(r))
+                @test normalize(r) isa SMatrix
             end
         end
     end
