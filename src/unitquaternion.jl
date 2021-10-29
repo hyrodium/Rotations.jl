@@ -1,4 +1,4 @@
-import Base: +, -, *, /, \, exp, ≈, ==, inv, conj
+import Base: +, -, *, /, \, exp, ≈, ==, inv
 
 """
     UnitQuaternion{T} <: Rotation
@@ -216,9 +216,7 @@ end
 # ~~~~~~~~~~~~~~~ Math Operations ~~~~~~~~~~~~~~~ #
 
 # Inverses
-# TODO: remove conj
-conj(q::Q) where Q <: UnitQuaternion = Q(q.w, -q.x, -q.y, -q.z, false)
-inv(q::UnitQuaternion) = conj(q)
+inv(q::Q) where Q <: UnitQuaternion = Q(q.w, -q.x, -q.y, -q.z, false)
 (-)(q::Q) where Q <: UnitQuaternion = Q(-q.w, -q.x, -q.y, -q.z, false)
 
 # Norms
@@ -315,10 +313,10 @@ function Base.:*(q::UnitQuaternion, r::StaticVector)  # must be StaticVector to 
     (w^2 - v'v)*r + 2*v*(v'r) + 2*w*cross(v,r)
 end
 
-(\)(q1::UnitQuaternion, q2::UnitQuaternion) = conj(q1)*q2  # Equivalent to inv(q1)*q2
-(/)(q1::UnitQuaternion, q2::UnitQuaternion) = q1*conj(q2)  # Equivalent to q1*inv(q2)
+(\)(q1::UnitQuaternion, q2::UnitQuaternion) = inv(q1)*q2  # Equivalent to inv(q1)*q2
+(/)(q1::UnitQuaternion, q2::UnitQuaternion) = q1*inv(q2)  # Equivalent to q1*inv(q2)
 
-(\)(q::UnitQuaternion, r::SVector{3}) = conj(q)*r          # Equivalent to inv(q)*r
+(\)(q::UnitQuaternion, r::SVector{3}) = inv(q)*r          # Equivalent to inv(q)*r
 
 """
     rotation_between(from, to)
