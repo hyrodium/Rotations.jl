@@ -32,6 +32,7 @@ struct UnitQuaternion{T} <: Rotation{3,T}
     end
 
     UnitQuaternion{T}(q::UnitQuaternion) where T = new{T}(q.w, q.x, q.y, q.z)
+    UnitQuaternion{T}(q::Quaternion) where T = new{T}(q.s, q.v1, q.v2, q.v3)
 end
 
 # ~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~ #
@@ -39,6 +40,10 @@ end
 function UnitQuaternion(w,x,y,z, normalize::Bool = true)
     types = promote(w,x,y,z)
     UnitQuaternion{eltype(types)}(w,x,y,z, normalize)
+end
+
+function Quaternions.Quaternion(q::UnitQuaternion, normalize::Bool = true)
+    Quaternion(q.w,q.x,q.y,q.z, normalize)
 end
 
 # Pass in Vectors
@@ -183,6 +188,7 @@ end
 # ~~~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~ #
 @inline scalar(q::UnitQuaternion) = q.w
 @inline vector(q::UnitQuaternion) = SVector{3}(q.x, q.y, q.z)
+@inline vector(q::Quaternion) = SVector{3}(q.v1, q.v2, q.v3)
 
 """
     params(R::Rotation)
@@ -197,6 +203,9 @@ Rotations.params(p) == @SVector [1.0, 2.0, 3.0]  # true
 """
 @inline params(q::UnitQuaternion) = SVector{4}(q.w, q.x, q.y, q.z)
 
+# TODO: this will be removed, because Quaternion is not a subtype of Rotation
+@inline params(q::Quaternion) = SVector{4}(q.s, q.v1, q.v2, q.v3)
+
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
 function Random.rand(rng::AbstractRNG, ::Random.SamplerType{<:UnitQuaternion{T}}) where T
     normalize(UnitQuaternion{T}(randn(rng,T), randn(rng,T), randn(rng,T), randn(rng,T)))
@@ -207,16 +216,18 @@ end
 # ~~~~~~~~~~~~~~~ Math Operations ~~~~~~~~~~~~~~~ #
 
 # Inverses
+# TODO: remove conj
 conj(q::Q) where Q <: UnitQuaternion = Q(q.w, -q.x, -q.y, -q.z, false)
 inv(q::UnitQuaternion) = conj(q)
 (-)(q::Q) where Q <: UnitQuaternion = Q(-q.w, -q.x, -q.y, -q.z, false)
 
 # Norms
-LinearAlgebra.norm(q::UnitQuaternion) = sqrt(q.w^2 + q.x^2 + q.y^2 + q.z^2)
+# LinearAlgebra.norm(q::UnitQuaternion) = sqrt(q.w^2 + q.x^2 + q.y^2 + q.z^2)
 vecnorm(q::UnitQuaternion) = sqrt(q.x^2 + q.y^2 + q.z^2)
+vecnorm(q::Quaternion) = sqrt(q.v1^2 + q.v2^2 + q.v3^2)
 
 function LinearAlgebra.normalize(q::Q) where Q <: UnitQuaternion
-    n = inv(norm(q))
+    n = inv(norm(params(q)))
     Q(q.w*n, q.x*n, q.y*n, q.z*n)
 end
 
@@ -225,32 +236,32 @@ end
 
 # Exponentials and Logarithms
 """
-    pure_quaternion(v::AbstractVector)
-    pure_quaternion(x, y, z)
+    _pure_quaternion(v::AbstractVector)
+    _pure_quaternion(x, y, z)
 
-Create a `UnitQuaternion` with zero scalar part (i.e. `q.w == 0`).
+Create a `Quaternion` with zero scalar part (i.e. `q.w == 0`).
 """
-function pure_quaternion(v::AbstractVector)
+function _pure_quaternion(v::AbstractVector)
     check_length(v, 3)
-    UnitQuaternion(zero(eltype(v)), v[1], v[2], v[3], false)
+    Quaternion(zero(eltype(v)), v[1], v[2], v[3], false)
 end
 
-@inline pure_quaternion(x::Real, y::Real, z::Real) =
-    UnitQuaternion(zero(x), x, y, z, false)
+@inline _pure_quaternion(x::Real, y::Real, z::Real) =
+    Quaternion(zero(x), x, y, z, false)
 
-function exp(q::Q) where Q <: UnitQuaternion
+function exp(q::Q) where Q <: Quaternion
     θ = vecnorm(q)
     sθ,cθ = sincos(θ)
-    es = exp(q.w)
+    es = exp(q.s)
     M = es*sθ/θ
-    Q(es*cθ, q.x*M, q.y*M, q.z*M, false)
+    UnitQuaternion(es*cθ, q.v1*M, q.v2*M, q.v3*M, false)
 end
 
 function expm(ϕ::AbstractVector)
     check_length(ϕ, 3)
     θ = norm(ϕ)
     sθ,cθ = sincos(θ/2)
-    M = 1//2 *sinc(θ/π/2)
+    M = sinc(θ/π/2)/2
     UnitQuaternion(cθ, ϕ[1]*M, ϕ[2]*M, ϕ[3]*M, false)
 end
 
@@ -262,12 +273,12 @@ function _log_as_quat(q::Q, eps=1e-6) where Q <: UnitQuaternion
     else
         M = (1-(θ^2/(3q.w^2)))/q.w
     end
-    pure_quaternion(M*vector(q))
+    _pure_quaternion(M*vector(q))
 end
 
 function logm(q::UnitQuaternion)
     # Assumes unit quaternion
-    2*vector(_log_as_quat(q))
+    return 2*vector(_log_as_quat(q))
 end
 
 # Composition
@@ -361,7 +372,7 @@ See "Fundamentals of Spacecraft Attitude Determination and Control" by Markley a
 Sections 3.1-3.2 for more details.
 """
 function kinematics(q::Q, ω::AbstractVector) where Q <: UnitQuaternion
-    1//2 * params(q*Q(0.0, ω[1], ω[2], ω[3], false))
+    params(q*Q(0.0, ω[1], ω[2], ω[3], false))/2
 end
 
 # ~~~~~~~~~~~~~~~ Linear Algebraic Conversions ~~~~~~~~~~~~~~~ #
@@ -379,6 +390,14 @@ function lmult(q::UnitQuaternion)
         q.z -q.y  q.x  q.w;
     ]
 end
+function lmult(q::Quaternion)
+    SA[
+        q.s  -q.v1 -q.v2 -q.v3;
+        q.v1  q.s  -q.v3  q.v2;
+        q.v2  q.v3  q.s  -q.v1;
+        q.v3 -q.v2  q.v1  q.s;
+    ]
+end
 lmult(q::StaticVector{4}) = lmult(UnitQuaternion(q, false))
 
 """
@@ -393,6 +412,14 @@ function rmult(q::UnitQuaternion)
         q.x  q.w  q.z -q.y;
         q.y -q.z  q.w  q.x;
         q.z  q.y -q.x  q.w;
+    ]
+end
+function rmult(q::Quaternion)
+    SA[
+        q.s  -q.v1 -q.v2 -q.v3;
+        q.v1  q.s   q.v3 -q.v2;
+        q.v2 -q.v3  q.s   q.v1;
+        q.v3  q.v2 -q.v1  q.s;
     ]
 end
 rmult(q::SVector{4}) = rmult(UnitQuaternion(q, false))

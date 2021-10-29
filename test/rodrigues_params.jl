@@ -30,7 +30,7 @@ import Rotations: ∇rotate, ∇composition1, ∇composition2, skew, params
 
     # Math operations
     g = rand(R)
-    @test norm(g) == sqrt(g.x^2 + g.y^2 + g.z^2)
+    @test norm(g) == norm(Matrix(g))
 
     # Test Jacobians
     R = RodriguesParam
@@ -67,7 +67,7 @@ end
     @test qdot ≈ 0.5*lmult(q)*hmat(ω)
     @test ω ≈ 2*vmat()*lmult(q)'qdot
     @test ω ≈ 2*vmat()*lmult(inv(q))*qdot
-    @test qdot ≈ 0.5 * params(q*pure_quaternion(ω))
+    @test qdot ≈ 0.5 * params(Quaternion(q)*_pure_quaternion(ω))
 
     # MRPs
     ω = @SVector rand(3)
