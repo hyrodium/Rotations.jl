@@ -161,8 +161,10 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
             for i = 1:repeats
                 r = rand(R)
                 @test norm(r) ≈ norm(Matrix(r))
-                @test normalize(r) ≈ normalize(Matrix(r))
-                @test normalize(r) isa SMatrix
+                if VERSION ≥ v"1.5"
+                    @test normalize(r) ≈ normalize(Matrix(r))
+                    @test normalize(r) isa SMatrix
+                end
             end
         end
     end
