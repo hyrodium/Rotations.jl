@@ -42,8 +42,16 @@ function UnitQuaternion(w,x,y,z, normalize::Bool = true)
     UnitQuaternion{eltype(types)}(w,x,y,z, normalize)
 end
 
-function Quaternions.Quaternion(q::UnitQuaternion, normalize::Bool = true)
-    Quaternion(q.w,q.x,q.y,q.z, normalize)
+function UnitQuaternion(q::T) where T<:Quaternion
+    if q.norm
+        return UnitQuaternion(q.s, q.v1, q.v2, q.v3)
+    else
+        throw(InexactError(nameof(T), T, q))
+    end
+end
+
+function Quaternions.Quaternion(q::UnitQuaternion)
+    Quaternion(q.w, q.x, q.y, q.z, true)
 end
 
 # Pass in Vectors
