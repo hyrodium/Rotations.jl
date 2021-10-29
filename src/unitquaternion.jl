@@ -1,4 +1,4 @@
-import Base: +, -, *, /, \, exp, ≈, ==, inv
+import Base: *, /, \, exp, ≈, ==, inv
 
 """
     UnitQuaternion{T} <: Rotation
