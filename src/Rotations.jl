@@ -6,6 +6,7 @@ module Rotations
 using LinearAlgebra
 using StaticArrays
 using Random
+using Quaternions
 
 import Statistics
 
