@@ -131,7 +131,7 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
     @test eltype(logm(q32)) == Float32
     @test expm(logm(q32)) ≈ q32
 
-    @test normalize(q32) isa UnitQuaternion{Float32}
+    @test normalize(q32) isa SMatrix{3,3,Float32}
 
     ω = @SVector rand(3)
     ω32 = Float32.(ω)

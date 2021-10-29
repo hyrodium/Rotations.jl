@@ -208,7 +208,7 @@ Rotations.params(p) == @SVector [1.0, 2.0, 3.0]  # true
 
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
 function Random.rand(rng::AbstractRNG, ::Random.SamplerType{<:UnitQuaternion{T}}) where T
-    normalize(UnitQuaternion{T}(randn(rng,T), randn(rng,T), randn(rng,T), randn(rng,T)))
+    _normalize(UnitQuaternion{T}(randn(rng,T), randn(rng,T), randn(rng,T), randn(rng,T)))
 end
 @inline Base.one(::Type{Q}) where Q <: UnitQuaternion = Q(1.0, 0.0, 0.0, 0.0)
 
@@ -222,9 +222,9 @@ inv(q::Q) where Q <: UnitQuaternion = Q(q.w, -q.x, -q.y, -q.z, false)
 vecnorm(q::UnitQuaternion) = sqrt(q.x^2 + q.y^2 + q.z^2)
 vecnorm(q::Quaternion) = sqrt(q.v1^2 + q.v2^2 + q.v3^2)
 
-function LinearAlgebra.normalize(q::Q) where Q <: UnitQuaternion
-    n = inv(norm(params(q)))
-    Q(q.w*n, q.x*n, q.y*n, q.z*n)
+function _normalize(q::Q) where Q <: UnitQuaternion
+    n = norm(params(q))
+    Q(q.w/n, q.x/n, q.y/n, q.z/n)
 end
 
 # Identity
