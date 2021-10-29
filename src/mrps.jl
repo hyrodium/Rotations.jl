@@ -48,7 +48,6 @@ end
 @inline Base.Tuple(p::MRP) = Tuple(convert(UnitQuaternion, p))
 
 # ~~~~~~~~~~~~~~~ Math Operations ~~~~~~~~~~~~~~~ #
-# LinearAlgebra.norm(p::MRP) = sqrt(p.x^2 + p.y^2 + p.z^2)
 Base.inv(p::MRP) = MRP(-p.x, -p.y, -p.z)
 
 # ~~~~~~~~~~~~~~~ Composition ~~~~~~~~~~~~~~~ #

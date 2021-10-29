@@ -222,7 +222,6 @@ inv(q::UnitQuaternion) = conj(q)
 (-)(q::Q) where Q <: UnitQuaternion = Q(-q.w, -q.x, -q.y, -q.z, false)
 
 # Norms
-# LinearAlgebra.norm(q::UnitQuaternion) = sqrt(q.w^2 + q.x^2 + q.y^2 + q.z^2)
 vecnorm(q::UnitQuaternion) = sqrt(q.x^2 + q.y^2 + q.z^2)
 vecnorm(q::Quaternion) = sqrt(q.v1^2 + q.v2^2 + q.v3^2)
 
