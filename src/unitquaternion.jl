@@ -217,7 +217,6 @@ end
 
 # Inverses
 inv(q::Q) where Q <: UnitQuaternion = Q(q.w, -q.x, -q.y, -q.z, false)
-(-)(q::Q) where Q <: UnitQuaternion = Q(-q.w, -q.x, -q.y, -q.z, false)
 
 # Norms
 vecnorm(q::UnitQuaternion) = sqrt(q.x^2 + q.y^2 + q.z^2)
