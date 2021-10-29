@@ -56,8 +56,8 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
     @test exp(q) ≈ q1
 
     q = UnitQuaternion((@SVector [1, 2, 3, 4.0]), false)
-    @test 2 * q == UnitQuaternion((@SVector [2, 4, 6, 8.0]), false)
-    @test q * 2 == UnitQuaternion((@SVector [2, 4, 6, 8.0]), false)
+    @test 2 * q == 2 * Matrix(q)
+    @test q * 2 == 2 * Matrix(q)
 
     # Axis-angle
     ϕ = 0.1 * @SVector [1, 0, 0]
