@@ -30,12 +30,15 @@ include("deprecated.jl")
 export
     Rotation, RotMatrix, RotMatrix2, RotMatrix3,
     Angle2d,
-    Quat, UnitQuaternion,
-    AngleAxis, RodriguesVec, RotationVec, RodriguesParam, MRP,
+    UnitQuaternion,
+    AngleAxis, RotationVec, RodriguesParam, MRP,
     RotX, RotY, RotZ,
     RotXY, RotYX, RotZX, RotXZ, RotYZ, RotZY,
     RotXYX, RotYXY, RotZXZ, RotXZX, RotYZY, RotZYZ,
     RotXYZ, RotYXZ, RotZXY, RotXZY, RotYZX, RotZYX,
+
+    # Deprecated, but export for compatibility
+    RodriguesVec, Quat, SPQuat,
 
     # Quaternion math ops
     logm, expm, ⊖, ⊕,
