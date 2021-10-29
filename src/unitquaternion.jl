@@ -245,14 +245,6 @@ end
 @inline _pure_quaternion(x::Real, y::Real, z::Real) =
     Quaternion(zero(x), x, y, z, false)
 
-function exp(q::Q) where Q <: Quaternion
-    θ = vecnorm(q)
-    sθ,cθ = sincos(θ)
-    es = exp(q.s)
-    M = es*sθ/θ
-    UnitQuaternion(es*cθ, q.v1*M, q.v2*M, q.v3*M, false)
-end
-
 function expm(ϕ::AbstractVector)
     check_length(ϕ, 3)
     θ = norm(ϕ)

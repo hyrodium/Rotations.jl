@@ -53,7 +53,8 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
     ϕ = inv(ExponentialMap())(q1)
     @test expm(ϕ * 2) ≈ q1
     q = Rotations._pure_quaternion(ϕ)
-    @test exp(q) ≈ q1
+    @test UnitQuaternion(exp(q)) ≈ q1
+    @test exp(q) isa Quaternion
 
     q = UnitQuaternion((@SVector [1, 2, 3, 4.0]), false)
     @test 2 * q == 2 * Matrix(q)
