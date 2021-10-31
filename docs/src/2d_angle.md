@@ -3,5 +3,6 @@
 ## `Angle2d`
 (TBW)
 
-### Example
+**example**
+
 (TBW)
