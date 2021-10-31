@@ -228,7 +228,6 @@ inv(q::Q) where Q <: UnitQuaternion = Q(q.w, -q.x, -q.y, -q.z, false)
 
 # Norms
 vecnorm(q::UnitQuaternion) = sqrt(q.x^2 + q.y^2 + q.z^2)
-vecnorm(q::Quaternion) = sqrt(q.v1^2 + q.v2^2 + q.v3^2)
 
 function _normalize(q::Q) where Q <: UnitQuaternion
     n = norm(params(q))
@@ -314,8 +313,6 @@ end
 
 (\)(q1::UnitQuaternion, q2::UnitQuaternion) = inv(q1)*q2  # Equivalent to inv(q1)*q2
 (/)(q1::UnitQuaternion, q2::UnitQuaternion) = q1*inv(q2)  # Equivalent to q1*inv(q2)
-
-(\)(q::UnitQuaternion, r::SVector{3}) = inv(q)*r          # Equivalent to inv(q)*r
 
 """
     rotation_between(from, to)
