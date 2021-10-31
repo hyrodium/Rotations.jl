@@ -226,9 +226,6 @@ end
 # Inverses
 inv(q::Q) where Q <: UnitQuaternion = Q(q.w, -q.x, -q.y, -q.z, false)
 
-# Norms
-vecnorm(q::UnitQuaternion) = sqrt(q.x^2 + q.y^2 + q.z^2)
-
 function _normalize(q::Q) where Q <: UnitQuaternion
     n = norm(params(q))
     Q(q.w/n, q.x/n, q.y/n, q.z/n)
@@ -262,7 +259,7 @@ end
 
 function _log_as_quat(q::Q, eps=1e-6) where Q <: UnitQuaternion
     # Assumes unit quaternion
-    θ = vecnorm(q)
+    θ = sqrt(q.x^2 + q.y^2 + q.z^2)
     if θ > eps
         M = atan(θ, q.w)/θ
     else
