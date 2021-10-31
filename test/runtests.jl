@@ -29,6 +29,7 @@ include("quatmaps.jl")
 include("rotation_error.jl")
 include("distribution_tests.jl")
 include("eigen.jl")
+include("log.jl")
 include("deprecated.jl")
 
 include(joinpath(@__DIR__, "..", "perf", "runbenchmarks.jl"))
