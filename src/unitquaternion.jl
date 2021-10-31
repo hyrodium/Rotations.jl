@@ -308,8 +308,8 @@ function Base.:*(q::UnitQuaternion, r::StaticVector)  # must be StaticVector to 
     (w^2 - v'v)*r + 2*v*(v'r) + 2*w*cross(v,r)
 end
 
-(\)(q1::UnitQuaternion, q2::UnitQuaternion) = inv(q1)*q2  # Equivalent to inv(q1)*q2
-(/)(q1::UnitQuaternion, q2::UnitQuaternion) = q1*inv(q2)  # Equivalent to q1*inv(q2)
+(\)(q1::UnitQuaternion, q2::UnitQuaternion) = inv(q1)*q2
+(/)(q1::UnitQuaternion, q2::UnitQuaternion) = q1*inv(q2)
 
 """
     rotation_between(from, to)
