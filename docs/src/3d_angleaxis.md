@@ -39,7 +39,7 @@ n_z
 \end{aligned}
 ```
 
-### Example
+**example**
 
 ```@repl
 using Rotations, LinearAlgebra
@@ -69,7 +69,7 @@ R(\bm{v})
     The first derivative of the rotation *should* behave, but higher-order derivatives of it (as well as parameterization conversions) should be tested.
     The Stereographic Quaternion Projection (`MRP`) is the recommended three parameter format for differentiation.
 
-### Example
+**example**
 
 ```@repl
 using Rotations, LinearAlgebra
@@ -81,4 +81,9 @@ R^2
 R^3
 # These matrices are approximately equal
 R^3 ≈ I(3)
+
+α, β, γ = 1.2, -0.8, 0.1;
+RotX(α) ≈ RotationVec(α,0,0)  # These matrices are equal
+RotY(β) ≈ RotationVec(0,β,0)  # These matrices are equal
+RotZ(γ) ≈ RotationVec(0,0,γ)  # These matrices are equal
 ```

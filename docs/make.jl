@@ -26,6 +26,7 @@ makedocs(;
             "Quaternion and Related Parameters" => "3d_quaternion.md",
             ],
         "Common Methods for Rotations" => "functions.md",
+        "Visualizing Rotations" => "visualizing.md",
         "Function Reference" => "functionreference.md",
     ],
 )
