@@ -39,7 +39,20 @@ end
     @test rv_prin ≈ rv
 end
 
-@testset "Principal Value ($(rot_type))" for rot_type in [:RotX, :RotY, :RotZ] begin
+@testset "Principal Value (Rodrigues Parameters)" begin
+    for i = 1:1000
+        rv = RodriguesParam(100.0 * randn(), 100.0 * randn(), 100.0 * randn())
+        rv_prin = principal_value(rv)
+        @test rv_prin ≈ rv
+        @test Rotations.params(rv_prin) ≈ Rotations.params(rv)
+    end
+    rv = RodriguesParam(0.0, 0.0, 0.0)
+    rv_prin = principal_value(rv)
+    @test rv_prin ≈ rv
+    @test Rotations.params(rv_prin) ≈ Rotations.params(rv)
+end
+
+@testset "Principal Value ($(rot_type))" for rot_type in [:RotX, :RotY, :RotZ, :Angle2d] begin
         @eval begin
             for i = 1:1000
                 r = $(rot_type)(100.0 * randn())
