@@ -16,7 +16,7 @@ the following properties:
 - the `RotationVec` rotation is at most `pi`
 
 """
-principal_value(r::RotMatrix) = r
+principal_value(r::Rotation) = r
 principal_value(q::Q) where Q <: UnitQuaternion = q.w < zero(eltype(q)) ? Q(-q.w, -q.x, -q.y, -q.z, false) : q
 function principal_value(spq::MRP{T}) where {T}
     # A quat with positive real part: UnitQuaternion( qw,  qx,  qy,  qz)
@@ -61,7 +61,7 @@ function principal_value(rv::RotationVec{T}) where {T}
     end
 end
 
-for rot_type in [:RotX, :RotY, :RotZ]
+for rot_type in [:RotX, :RotY, :RotZ, :Angle2d]
     @eval begin
         function principal_value(r::$rot_type{T}) where {T}
             return $(rot_type){T}(rem2pi(r.theta, RoundNearest))
