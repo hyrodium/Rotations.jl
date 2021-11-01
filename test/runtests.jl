@@ -16,8 +16,6 @@ ramb = detect_ambiguities(Rotations, Base, Core)
 samb = detect_ambiguities(StaticArrays, Base, Core)
 @test isempty(setdiff(ramb, samb))
 
-# TODO test mean()
-
 include("util_tests.jl")
 include("2d.jl")
 include("rotation_tests.jl")

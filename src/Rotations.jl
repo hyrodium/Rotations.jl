@@ -15,7 +15,8 @@ include("unitquaternion.jl")
 include("mrps.jl")
 include("euler_types.jl")
 include("angleaxis_types.jl")
-include("mean.jl")
+# TODO: Add method `mean_rotation` instead of `mean`
+# include("mean.jl")
 include("derivatives.jl")
 include("principal_value.jl")
 
