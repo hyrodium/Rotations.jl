@@ -128,7 +128,7 @@ j2 = Rotations.jacobian(q, p) # How does the rotated point q*p change w.r.t. the
 
 1. **Rotation Matrix** `RotMatrix{N, T}`
 
-    An N x N rotation matrix storing the rotation.  This is a simple wrapper for
+    An N×N rotation matrix storing the rotation.  This is a simple wrapper for
     a [StaticArrays](https://github.com/JuliaArrays/StaticArrays.jl) `SMatrix{N,N,T}`.
     A rotation matrix `R` should have the property `I = R * R'`, but this isn't
     enforced by the constructor. On the other hand, all the types below are
@@ -267,7 +267,7 @@ This package assumes [active (right handed) rotations](https://en.wikipedia.org/
 
 ### Why use immutables / StaticArrays?
 
-They're faster (Julia's `Array` and BLAS aren't great for 3x3 matrices) and
+They're faster (Julia's `Array` and BLAS aren't great for 3×3 matrices) and
 don't need preallocating or garbage collection. For example, see this benchmark
 case where we get a 20× speedup:
 

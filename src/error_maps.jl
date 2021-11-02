@@ -182,7 +182,7 @@ end
 """
     jacobian(::InvErrorMap, q::UnitQuaternion)
 
-Jacobian of the inverse quaternion map, returning a 3x4 matrix.
+Jacobian of the inverse quaternion map, returning a 3×4 matrix.
 For all maps: `jacobian(::InvErrorMap, UnitQuaternion(I)) = [0 I] = Hmat()'`
 """
 function jacobian(::InvExponentialMap, q::UnitQuaternion, eps=1e-5)
