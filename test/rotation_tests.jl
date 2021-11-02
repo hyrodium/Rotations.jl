@@ -259,11 +259,12 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
 
     @testset "DCM to UnitQuaternion" begin
         pert = 1e-3
-		quat = UnitQuaternion
         for type_rot in all_types
             for _ = 1:100
                 not_orthonormal = rand(type_rot) + rand(3, 3) * pert
-                @test norm(quat(not_orthonormal) - nearest_orthonormal(not_orthonormal)) < 10pert
+                quat_ill_cond = UnitQuaternion(not_orthonormal)
+                @test 0 <= quat_ill_cond.w
+                @test norm(quat_ill_cond - nearest_orthonormal(not_orthonormal)) < 10 * pert
             end
         end
     end
