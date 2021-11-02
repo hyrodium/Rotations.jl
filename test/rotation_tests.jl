@@ -66,7 +66,7 @@ end
 #####################################################################################
 
 rot_types = (RotMatrix{3}, AngleAxis, RotationVec,
-			 UnitQuaternion, RodriguesParam, MRP,
+             UnitQuaternion, RodriguesParam, MRP,
              RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
              RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ)
 
@@ -74,7 +74,7 @@ one_types = (RotX, RotY, RotZ)
 two_types = (RotXY, RotYZ, RotZX, RotXZ, RotYX, RotZY)
 taitbyran_types = (RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX)
 all_types = (RotMatrix{3}, AngleAxis, RotationVec,
-			 UnitQuaternion, RodriguesParam, MRP,
+             UnitQuaternion, RodriguesParam, MRP,
              RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
              RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ,
              RotX, RotY, RotZ,
@@ -176,23 +176,23 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
 
     @testset "Quaternion double cover" begin
         repeats = 100
-		@testset "Quaternion double cover" begin
-			Q = UnitQuaternion
-	        for i = 1 : repeats
-	            q = rand(UnitQuaternion)
+        @testset "Quaternion double cover" begin
+            Q = UnitQuaternion
+            for i = 1 : repeats
+                q = rand(UnitQuaternion)
 
-	            q2 = UnitQuaternion(-q.w, -q.x, -q.y, -q.z) # normalize: need a tolerance
-	            @test SVector(q2.w, q2.x, q2.y, q2.z) ≈ SVector(-q.w, -q.x, -q.y, -q.z) atol = 100 * eps()
-	            @test q ≈ q2 atol = 100 * eps()
+                q2 = UnitQuaternion(-q.w, -q.x, -q.y, -q.z) # normalize: need a tolerance
+                @test SVector(q2.w, q2.x, q2.y, q2.z) ≈ SVector(-q.w, -q.x, -q.y, -q.z) atol = 100 * eps()
+                @test q ≈ q2 atol = 100 * eps()
 
-	            q3 = UnitQuaternion(-q.w, -q.x, -q.y, -q.z, false) # don't normalize: everything is exact
-	            @test (q3.w, q3.x, q3.y, q3.z) == (-q.w, -q.x, -q.y, -q.z)
-	            @test q == q3
+                q3 = UnitQuaternion(-q.w, -q.x, -q.y, -q.z, false) # don't normalize: everything is exact
+                @test (q3.w, q3.x, q3.y, q3.z) == (-q.w, -q.x, -q.y, -q.z)
+                @test q == q3
 
-	            Δq = q \ q3
-	            @test Δq ≈ one(UnitQuaternion) atol = 100 * eps()
-	        end
-		end
+                Δq = q \ q3
+                @test Δq ≈ one(UnitQuaternion) atol = 100 * eps()
+            end
+        end
     end
 
     # compose two random rotations
@@ -289,7 +289,7 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
                 @test rotation_axis(r2) ≈ axis
             end
         end
-		@test norm(rotation_axis(UnitQuaternion(1.0, 0.0, 0.0, 0.0))) ≈ 1.0
+        @test norm(rotation_axis(UnitQuaternion(1.0, 0.0, 0.0, 0.0))) ≈ 1.0
 
         # TODO RotX, RotXY?
     end
