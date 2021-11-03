@@ -13,8 +13,9 @@
             @test U ≈ U'
             @test V ≈ V'
             # Eigen values are non-negative, except for the first value.
-            @test all(eigvals(U)[2:end] .≥ 0)
-            @test all(eigvals(V)[2:end] .≥ 0)
+            # We just need sort for Julia 1.0
+            @test all(sort(eigvals(U))[2:end] .≥ 0)
+            @test all(sort(eigvals(V))[2:end] .≥ 0)
         end
 
         for _ in 1:100
@@ -27,8 +28,8 @@
             @test U ≈ U'
             @test V ≈ V'
             # Can't calculate eigen values of general SMatrix.
-            @test all(eigvals(Symmetric(U))[2:end] .≥ 0)
-            @test all(eigvals(Symmetric(V))[2:end] .≥ 0)
+            @test all(sort(eigvals(Symmetric(U)))[2:end] .≥ 0)
+            @test all(sort(eigvals(Symmetric(V)))[2:end] .≥ 0)
         end
     end
 end
