@@ -47,6 +47,24 @@ Check the given matrix is rotation matrix.
 
 (TBW)
 
+## `nearest_rotation`
+
+```@setup nearest_rotation
+using Rotations
+```
+
+Get the nearest special orthonormal matrix from given matrix `M`.
+The problem of finding the orthogonal matrix nearest to a given matrix is related to the [Wahba's problem](https://en.wikipedia.org/wiki/Wahba%27s_problem).
+
+**example**
+
+```@repl nearest_rotation
+M = randn(3,3)  # Generate random matrix
+R = nearest_rotation(M)  # Find the nearest rotation matrix
+U, V = R\M, M/R  # Polar decomposition of M
+U ≈ U'  # U is a symmetric matrix (The same for V)
+```
+
 ## `rand`
 ```@setup rand
 using Rotations
