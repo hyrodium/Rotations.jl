@@ -9,6 +9,7 @@
             # R is rotation matrix
             @test isrotation(R)
             # U, V are (approximately) symmetric matrices
+            # See [polar decomposition](https://en.wikipedia.org/wiki/Polar_decomposition)
             @test U ≈ U'
             @test V ≈ V'
             # Eigen values are non-negative, except for the first value.
