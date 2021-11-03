@@ -141,18 +141,18 @@ function ∇²composition1(p2::MRP, p1::MRP, b::AbstractVector)
     n1 = p1'p1
     n2 = p2'p2
     D = 1 / (1+n1*n2 - 2p1'p2)  # scalar
-    dD = -D^2 * (n2*2p1 - 2p2)  # 3x1 (correct)
-    A = -((1-n2)*p1 + (1-n1)*p2 - cross(2p1, p2) )  # 3x1
-    dA = -I*(1-n2) + 2p2*p1' - 2skew(p2)  # 3x3 (correct)
-    B = 2(p1*n2 -  p2)  # 3x1
-    dB = 2n2*b  # 3x1
+    dD = -D^2 * (n2*2p1 - 2p2)  # 3×1 (correct)
+    A = -((1-n2)*p1 + (1-n1)*p2 - cross(2p1, p2) )  # 3×1
+    dA = -I*(1-n2) + 2p2*p1' - 2skew(p2)  # 3×3 (correct)
+    B = 2(p1*n2 -  p2)  # 3×1
+    dB = 2n2*b  # 3×1
 
     # d1b = ((1-n2)*I + -2p1*p2' - 2skew(p2) ) * D * b
-    dd1b = -2I*(p2'b)*D + ((1-n2)*I + -2p1*p2' - 2skew(p2) )*b*dD' # 3x3 (correct)
+    dd1b = -2I*(p2'b)*D + ((1-n2)*I + -2p1*p2' - 2skew(p2) )*b*dD' # 3×3 (correct)
 
     dd2 = D^2 * B * b' * dA +
          D^2 * A'b*2*(n2*I) +
-         B*A'b* 2D * dD' # 3x3 (correct)
+         B*A'b* 2D * dD' # 3×3 (correct)
     dd1b + dd2
 end
 
@@ -175,13 +175,13 @@ function ∇²differential(p2::MRP, b::AbstractVector)
     check_length(b, 3)
     p2 = params(p2)
     n2 = p2'p2
-    A = -p2  # 3x1
-    B = -2p2  # 3x1
+    A = -p2  # 3×1
+    B = -2p2  # 3×1
     D = 1
     dD = 2p2
 
-    dA = -I*(1-n2) - 2skew(p2)  # 3x3
-    dB = 2n2*I  # 3x3
+    dA = -I*(1-n2) - 2skew(p2)  # 3×3
+    dB = 2n2*I  # 3×3
 
     d1 = (-2p2'b*I*D) - (dA'b * dD')
     d2 = dB * A'b * D^2 +
@@ -229,19 +229,19 @@ function ∇²err(p1::MRP, p2::MRP, b::AbstractVector)
     s = s1*s2 - v1'v2
     v = s1*v2 + s2*v1 + v1 × v2
 
-    dsdp = -2s1*q2 - 2v1  # 3x1
-    dsdp2 = -2s1*I  # 3x3
+    dsdp = -2s1*q2 - 2v1  # 3×1
+    dsdp2 = -2s1*I  # 3×3
 
     dvdp = 2s1*b + -2q2*v1'b - 2skew(v1)*b
     dvdp2 = -I*2v1'b
 
-    dθdp = -θ^2*(1+n1)*2q2  # 3x1
-    dθdp2 = -2θ*(1+n1)*2q2*dθdp' - θ^2*(1+n1)*2I # 3x3
+    dθdp = -θ^2*(1+n1)*2q2  # 3×1
+    dθdp2 = -2θ*(1+n1)*2q2*dθdp' - θ^2*(1+n1)*2I # 3×3
 
     M = θ/(1+θ*s)  # scalar
-    dMdp = 1/(1+θ*s)*dθdp - θ/(1+θ*s)^2*(dθdp*s + θ*dsdp) # 3x1
+    dMdp = 1/(1+θ*s)*dθdp - θ/(1+θ*s)^2*(dθdp*s + θ*dsdp) # 3×1
     dM2 = θ/(1+θ*s)^2  # scalar
-    dM3 = dθdp*s + θ*dsdp  # 3x1
+    dM3 = dθdp*s + θ*dsdp  # 3×1
     dM2dp = dθdp'/(1+θ*s)^2 - 2θ/(1+θ*s)^3 * (dθdp*s + θ*dsdp)'
     dM3dp = dθdp2*s + dθdp*dsdp' + dsdp*dθdp' + θ*dsdp2
 

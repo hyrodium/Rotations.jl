@@ -105,7 +105,7 @@ function ∇²composition1(g2::RodriguesParam, g1::RodriguesParam, b::AbstractVe
     g2 = params(g2)
     g1 = params(g1)
 
-    N = g2 + g1 + g2 × g1  # 3x1
+    N = g2 + g1 + g2 × g1  # 3×1
     D = 1/(1 - g2'g1)  # scalar
     dN = I + skew(g2)
     dD = D^2*g2'

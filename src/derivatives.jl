@@ -10,7 +10,7 @@ ith_partial{N}(X::SMatrix{3,N}, i) = SVector(X[1,i], X[2,i], X[3,i])
 
 ith_partial{N}(X::SMatrix{4,N}, i) = SVector(X[1,i], X[2,i], X[3,i], X[4,i])
 
-# reformat to produce the usual 3x3 rotation matrix in this case
+# reformat to produce the usual 3×3 rotation matrix in this case
 ith_partial{N}(X::SMatrix{9,N}, i) = @SMatrix([X[1,i]   X[4,i]   X[7,i];
                                                X[2,i]   X[5,i]   X[8,i];
                                                X[3,i]   X[6,i]   X[9,i]])
@@ -155,7 +155,7 @@ end
 #######################################################
 
 # Note: this is *not* projected into the orthogonal matrix tangent space.
-# can do this by projecting each 3x3 matrix (row of 9) by (jacobian[i] - r * jacabian[i]' * r) / 2   (for i = 1:3)
+# can do this by projecting each 3×3 matrix (row of 9) by (jacobian[i] - r * jacabian[i]' * r) / 2   (for i = 1:3)
 function jacobian(r::RotMatrix{3}, X::AbstractVector)
     @assert length(X) === 3
     T = promote_type(eltype(r), eltype(X))
