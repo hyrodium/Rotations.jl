@@ -28,6 +28,7 @@ include("eigen.jl")
 include("deprecated.jl")
 
 export
+    # Rotation types
     Rotation, RotMatrix, RotMatrix2, RotMatrix3,
     Angle2d,
     Quat, UnitQuaternion,
@@ -45,6 +46,9 @@ export
 
     # check validity of the rotation (is it close to unitary?)
     isrotation,
+
+    # Get nearest rotation matrix
+    nearest_rotation,
 
     # angle and axis introspection
     rotation_angle,
