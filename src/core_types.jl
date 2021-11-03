@@ -228,6 +228,27 @@ function isrotation(r::AbstractMatrix{T}, tol::Real = 1000 * _isrotation_eps(elt
     return d <= tol && det(r) > 0
 end
 
+"""
+    nearest_rotation(M) -> RotMatrix
+
+Get the nearest special orthonormal matrix from given matrix `M`.
+See [Wahba's problem](https://en.wikipedia.org/wiki/Wahba%27s_problem) for more information.
+"""
+function nearest_rotation(M::StaticMatrix{N,N}) where N
+    u, _, v = svd(M)
+    s = sign(det(u * v'))
+    d = @SVector ones(N-1)
+    R = u * Diagonal(push(d,s)) * v'
+    return RotMatrix{N}(R)
+end
+
+function nearest_rotation(M::AbstractMatrix{T}) where T
+    N = size(M,1)
+    L = N^2
+    M_ = convert(SMatrix{N,N,T,L}, M)
+    return nearest_rotation(M_)
+end
+
 # A simplification and specialization of the Base.show function for AbstractArray makes
 # everything sensible at the REPL.
 function Base.show(io::IO, ::MIME"text/plain", X::Rotation)
