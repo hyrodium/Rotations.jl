@@ -64,13 +64,8 @@ function (::Type{Q})(t::NTuple{9}) where Q<:UnitQuaternion
     This function solves the system of equations in Section 3.1
     of https://arxiv.org/pdf/math/0701759.pdf. This cheap method
     only works for matrices that are already orthonormal (orthogonal
-    and unit length columns). The nearest orthonormal matrix can
-    be found by solving Wahba's problem:
-    https://en.wikipedia.org/wiki/Wahba%27s_problem as shown below.
-
-    not_orthogonal = randn(3,3)
-    u,s,v = svd(not_orthogonal)
-    is_orthogoral = u * diagm([1, 1, sign(det(u * transpose(v)))]) * transpose(v)
+    and unit length columns).
+    Use `nearest_rotation` to get rotation matrix from the given matrix.
     =#
 
     a = 1 + t[1] + t[5] + t[9]

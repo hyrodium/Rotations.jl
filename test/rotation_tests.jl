@@ -252,11 +252,6 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
     #########################################################################
     # Test robustness of DCM to UnitQuaternion function
     #########################################################################
-    function nearest_orthonormal(not_orthonormal)
-        u,s,v = svd(not_orthonormal)
-        return u * Diagonal([1, 1, sign(det(u * transpose(v)))]) * transpose(v)
-    end
-
     @testset "DCM to UnitQuaternion" begin
         pert = 1e-3
         for type_rot in all_types
@@ -264,7 +259,7 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
                 not_orthonormal = rand(type_rot) + rand(3, 3) * pert
                 quat_ill_cond = UnitQuaternion(not_orthonormal)
                 @test 0 <= quat_ill_cond.w
-                @test norm(quat_ill_cond - nearest_orthonormal(not_orthonormal)) < 10 * pert
+                @test norm(quat_ill_cond - nearest_rotation(not_orthonormal)) < 10 * pert
             end
         end
     end

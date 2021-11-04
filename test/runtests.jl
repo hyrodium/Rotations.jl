@@ -28,6 +28,7 @@ include("rotation_error.jl")
 include("distribution_tests.jl")
 include("eigen.jl")
 include("log.jl")
+include("nearest_rotation.jl")
 include("deprecated.jl")
 
 include(joinpath(@__DIR__, "..", "perf", "runbenchmarks.jl"))
