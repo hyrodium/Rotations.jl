@@ -31,8 +31,14 @@ struct UnitQuaternion{T} <: Rotation{3,T}
         end
     end
 
+    @inline function UnitQuaternion{T}(q::Quaternion) where T
+        if q.norm
+            new{T}(q.s, q.v1, q.v2, q.v3)
+        else
+            throw(InexactError(nameof(T), T, q))
+        end
+    end
     UnitQuaternion{T}(q::UnitQuaternion) where T = new{T}(q.w, q.x, q.y, q.z)
-    UnitQuaternion{T}(q::Quaternion) where T = new{T}(q.s, q.v1, q.v2, q.v3)
 end
 
 # ~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~ #
@@ -44,7 +50,7 @@ end
 
 function UnitQuaternion(q::T) where T<:Quaternion
     if q.norm
-        return UnitQuaternion(q.s, q.v1, q.v2, q.v3)
+        return UnitQuaternion(q.s, q.v1, q.v2, q.v3, false)
     else
         throw(InexactError(nameof(T), T, q))
     end
