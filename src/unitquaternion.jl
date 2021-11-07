@@ -17,28 +17,25 @@ where `w` is the scalar (real) part, `x`,`y`, and `z` are the vector (imaginary)
 and `q = [w,x,y,z]`.
 """
 struct UnitQuaternion{T} <: Rotation{3,T}
-    w::T
-    x::T
-    y::T
-    z::T
+    q::Quaternion{T}
 
     @inline function UnitQuaternion{T}(w, x, y, z, normalize::Bool = true) where T
         if normalize
             inorm = inv(sqrt(w*w + x*x + y*y + z*z))
-            new{T}(w*inorm, x*inorm, y*inorm, z*inorm)
+            new{T}(Quaternion(w*inorm, x*inorm, y*inorm, z*inorm, true))
         else
-            new{T}(w, x, y, z)
+            new{T}(Quaternion(w, x, y, z, true))
         end
     end
 
     @inline function UnitQuaternion{T}(q::Quaternion) where T
         if q.norm
-            new{T}(q.s, q.v1, q.v2, q.v3)
+            new{T}(q)
         else
             throw(InexactError(nameof(T), T, q))
         end
     end
-    UnitQuaternion{T}(q::UnitQuaternion) where T = new{T}(q.w, q.x, q.y, q.z)
+    UnitQuaternion{T}(q::UnitQuaternion) where T = new{T}(q.q)
 end
 
 # ~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~ #
@@ -58,6 +55,20 @@ end
 
 function Quaternions.Quaternion(q::UnitQuaternion)
     Quaternion(q.w, q.x, q.y, q.z, true)
+end
+
+function Base.getproperty(q::UnitQuaternion, s::Symbol)
+    if s == :q
+        return getfield(q,:q)
+    elseif s == :w
+        return getfield(q,:q).s
+    elseif s == :x
+        return getfield(q,:q).v1
+    elseif s == :y
+        return getfield(q,:q).v2
+    elseif s == :z
+        return getfield(q,:q).v3
+    end
 end
 
 # Pass in Vectors
