@@ -57,20 +57,6 @@ function Quaternions.Quaternion(q::UnitQuaternion)
     return q.q
 end
 
-function Base.getproperty(q::UnitQuaternion, s::Symbol)
-    if s == :q
-        return getfield(q,:q)
-    elseif s == :w
-        return getfield(q,:q).s
-    elseif s == :x
-        return getfield(q,:q).v1
-    elseif s == :y
-        return getfield(q,:q).v2
-    elseif s == :z
-        return getfield(q,:q).v3
-    end
-end
-
 # Pass in Vectors
 @inline function (::Type{Q})(q::AbstractVector, normalize::Bool = true) where Q <: UnitQuaternion
     check_length(q, 4)
