@@ -233,9 +233,6 @@ Rotations.params(p) == @SVector [1.0, 2.0, 3.0]  # true
 """
 @inline params(q::UnitQuaternion) = SVector{4}(q.q.s, q.q.v1, q.q.v2, q.q.v3)
 
-# TODO: this will be removed, because Quaternion is not a subtype of Rotation
-@inline params(q::Quaternion) = SVector{4}(q.s, q.v1, q.v2, q.v3)
-
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
 function Random.rand(rng::AbstractRNG, ::Random.SamplerType{<:UnitQuaternion{T}}) where T
     _normalize(UnitQuaternion{T}(randn(rng,T), randn(rng,T), randn(rng,T), randn(rng,T)))
