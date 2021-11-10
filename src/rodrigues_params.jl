@@ -45,7 +45,6 @@ end
 @inline Base.Tuple(rp::RodriguesParam) = Tuple(convert(UnitQuaternion, rp))
 
 # ~~~~~~~~~~~~~~~ Math Operations ~~~~~~~~~~~~~~~ #
-LinearAlgebra.norm(g::RodriguesParam) = sqrt(g.x^2 + g.y^2 + g.z^2)
 Base.inv(p::RodriguesParam) = RodriguesParam(-p.x, -p.y, -p.z)
 
 # ~~~~~~~~~~~~~~~ Composition ~~~~~~~~~~~~~~~ #

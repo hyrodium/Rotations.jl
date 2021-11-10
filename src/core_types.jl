@@ -78,6 +78,15 @@ end
     inv(r1) * r2
 end
 
+@inline function Base.:\(r::Rotation, v::AbstractVector)
+    inv(r) * v
+end
+
+# This definition is for avoiding anbiguity
+@inline function Base.:\(r::Rotation, v::StaticVector)
+    inv(r) * v
+end
+
 ################################################################################
 ################################################################################
 """
