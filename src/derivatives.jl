@@ -31,6 +31,10 @@ to the output parameterization, centered at the value of R.
 Returns the jacobian for rotating the vector X by R.
 """
 function jacobian(::Type{RotMatrix},  q::UnitQuaternion)
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
 
     # let q = s * qhat where qhat is a unit quaternion and  s is a scalar,
     # then R = RotMatrix(q) = RotMatrix(s * qhat) = s * RotMatrix(qhat)
@@ -40,21 +44,21 @@ function jacobian(::Type{RotMatrix},  q::UnitQuaternion)
     R = SVector(Tuple(q))
 
     # solve d(s*R)/dQ (because its easy)
-    dsRdQ = @SMatrix [ 2*q.w   2*q.x   -2*q.y   -2*q.z ;
-                       2*q.z   2*q.y    2*q.x    2*q.w ;
-                      -2*q.y   2*q.z   -2*q.w    2*q.x ;
+    dsRdQ = @SMatrix [ 2*w   2*x   -2*y   -2*z ;
+                       2*z   2*y    2*x    2*w ;
+                      -2*y   2*z   -2*w    2*x ;
 
-                      -2*q.z   2*q.y    2*q.x   -2*q.w ;
-                       2*q.w  -2*q.x    2*q.y   -2*q.z ;
-                       2*q.x   2*q.w    2*q.z    2*q.y ;
+                      -2*z   2*y    2*x   -2*w ;
+                       2*w  -2*x    2*y   -2*z ;
+                       2*x   2*w    2*z    2*y ;
 
-                       2*q.y   2*q.z    2*q.w    2*q.x ;
-                      -2*q.x  -2*q.w    2*q.z    2*q.y ;
-                       2*q.w  -2*q.x   -2*q.y    2*q.z ]
+                       2*y   2*z    2*w    2*x ;
+                      -2*x  -2*w    2*z    2*y ;
+                       2*w  -2*x   -2*y    2*z ]
 
     # get s and dsdQ
     # s = 1
-    dsdQ = @SVector [2*q.w, 2*q.x, 2*q.y, 2*q.z]
+    dsdQ = @SVector [2*w, 2*x, 2*y, 2*z]
 
     # now R(q) = (s*R) / s
     # so dR/dQ = (s * d(s*R)/dQ - (s*R) * ds/dQ) / s^2
@@ -134,16 +138,21 @@ end
 # Jacobian converting from a Quaternion to an MRP
 #
 function jacobian(::Type{MRP}, q::UnitQuaternion{T}) where T
-    den = 1 + q.w
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
+    den = 1 + w
     scale = 1 / den
     dscaledQw = -(scale * scale)
-    dSpqdQw = SVector(q.x, q.y, q.z) * dscaledQw
+    dSpqdQw = SVector(x, y, z) * dscaledQw
     J0 = @SMatrix [ dSpqdQw[1]  scale   zero(T) zero(T) ;
                     dSpqdQw[2]  zero(T) scale   zero(T) ;
                     dSpqdQw[3]  zero(T) zero(T) scale ]
 
     # Need to project out norm component of Quat
-    dQ = @SVector [q.w, q.x, q.y, q.z]
+    dQ = @SVector [w, x, y, z]
     return J0 - (J0*dQ)*dQ'
 end
 
@@ -175,18 +184,23 @@ end
 
 # TODO: should this be jacobian(:rotate, q,  X)   # or something?
 function jacobian(q::UnitQuaternion, X::AbstractVector)
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
     @assert length(X) === 3
     T = eltype(q)
 
     # derivatives ignoring the scaling
-    q_im = SVector(2*q.x, 2*q.y, 2*q.z)
-    dRdQr  = SVector{3}(2 * q.w * X + cross(q_im, X))
-    dRdQim = -X * q_im' + dot(X, q_im) * one(SMatrix{3,3,T}) + q_im * X' - 2*q.w * d_cross(X)
+    q_im = SVector(2*x, 2*y, 2*z)
+    dRdQr  = SVector{3}(2 * w * X + cross(q_im, X))
+    dRdQim = -X * q_im' + dot(X, q_im) * one(SMatrix{3,3,T}) + q_im * X' - 2*w * d_cross(X)
 
     dRdQs = hcat(dRdQr, dRdQim)
 
     # include normalization (S, s = norm of quaternion)
-    dSdQ = SVector(2*q.w, 2*q.x, 2*q.y, 2*q.z)     # h(x)
+    dSdQ = SVector(2*w, 2*x, 2*y, 2*z)     # h(x)
 
     # and finalize with the quotient rule
     Xo = q * X           # N.B. g(x) = s * Xo, with dG/dx = dRdQs

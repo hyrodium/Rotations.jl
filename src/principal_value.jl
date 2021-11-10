@@ -17,7 +17,7 @@ the following properties:
 
 """
 principal_value(r::Rotation) = r
-principal_value(q::Q) where Q <: UnitQuaternion = q.w < zero(eltype(q)) ? Q(-q.w, -q.x, -q.y, -q.z, false) : q
+principal_value(q::Q) where Q <: UnitQuaternion = real(q.q) < zero(eltype(q)) ? Q(-q.q) : q
 function principal_value(spq::MRP{T}) where {T}
     # A quat with positive real part: UnitQuaternion( qw,  qx,  qy,  qz)
     #

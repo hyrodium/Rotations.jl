@@ -173,9 +173,9 @@ for imap in (InvExponentialMap,InvCayleyMap,InvMRPMap,InvQuatVecMap)
 end
 
 (::InvExponentialMap)(q::UnitQuaternion) = scaling(ExponentialMap)*logm(q)
-(::InvCayleyMap)(q::UnitQuaternion) = scaling(CayleyMap) * vector(q)/q.w
-(::InvMRPMap)(q::UnitQuaternion) = scaling(MRPMap)*vector(q)/(1+q.w)
-(::InvQuatVecMap)(q::UnitQuaternion) = scaling(QuatVecMap)*vector(q) * sign(q.w)
+(::InvCayleyMap)(q::UnitQuaternion) = scaling(CayleyMap) * vector(q)/real(q.q)
+(::InvMRPMap)(q::UnitQuaternion) = scaling(MRPMap)*vector(q)/(1+real(q.q))
+(::InvQuatVecMap)(q::UnitQuaternion) = scaling(QuatVecMap)*vector(q) * sign(real(q.q))
 
 
 # ~~~~~~~~~~~~~~~ Inverse map Jacobians ~~~~~~~~~~~~~~~ #
@@ -209,8 +209,10 @@ end
 
 
 function jacobian(::InvQuatVecMap, q::UnitQuaternion)
+    w = q.q.s
+
     μ = scaling(QuatVecMap)
-    return sign(q.w) * SA[
+    return sign(w) * SA[
                 0. μ 0 0;
                 0. 0 μ 0;
                 0. 0 0 μ]
@@ -218,20 +220,30 @@ end
 
 
 function jacobian(::InvCayleyMap, q::UnitQuaternion)
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
     μ = scaling(CayleyMap)
-    si = 1/q.w
-    return μ*@SMatrix [-si^2*q.x si 0 0;
-                       -si^2*q.y 0 si 0;
-                       -si^2*q.z 0 0 si]
+    si = 1/w
+    return μ*@SMatrix [-si^2*x si 0 0;
+                       -si^2*y 0 si 0;
+                       -si^2*z 0 0 si]
 end
 
 
 function jacobian(::InvMRPMap, q::UnitQuaternion)
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
     μ = scaling(MRPMap)
-    si = 1/(1+q.w)
-    return μ*@SMatrix [-si^2*q.x si 0 0;
-                       -si^2*q.y 0 si 0;
-                       -si^2*q.z 0 0 si]
+    si = 1/(1+w)
+    return μ*@SMatrix [-si^2*x si 0 0;
+                       -si^2*y 0 si 0;
+                       -si^2*z 0 0 si]
 end
 
 
@@ -285,8 +297,10 @@ function ∇jacobian(::InvExponentialMap, q::UnitQuaternion, b::SVector{3}, eps=
 end
 
 function ∇jacobian(::InvCayleyMap, q::UnitQuaternion, b::SVector{3})
+    w = q.q.s
+
     μ = scaling(CayleyMap)
-    si = 1/q.w
+    si = 1/w
     v = vector(q)
     μ*@SMatrix [
         2*si^3*(v'b) -si^2*b[1] -si^2*b[2] -si^2*b[3];
@@ -297,8 +311,10 @@ function ∇jacobian(::InvCayleyMap, q::UnitQuaternion, b::SVector{3})
 end
 
 function ∇jacobian(::InvMRPMap, q::UnitQuaternion, b::SVector{3})
+    w = q.q.s
+
     μ = scaling(MRPMap)
-    si = 1/(1+q.w)
+    si = 1/(1+w)
     v = vector(q)
     μ * @SMatrix [
         2*si^3*(v'b) -si^2*b[1] -si^2*b[2] -si^2*b[3];
