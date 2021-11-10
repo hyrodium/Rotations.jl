@@ -57,16 +57,16 @@ struct InvExponentialMap <: InvErrorMap end
 struct InvMRPMap <: InvErrorMap end
 struct InvQuatVecMap <: InvErrorMap end
 
-inv(::CayleyMap) = InvCayleyMap()
-inv(::ExponentialMap) = InvExponentialMap()
-inv(::QuatVecMap) = InvQuatVecMap()
-inv(::MRPMap) = InvMRPMap()
-inv(::IdentityMap) = IdentityMap()
+Base.inv(::CayleyMap) = InvCayleyMap()
+Base.inv(::ExponentialMap) = InvExponentialMap()
+Base.inv(::QuatVecMap) = InvQuatVecMap()
+Base.inv(::MRPMap) = InvMRPMap()
+Base.inv(::IdentityMap) = IdentityMap()
 
-inv(::InvCayleyMap) = CayleyMap()
-inv(::InvExponentialMap) = ExponentialMap()
-inv(::InvQuatVecMap) = QuatVecMap()
-inv(::InvMRPMap) = MRPMap()
+Base.inv(::InvCayleyMap) = CayleyMap()
+Base.inv(::InvExponentialMap) = ExponentialMap()
+Base.inv(::InvQuatVecMap) = QuatVecMap()
+Base.inv(::InvMRPMap) = MRPMap()
 
 
 # Scalings
