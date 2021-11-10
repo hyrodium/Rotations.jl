@@ -12,7 +12,7 @@ end
     for i = 1:1000
         qq = rand(UnitQuaternion)
         qq_prin = principal_value(qq)
-        @test 0.0 <= qq_prin.w
+        @test 0.0 ≤ real(qq_prin.q)
         @test qq_prin ≈ qq
     end
 end
@@ -21,7 +21,7 @@ end
     for i = 1:1000
         aa = AngleAxis(100.0 * randn(), randn(), randn(), randn())
         aa_prin = principal_value(aa)
-        @test 0.0 <= aa_prin.theta
+        @test 0.0 ≤ aa_prin.theta
         @test aa_prin ≈ aa
     end
 end
@@ -30,12 +30,12 @@ end
     for i = 1:1000
         rv = RotationVec(100.0 * randn(), 100.0 * randn(), 100.0 * randn())
         rv_prin = principal_value(rv)
-        @test rotation_angle(rv_prin) <= pi
+        @test rotation_angle(rv_prin) ≤ π
         @test rv_prin ≈ rv
     end
     rv = RotationVec(0.0, 0.0, 0.0)
     rv_prin = principal_value(rv)
-    @test rotation_angle(rv_prin) <= pi
+    @test rotation_angle(rv_prin) ≤ π
     @test rv_prin ≈ rv
 end
 
@@ -57,7 +57,7 @@ end
             for i = 1:1000
                 r = $(rot_type)(100.0 * randn())
                 r_prin = principal_value(r)
-                @test -pi <= r_prin.theta <= pi
+                @test -π ≤ r_prin.theta ≤ π
                 @test r_prin ≈ r
             end
         end
@@ -69,8 +69,8 @@ end
             for i = 1:1000
                 r = $rot_type(100.0 * randn(), 100.0 * randn())
                 r_prin = principal_value(r)
-                @test -pi <= r_prin.theta1 <= pi
-                @test -pi <= r_prin.theta2 <= pi
+                @test -π ≤ r_prin.theta1 ≤ π
+                @test -π ≤ r_prin.theta2 ≤ π
                 @test r_prin ≈ r
             end
         end
@@ -82,9 +82,9 @@ end
             for i = 1:1000
                 r = $(rot_type)(100.0 * randn(), 100.0 * randn(), 100.0 * randn())
                 r_prin = principal_value(r)
-                @test -pi <= r_prin.theta1 <= pi
-                @test -pi <= r_prin.theta2 <= pi
-                @test -pi <= r_prin.theta3 <= pi
+                @test -π ≤ r_prin.theta1 ≤ π
+                @test -π ≤ r_prin.theta2 ≤ π
+                @test -π ≤ r_prin.theta3 ≤ π
                 @test r_prin ≈ r
             end
         end

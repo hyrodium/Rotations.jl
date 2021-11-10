@@ -266,7 +266,7 @@ end
     _pure_quaternion(v::AbstractVector)
     _pure_quaternion(x, y, z)
 
-Create a `Quaternion` with zero scalar part (i.e. `q.w == 0`).
+Create a `Quaternion` with zero scalar part (i.e. `q.q.s == 0`).
 """
 function _pure_quaternion(v::AbstractVector)
     check_length(v, 3)
