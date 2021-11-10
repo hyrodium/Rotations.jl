@@ -276,7 +276,7 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
             for _ = 1:100
                 not_orthonormal = rand(type_rot) + rand(3, 3) * pert
                 quat_ill_cond = UnitQuaternion(not_orthonormal)
-                @test 0 <= quat_ill_cond.w
+                @test 0 <= real(quat_ill_cond.q)
                 @test norm(quat_ill_cond - nearest_rotation(not_orthonormal)) < 10 * pert
             end
         end
