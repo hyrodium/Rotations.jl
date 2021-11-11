@@ -160,6 +160,11 @@ of `getindex` etc. are computed on the fly.
 """
 struct Angle2d{T} <: Rotation{2,T}
     theta::T
+    Angle2d{T}(theta) where T = new{T}(theta)
+end
+
+@inline function Angle2d(theta)
+    Angle2d{rot_eltype(typeof(theta))}(theta)
 end
 
 params(r::Angle2d) = SVector{1}(r.theta)
@@ -182,7 +187,7 @@ end
     end
     x,y = v
     s,c = sincos(r.theta)
-    T = eltype(r)
+    T = Base.promote_op(*, typeof(s), eltype(v))
     similar_type(v,T)(c*x - s*y, s*x + c*y)
 end
 
