@@ -23,6 +23,7 @@ include("principal_value.jl")
 include("rodrigues_params.jl")
 include("error_maps.jl")
 include("rotation_error.jl")
+include("infinitesimal.jl")
 include("log.jl")
 include("eigen.jl")
 include("deprecated.jl")
@@ -36,6 +37,12 @@ export
     RotXY, RotYX, RotZX, RotXZ, RotYZ, RotZY,
     RotXYX, RotYXY, RotZXZ, RotXZX, RotYZY, RotZYZ,
     RotXYZ, RotYXZ, RotZXY, RotXZY, RotYZX, RotZYX,
+
+    # infinitesimal rotations
+    InfinitesimalRotation,
+    InfinitesimalRotMatrix,
+    InfinitesimalAngle2d,
+    InfinitesimalRotationVec,
 
     # Quaternion math ops
     logm, expm, ⊖, ⊕,
