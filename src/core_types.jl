@@ -28,6 +28,7 @@ rotation_angle(r::Rotation{3}) = rotation_angle(AngleAxis(r))
 rotation_axis(r::Rotation{3}) = rotation_axis(AngleAxis(r))
 
 # `convert` goes through the constructors, similar to e.g. `Number`
+Base.convert(::Type{R}, rot::R) where {N,R<:Rotation{N}} = rot
 Base.convert(::Type{R}, rot::Rotation{N}) where {N,R<:Rotation{N}} = R(rot)
 
 # Rotation matrices should be orthoginal/unitary. Only the operations we define,
