@@ -40,7 +40,7 @@ export
     RotXYZ, RotYXZ, RotZXY, RotXZY, RotYZX, RotZYX,
 
     # Deprecated, but export for compatibility
-    RodriguesVec, Quat, SPQuat,
+    RodriguesVec, Quat, SPQuat, UnitQuaternion
 
     # Quaternion math ops
     logm, expm, ⊖, ⊕,
