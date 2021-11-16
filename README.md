@@ -222,7 +222,7 @@ the computationally cheapest map and often performs well.
 Rotations.jl provides the `RotationError` type for representing rotation errors, that act just like a `SVector{3}` but carry the nonlinear map used to compute the error, which can also be used to convert the error back to a `UnitQuaternion` (and, by extention, any other 3D rotation parameterization). The following methods are useful for computing `RotationError`s and adding them back to the nominal rotation:
 ```julia
 rotation_error(R1::Rotation, R2::Rotation, error_map::ErrorMap)  # compute the error between `R1` and `R2` using `error_map`
-add_error(R::Roation, err::RotationError)  # "adds" the error to `R` by converting back a `UnitQuaterion` and composing with `R`
+add_error(R::Rotation, err::RotationError)  # "adds" the error to `R` by converting back a `UnitQuaterion` and composing with `R`
 ```
 or their aliases
 ```julia

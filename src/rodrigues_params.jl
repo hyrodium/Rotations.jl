@@ -31,12 +31,16 @@ end
 # ~~~~~~~~~~~~~~~ Quaternion <=> RP ~~~~~~~~~~~~~~~~~~ #
 @inline function (::Type{Q})(g::RodriguesParam) where Q<:UnitQuaternion
     M = 1/sqrt(1 + g.x*g.x + g.y*g.y + g.z*g.z)
-    q = Q(M, M*g.x, M*g.y, M*g.z, false)
+    return Q(M, M*g.x, M*g.y, M*g.z, false)
 end
 
 @inline function (::Type{G})(q::UnitQuaternion) where G<:RodriguesParam
-    M = 1/q.w
-    G(q.x*M, q.y*M, q.z*M)
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
+    return G(x/w, y/w, z/w)
 end
 
 # ~~~~~~~~~~~~~~~ StaticArrays Interface ~~~~~~~~~~~~~~~ #

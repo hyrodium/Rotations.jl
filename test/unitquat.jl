@@ -92,7 +92,8 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
 
     @test rmult(params(q)) == rmult(q)
     @test lmult(params(q)) == lmult(q)
-    @test hmat(r) == params(_pure_quaternion(r))
+    r_pure = _pure_quaternion(r)
+    @test hmat(r) == SVector(r_pure.s, r_pure.v1, r_pure.v2, r_pure.v3)
 
     # Test Jacobians
     @test ForwardDiff.jacobian(q -> UnitQuaternion(q, false) * r, params(q)) ≈

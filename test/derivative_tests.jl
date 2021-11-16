@@ -18,7 +18,7 @@ using ForwardDiff
                 # test jacobian to a Rotation matrix
                 R_jac = Rotations.jacobian(RotMatrix, q)
                 FD_jac = ForwardDiff.jacobian(x -> SVector{9}(UnitQuaternion(x[1], x[2], x[3], x[4])),
-                                              SVector(q.w, q.x, q.y, q.z))
+                                              Rotations.params(q))
 
                 # compare
                 @test FD_jac ≈ R_jac
@@ -33,7 +33,7 @@ using ForwardDiff
                 # test jacobian to a Rotation matrix
                 R_jac = Rotations.jacobian(UnitQuaternion, p)
                 FD_jac = ForwardDiff.jacobian(x -> (q = UnitQuaternion(MRP(x[1],x[2],x[3]));
-                                                    SVector(q.w, q.x, q.y, q.z)),
+                                                    Rotations.params(q)),
                                               SVector(p.x, p.y, p.z))
 
                 # compare
@@ -46,7 +46,7 @@ using ForwardDiff
                 # test jacobian to a Rotation matrix
                 R_jac = Rotations.jacobian(UnitQuaternion, p)
                 FD_jac = ForwardDiff.jacobian(x -> (q = UnitQuaternion(MRP(x[1],x[2],x[3]));
-                                                    SVector(q.w, q.x, q.y, q.z)),
+                                                    Rotations.params(q)),
                                               SVector(p.x, p.y, p.z))
 
                 # compare
@@ -63,7 +63,7 @@ using ForwardDiff
                 R_jac = Rotations.jacobian(MRP, q)
                 FD_jac = ForwardDiff.jacobian(x -> (p = MRP(UnitQuaternion(x[1], x[2], x[3], x[4]));
                                                     SVector(p.x, p.y, p.z)),
-                                              SVector(q.w, q.x, q.y, q.z))
+                                              Rotations.params(q))
 
                 # compare
                 @test FD_jac ≈ R_jac
@@ -158,7 +158,7 @@ using ForwardDiff
                 # test jacobian to a Rotation matrix
                 R_jac = Rotations.jacobian(q, v)
                 FD_jac = ForwardDiff.jacobian(x -> UnitQuaternion(x[1], x[2], x[3], x[4])*v,
-                                              SVector(q.w, q.x, q.y, q.z))
+                                              Rotations.params(q))
 
                 # compare
                 @test FD_jac ≈ R_jac

@@ -1,4 +1,4 @@
-import Base: *, /, \, exp, ≈, ==, inv
+import Base: *, /, \, exp, ≈, ==
 
 """
     UnitQuaternion{T} <: Rotation
@@ -17,28 +17,25 @@ where `w` is the scalar (real) part, `x`,`y`, and `z` are the vector (imaginary)
 and `q = [w,x,y,z]`.
 """
 struct UnitQuaternion{T} <: Rotation{3,T}
-    w::T
-    x::T
-    y::T
-    z::T
+    q::Quaternion{T}
 
     @inline function UnitQuaternion{T}(w, x, y, z, normalize::Bool = true) where T
         if normalize
             inorm = inv(sqrt(w*w + x*x + y*y + z*z))
-            new{T}(w*inorm, x*inorm, y*inorm, z*inorm)
+            new{T}(Quaternion(w*inorm, x*inorm, y*inorm, z*inorm, true))
         else
-            new{T}(w, x, y, z)
+            new{T}(Quaternion(w, x, y, z, true))
         end
     end
 
     @inline function UnitQuaternion{T}(q::Quaternion) where T
         if q.norm
-            new{T}(q.s, q.v1, q.v2, q.v3)
+            new{T}(q)
         else
             throw(InexactError(nameof(T), T, q))
         end
     end
-    UnitQuaternion{T}(q::UnitQuaternion) where T = new{T}(q.w, q.x, q.y, q.z)
+    UnitQuaternion{T}(q::UnitQuaternion) where T = new{T}(q.q)
 end
 
 # ~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~ #
@@ -57,7 +54,7 @@ function UnitQuaternion(q::T) where T<:Quaternion
 end
 
 function Quaternions.Quaternion(q::UnitQuaternion)
-    Quaternion(q.w, q.x, q.y, q.z, true)
+    return q.q
 end
 
 # Pass in Vectors
@@ -114,55 +111,60 @@ end
 
 
 function Base.getindex(q::UnitQuaternion, i::Int)
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
     if i == 1
-        ww = (q.w * q.w)
-        xx = (q.x * q.x)
-        yy = (q.y * q.y)
-        zz = (q.z * q.z)
+        ww = (w * w)
+        xx = (x * x)
+        yy = (y * y)
+        zz = (z * z)
 
         ww + xx - yy - zz
     elseif i == 2
-        xy = (q.x * q.y)
-        zw = (q.w * q.z)
+        xy = (x * y)
+        zw = (w * z)
 
         2 * (xy + zw)
     elseif i == 3
-        xz = (q.x * q.z)
-        yw = (q.y * q.w)
+        xz = (x * z)
+        yw = (y * w)
 
         2 * (xz - yw)
     elseif i == 4
-        xy = (q.x * q.y)
-        zw = (q.w * q.z)
+        xy = (x * y)
+        zw = (w * z)
 
         2 * (xy - zw)
     elseif i == 5
-        ww = (q.w * q.w)
-        xx = (q.x * q.x)
-        yy = (q.y * q.y)
-        zz = (q.z * q.z)
+        ww = (w * w)
+        xx = (x * x)
+        yy = (y * y)
+        zz = (z * z)
 
         ww - xx + yy - zz
     elseif i == 6
-        yz = (q.y * q.z)
-        xw = (q.w * q.x)
+        yz = (y * z)
+        xw = (w * x)
 
         2 * (yz + xw)
     elseif i == 7
-        xz = (q.x * q.z)
-        yw = (q.y * q.w)
+        xz = (x * z)
+        yw = (y * w)
 
         2 * (xz + yw)
     elseif i == 8
-        yz = (q.y * q.z)
-        xw = (q.w * q.x)
+        yz = (y * z)
+        xw = (w * x)
 
         2 * (yz - xw)
     elseif i == 9
-        ww = (q.w * q.w)
-        xx = (q.x * q.x)
-        yy = (q.y * q.y)
-        zz = (q.z * q.z)
+        ww = (w * w)
+        xx = (x * x)
+        yy = (y * y)
+        zz = (z * z)
 
         ww - xx - yy + zz
     else
@@ -171,16 +173,21 @@ function Base.getindex(q::UnitQuaternion, i::Int)
 end
 
 function Base.Tuple(q::UnitQuaternion)
-    ww = (q.w * q.w)
-    xx = (q.x * q.x)
-    yy = (q.y * q.y)
-    zz = (q.z * q.z)
-    xy = (q.x * q.y)
-    zw = (q.w * q.z)
-    xz = (q.x * q.z)
-    yw = (q.y * q.w)
-    yz = (q.y * q.z)
-    xw = (q.w * q.x)
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
+    ww = (w * w)
+    xx = (x * x)
+    yy = (y * y)
+    zz = (z * z)
+    xy = (x * y)
+    zw = (w * z)
+    xz = (x * z)
+    yw = (y * w)
+    yz = (y * z)
+    xw = (w * x)
 
     # initialize rotation part
     return (ww + xx - yy - zz,
@@ -195,8 +202,8 @@ function Base.Tuple(q::UnitQuaternion)
 end
 
 # ~~~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~ #
-@inline scalar(q::UnitQuaternion) = q.w
-@inline vector(q::UnitQuaternion) = SVector{3}(q.x, q.y, q.z)
+@inline scalar(q::UnitQuaternion) = real(q.q)
+@inline vector(q::UnitQuaternion) = vector(q.q)
 @inline vector(q::Quaternion) = SVector{3}(q.v1, q.v2, q.v3)
 
 """
@@ -210,10 +217,7 @@ p = MRP(1.0, 2.0, 3.0)
 Rotations.params(p) == @SVector [1.0, 2.0, 3.0]  # true
 ```
 """
-@inline params(q::UnitQuaternion) = SVector{4}(q.w, q.x, q.y, q.z)
-
-# TODO: this will be removed, because Quaternion is not a subtype of Rotation
-@inline params(q::Quaternion) = SVector{4}(q.s, q.v1, q.v2, q.v3)
+@inline params(q::UnitQuaternion) = SVector{4}(q.q.s, q.q.v1, q.q.v2, q.q.v3)
 
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
 function Random.rand(rng::AbstractRNG, ::Random.SamplerType{<:UnitQuaternion{T}}) where T
@@ -225,11 +229,16 @@ end
 # ~~~~~~~~~~~~~~~ Math Operations ~~~~~~~~~~~~~~~ #
 
 # Inverses
-inv(q::Q) where Q <: UnitQuaternion = Q(q.w, -q.x, -q.y, -q.z, false)
+Base.inv(q::Q) where Q <: UnitQuaternion = Q(conj(q.q))
 
 function _normalize(q::Q) where Q <: UnitQuaternion
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
     n = norm(params(q))
-    Q(q.w/n, q.x/n, q.y/n, q.z/n)
+    Q(w/n, x/n, y/n, z/n)
 end
 
 # Identity
@@ -240,7 +249,7 @@ end
     _pure_quaternion(v::AbstractVector)
     _pure_quaternion(x, y, z)
 
-Create a `Quaternion` with zero scalar part (i.e. `q.w == 0`).
+Create a `Quaternion` with zero scalar part (i.e. `q.q.s == 0`).
 """
 function _pure_quaternion(v::AbstractVector)
     check_length(v, 3)
@@ -259,12 +268,17 @@ function expm(ϕ::AbstractVector)
 end
 
 function _log_as_quat(q::Q, eps=1e-6) where Q <: UnitQuaternion
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
     # Assumes unit quaternion
-    θ = sqrt(q.x^2 + q.y^2 + q.z^2)
+    θ = sqrt(x^2 + y^2 + z^2)
     if θ > eps
-        M = atan(θ, q.w)/θ
+        M = atan(θ, w)/θ
     else
-        M = (1-(θ^2/(3q.w^2)))/q.w
+        M = (1-(θ^2/(3w^2)))/w
     end
     _pure_quaternion(M*vector(q))
 end
@@ -288,11 +302,8 @@ rmult(w) * SVector(q)
 
 Sets the output mapping equal to the mapping of `w`
 """
-function (*)(q::UnitQuaternion, w::UnitQuaternion)
-    UnitQuaternion(q.w * w.w - q.x * w.x - q.y * w.y - q.z * w.z,
-                   q.w * w.x + q.x * w.w + q.y * w.z - q.z * w.y,
-                   q.w * w.y - q.x * w.z + q.y * w.w + q.z * w.x,
-                   q.w * w.z + q.x * w.y - q.y * w.x + q.z * w.w, false)
+function (*)(q1::UnitQuaternion, q2::UnitQuaternion)
+    return UnitQuaternion(q1.q*q2.q)
 end
 
 """
@@ -304,8 +315,8 @@ Equivalent to `hmat()' lmult(q) * rmult(q)' hmat() * r`
 """
 function Base.:*(q::UnitQuaternion, r::StaticVector)  # must be StaticVector to avoid ambiguity
     check_length(r, 3)
-    w = q.w
-    v = vector(q)
+    w = real(q.q)
+    v = vector(q.q)
     (w^2 - v'v)*r + 2*v*(v'r) + 2*w*cross(v,r)
 end
 
@@ -362,11 +373,16 @@ end
 `lmult(q2)*params(q1)` returns a vector equivalent to `q2*q1` (quaternion composition)
 """
 function lmult(q::UnitQuaternion)
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
     SA[
-        q.w -q.x -q.y -q.z;
-        q.x  q.w -q.z  q.y;
-        q.y  q.z  q.w -q.x;
-        q.z -q.y  q.x  q.w;
+        w -x -y -z;
+        x  w -z  y;
+        y  z  w -x;
+        z -y  x  w;
     ]
 end
 function lmult(q::Quaternion)
@@ -386,11 +402,16 @@ lmult(q::StaticVector{4}) = lmult(UnitQuaternion(q, false))
 `rmult(q1)*params(q2)` return a vector equivalent to `q2*q1` (quaternion composition)
 """
 function rmult(q::UnitQuaternion)
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
     SA[
-        q.w -q.x -q.y -q.z;
-        q.x  q.w  q.z -q.y;
-        q.y -q.z  q.w  q.x;
-        q.z  q.y -q.x  q.w;
+        w -x -y -z;
+        x  w  z -y;
+        y -z  w  x;
+        z  y -x  w;
     ]
 end
 function rmult(q::Quaternion)
@@ -465,11 +486,16 @@ Useful for converting Jacobians from R⁴ to R³ and
     differential quaternion parameterization are the same up to a constant.
 """
 function ∇differential(q::UnitQuaternion)
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
     SA[
-        -q.x -q.y -q.z;
-         q.w -q.z  q.y;
-         q.z  q.w -q.x;
-        -q.y  q.x  q.w;
+        -x -y -z;
+         w -z  y;
+         z  w -x;
+        -y  x  w;
     ]
 end
 

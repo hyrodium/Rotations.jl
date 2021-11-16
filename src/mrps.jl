@@ -38,8 +38,13 @@ Base.one(::Type{RP}) where RP <: MRP = RP(0.0, 0.0, 0.0)
 end
 
 @inline function (::Type{RP})(q::UnitQuaternion) where RP<:MRP
-    M = 1/(1+q.w)
-    RP(q.x*M, q.y*M, q.z*M)
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+
+    M = 1/(1+w)
+    RP(x*M, y*M, z*M)
 end
 
 # ~~~~~~~~~~~~~~~ StaticArrays Interface ~~~~~~~~~~~~~~~ #

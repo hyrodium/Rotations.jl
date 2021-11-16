@@ -78,12 +78,16 @@ end
 end
 
 @inline function (::Type{AA})(q::UnitQuaternion) where AA <: AngleAxis
-    s2 = q.x * q.x + q.y * q.y + q.z * q.z
+    w = q.q.s
+    x = q.q.v1
+    y = q.q.v2
+    z = q.q.v3
+    s2 = x * x + y * y + z * z
     sin_t2 = sqrt(s2)
-    theta = 2 * atan(sin_t2, q.w)
+    theta = 2 * atan(sin_t2, w)
     num_pert = eps(typeof(theta))^4
     inv_sin_t2 = 1 / (sin_t2 + num_pert)
-    return principal_value(AA(theta, inv_sin_t2 * (q.x + num_pert), inv_sin_t2 * q.y, inv_sin_t2 * q.z, false))
+    return principal_value(AA(theta, inv_sin_t2 * (x + num_pert), inv_sin_t2 * y, inv_sin_t2 * z, false))
 end
 
 # Trivial type conversions for RotX, RotY and RotZ

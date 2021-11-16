@@ -198,22 +198,20 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
 
     @testset "Quaternion double cover" begin
         repeats = 100
-        @testset "Quaternion double cover" begin
-            Q = UnitQuaternion
-            for i = 1 : repeats
-                q = rand(UnitQuaternion)
+        Q = UnitQuaternion
+        for i = 1 : repeats
+            q = rand(UnitQuaternion)
 
-                q2 = UnitQuaternion(-q.w, -q.x, -q.y, -q.z) # normalize: need a tolerance
-                @test SVector(q2.w, q2.x, q2.y, q2.z) ≈ SVector(-q.w, -q.x, -q.y, -q.z) atol = 100 * eps()
-                @test q ≈ q2 atol = 100 * eps()
+            q2 = UnitQuaternion(-q.q) # normalize: need a tolerance
+            @test Rotations.params(q2) ≈ -Rotations.params(q) atol = 100 * eps()
+            @test q ≈ q2 atol = 100 * eps()
 
-                q3 = UnitQuaternion(-q.w, -q.x, -q.y, -q.z, false) # don't normalize: everything is exact
-                @test (q3.w, q3.x, q3.y, q3.z) == (-q.w, -q.x, -q.y, -q.z)
-                @test q == q3
+            q3 = UnitQuaternion(-q.q.s, -q.q.v1, -q.q.v2, -q.q.v3, false) # don't normalize: everything is exact
+            @test Rotations.params(q3) == -Rotations.params(q)
+            @test q == q3
 
-                Δq = q \ q3
-                @test Δq ≈ one(UnitQuaternion) atol = 100 * eps()
-            end
+            Δq = q \ q3
+            @test Δq ≈ one(UnitQuaternion) atol = 100 * eps()
         end
     end
 
@@ -280,7 +278,7 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
             for _ = 1:100
                 not_orthonormal = rand(type_rot) + rand(3, 3) * pert
                 quat_ill_cond = UnitQuaternion(not_orthonormal)
-                @test 0 <= quat_ill_cond.w
+                @test 0 <= real(quat_ill_cond.q)
                 @test norm(quat_ill_cond - nearest_rotation(not_orthonormal)) < 10 * pert
             end
         end
@@ -445,15 +443,15 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
 
         w, x, y, z = 1., 2., 3., 4.
         quat = UnitQuaternion(w, x, y, z)
-        @test norm([quat.w, quat.x, quat.y, quat.z]) ≈ 1.
+        @test norm(Rotations.params(quat)) ≈ 1.
         quat = UnitQuaternion(w, x, y, z, false)
-        @test norm([quat.w, quat.x, quat.y, quat.z]) ≈ norm([w, x, y, z])
+        @test norm(Rotations.params(quat)) ≈ norm([w, x, y, z])
 
         w, x, y, z = 1., 2., 3., 4.
         quat = UnitQuaternion(w, x, y, z)
-        @test norm([quat.w, quat.x, quat.y, quat.z]) ≈ 1.
+        @test norm(Rotations.params(quat)) ≈ 1.
         quat = UnitQuaternion(w, x, y, z, false)
-        @test norm([quat.w, quat.x, quat.y, quat.z]) ≈ norm([w, x, y, z])
+        @test norm(Rotations.params(quat)) ≈ norm([w, x, y, z])
     end
 
     @testset "Testing RotMatrix conversion to Tuple" begin
