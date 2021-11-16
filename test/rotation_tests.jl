@@ -98,7 +98,9 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         @testset "$(R)" for R in all_types
             # one(R) should always return something of type R (#114)
             @test one(R)::R == I
+            @test one(one(R))::R == I
             @test one(R{Float32})::R{Float32} == I32
+            @test one(one(R{Float32}))::R{Float32} == I32
         end
     end
 
