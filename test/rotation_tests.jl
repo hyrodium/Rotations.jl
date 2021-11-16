@@ -438,6 +438,9 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         aa = AngleAxis(θ, x, y, z, false)
         @test norm([aa.axis_x, aa.axis_y, aa.axis_z]) ≈ norm([x, y, z])
 
+        aa = AngleAxis(0.0, 0.0, 0.0, 0.0, false)
+        @test convert(typeof(aa), aa) === aa
+
         w, x, y, z = 1., 2., 3., 4.
         quat = UnitQuaternion(w, x, y, z)
         @test norm([quat.w, quat.x, quat.y, quat.z]) ≈ 1.
