@@ -56,7 +56,7 @@ rotation_angle(r::Rotation)
 #### Initialization
 All rotation types support `one(R)` to construct the identity rotation for the desired parameterization. A random rotation, uniformly sampled over the space of rotations, can be sampled using `rand(R)`. For example:
 ```julia
-r = one(QuatRotation)  # equivalent to Quat(1.0, 0.0, 0.0, 0.0)
+r = one(QuatRotation)  # equivalent to QuatRotation(1.0, 0.0, 0.0, 0.0)
 q = rand(QuatRotation)
 p = rand(MRP{Float32})
 ```
@@ -83,7 +83,7 @@ r = rand(RotMatrix{3}) # uses Float64 by default
 # create a point
 p = SVector(1.0, 2.0, 3.0) # from StaticArrays.jl, but could use any AbstractVector...
 
-# convert to a quaternion (Quat) and rotate the point
+# convert to a quaternion (QuatRotation) and rotate the point
 q = QuatRotation(r)
 p_rotated = q * p
 
@@ -152,7 +152,7 @@ j2 = Rotations.jacobian(q, p) # How does the rotated point q*p change w.r.t. the
     they follow the same multiplicative *algebra* as quaternions, it is better
     to think of `QuatRotation` as a 3×3 matrix rather than as a quaternion *number*.
 
-    Previously `Quat`.
+    Previously `Quat`, `UnitQuaternion`.
 
 4. **Rotation Vector** `RotationVec{T}`
 
