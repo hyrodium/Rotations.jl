@@ -8,9 +8,9 @@
     end
 end
 
-@testset "Principal Value (UnitQuaternion)" begin
+@testset "Principal Value (QuatRotation)" begin
     for i = 1:1000
-        qq = rand(UnitQuaternion)
+        qq = rand(QuatRotation)
         qq_prin = principal_value(qq)
         @test 0.0 ≤ real(qq_prin.q)
         @test qq_prin ≈ qq

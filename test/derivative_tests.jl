@@ -11,13 +11,13 @@ using ForwardDiff
     @testset "Jacobian checks" begin
 
         # Quaternion to rotation matrix
-        @testset "Jacobian (UnitQuaternion -> RotMatrix)" begin
+        @testset "Jacobian (QuatRotation -> RotMatrix)" begin
             for i = 1:10    # do some repeats
-                q = rand(UnitQuaternion)  # a random quaternion
+                q = rand(QuatRotation)  # a random quaternion
 
                 # test jacobian to a Rotation matrix
                 R_jac = Rotations.jacobian(RotMatrix, q)
-                FD_jac = ForwardDiff.jacobian(x -> SVector{9}(UnitQuaternion(x[1], x[2], x[3], x[4])),
+                FD_jac = ForwardDiff.jacobian(x -> SVector{9}(QuatRotation(x[1], x[2], x[3], x[4])),
                                               Rotations.params(q))
 
                 # compare
@@ -26,13 +26,13 @@ using ForwardDiff
         end
 
         # MRP to UnitQuternion
-        @testset "Jacobian (MRP -> UnitQuaternion)" begin
+        @testset "Jacobian (MRP -> QuatRotation)" begin
             for i = 1:10    # do some repeats
                 p = rand(MRP)  # a random MRP
 
                 # test jacobian to a Rotation matrix
-                R_jac = Rotations.jacobian(UnitQuaternion, p)
-                FD_jac = ForwardDiff.jacobian(x -> (q = UnitQuaternion(MRP(x[1],x[2],x[3]));
+                R_jac = Rotations.jacobian(QuatRotation, p)
+                FD_jac = ForwardDiff.jacobian(x -> (q = QuatRotation(MRP(x[1],x[2],x[3]));
                                                     Rotations.params(q)),
                                               SVector(p.x, p.y, p.z))
 
@@ -41,11 +41,11 @@ using ForwardDiff
             end
         end
 
-        @testset "Jacobian (MRP -> UnitQuaternion) [Corner Cases]" begin
+        @testset "Jacobian (MRP -> QuatRotation) [Corner Cases]" begin
             for p = [MRP(1.0, 0.0, 0.0), MRP(0.0, 1.0, 0.0), MRP(0.0, 0.0, 1.0)]
                 # test jacobian to a Rotation matrix
-                R_jac = Rotations.jacobian(UnitQuaternion, p)
-                FD_jac = ForwardDiff.jacobian(x -> (q = UnitQuaternion(MRP(x[1],x[2],x[3]));
+                R_jac = Rotations.jacobian(QuatRotation, p)
+                FD_jac = ForwardDiff.jacobian(x -> (q = QuatRotation(MRP(x[1],x[2],x[3]));
                                                     Rotations.params(q)),
                                               SVector(p.x, p.y, p.z))
 
@@ -54,14 +54,14 @@ using ForwardDiff
             end
         end
 
-        # MRP to UnitQuaternion
-        @testset "Jacobian (UnitQuaternion -> MRP)" begin
+        # MRP to QuatRotation
+        @testset "Jacobian (QuatRotation -> MRP)" begin
             for i = 1:10    # do some repeats
-                q = rand(UnitQuaternion)  # a random UnitQuaternion
+                q = rand(QuatRotation)  # a random QuatRotation
 
                 # test jacobian to a Rotation matrix
                 R_jac = Rotations.jacobian(MRP, q)
-                FD_jac = ForwardDiff.jacobian(x -> (p = MRP(UnitQuaternion(x[1], x[2], x[3], x[4]));
+                FD_jac = ForwardDiff.jacobian(x -> (p = MRP(QuatRotation(x[1], x[2], x[3], x[4]));
                                                     SVector(p.x, p.y, p.z)),
                                               Rotations.params(q))
 
@@ -150,14 +150,14 @@ using ForwardDiff
         end
 
         # rotate a point by a quaternion
-        @testset "Jacobian (UnitQuaternion rotation)" begin
+        @testset "Jacobian (QuatRotation rotation)" begin
             for i = 1:10    # do some repeats
-                q = rand(UnitQuaternion)    # a random quaternion
+                q = rand(QuatRotation)    # a random quaternion
                 v = randn(SVector{3,Float64})
 
                 # test jacobian to a Rotation matrix
                 R_jac = Rotations.jacobian(q, v)
-                FD_jac = ForwardDiff.jacobian(x -> UnitQuaternion(x[1], x[2], x[3], x[4])*v,
+                FD_jac = ForwardDiff.jacobian(x -> QuatRotation(x[1], x[2], x[3], x[4])*v,
                                               Rotations.params(q))
 
                 # compare

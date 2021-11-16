@@ -5,22 +5,22 @@ import Rotations: kinematics, _pure_quaternion, params
 import Rotations: vmat, rmult, lmult, hmat, tmat
 
 @testset "Unit Quaternions" begin
-    q1 = rand(UnitQuaternion)
-    q2 = rand(UnitQuaternion)
+    q1 = rand(QuatRotation)
+    q2 = rand(QuatRotation)
     r = @SVector rand(3)
     ω = @SVector rand(3)
 
     # Constructors
-    @test UnitQuaternion(1.0, 0.0, 0.0, 0.0) isa UnitQuaternion{Float64}
-    @test UnitQuaternion(1.0, 0, 0, 0) isa UnitQuaternion{Float64}
-    @test UnitQuaternion(1.0, 0, 0, 0) isa UnitQuaternion{Float64}
-    @test UnitQuaternion(1, 0, 0, 0) isa UnitQuaternion{Int}
-    @test UnitQuaternion(1.0f0, 0, 0, 0) isa UnitQuaternion{Float32}
+    @test QuatRotation(1.0, 0.0, 0.0, 0.0) isa QuatRotation{Float64}
+    @test QuatRotation(1.0, 0, 0, 0) isa QuatRotation{Float64}
+    @test QuatRotation(1.0, 0, 0, 0) isa QuatRotation{Float64}
+    @test QuatRotation(1, 0, 0, 0) isa QuatRotation{Int}
+    @test QuatRotation(1.0f0, 0, 0, 0) isa QuatRotation{Float32}
 
     q = normalize(@SVector rand(4))
     q32 = SVector{4,Float32}(q)
-    @test UnitQuaternion(q) isa UnitQuaternion{Float64}
-    @test UnitQuaternion(q32) isa UnitQuaternion{Float32}
+    @test QuatRotation(q) isa QuatRotation{Float64}
+    @test QuatRotation(q32) isa QuatRotation{Float32}
 
     r = @SVector rand(3)
     r32 = SVector{3,Float32}(r)
@@ -28,42 +28,42 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
     @test _pure_quaternion(r32) isa Quaternion{Float32}
     @test real(_pure_quaternion(r)) == 0
 
-    @test UnitQuaternion{Float64}(1, 0, 0, 0) isa UnitQuaternion{Float64}
-    @test UnitQuaternion{Float32}(1, 0, 0, 0) isa UnitQuaternion{Float32}
-    @test UnitQuaternion{Float32}(1.0, 0, 0, 0) isa UnitQuaternion{Float32}
-    @test UnitQuaternion{Float64}(1f0, 0, 0, 0) isa UnitQuaternion{Float64}
+    @test QuatRotation{Float64}(1, 0, 0, 0) isa QuatRotation{Float64}
+    @test QuatRotation{Float32}(1, 0, 0, 0) isa QuatRotation{Float32}
+    @test QuatRotation{Float32}(1.0, 0, 0, 0) isa QuatRotation{Float32}
+    @test QuatRotation{Float64}(1f0, 0, 0, 0) isa QuatRotation{Float64}
 
     # normalization
-    @test UnitQuaternion(2.0, 0, 0, 0, true) == one(UnitQuaternion)
-    @test UnitQuaternion(2q, true) ≈ UnitQuaternion(q)
+    @test QuatRotation(2.0, 0, 0, 0, true) == one(QuatRotation)
+    @test QuatRotation(2q, true) ≈ QuatRotation(q)
 
     # Copy constructors
-    q = rand(UnitQuaternion)
-    @test UnitQuaternion(q) === q
-    @test UnitQuaternion{Float32}(q) isa UnitQuaternion{Float32}
-    UnitQuaternion{Float32}(q)
+    q = rand(QuatRotation)
+    @test QuatRotation(q) === q
+    @test QuatRotation{Float32}(q) isa QuatRotation{Float32}
+    QuatRotation{Float32}(q)
 
     # rand
-    @test rand(UnitQuaternion) isa UnitQuaternion{Float64}
-    @test rand(UnitQuaternion{Float32}) isa UnitQuaternion{Float32}
+    @test rand(QuatRotation) isa QuatRotation{Float64}
+    @test rand(QuatRotation{Float32}) isa QuatRotation{Float32}
 
     # Test math
-    @test UnitQuaternion(I) isa UnitQuaternion{Float64}
+    @test QuatRotation(I) isa QuatRotation{Float64}
 
     ϕ = inv(ExponentialMap())(q1)
     @test expm(ϕ * 2) ≈ q1
     q = Rotations._pure_quaternion(ϕ)
-    @test UnitQuaternion(exp(q)) ≈ q1
+    @test QuatRotation(exp(q)) ≈ q1
     @test exp(q) isa Quaternion
 
-    q = UnitQuaternion((@SVector [1, 2, 3, 4.0]), false)
+    q = QuatRotation((@SVector [1, 2, 3, 4.0]), false)
     @test 2 * q == 2 * Matrix(q)
     @test q * 2 == 2 * Matrix(q)
 
     # Axis-angle
     ϕ = 0.1 * @SVector [1, 0, 0]
     q = expm(ϕ)
-    @test q isa UnitQuaternion
+    @test q isa QuatRotation
     @test logm(expm(ϕ)) ≈ ϕ
     @test expm(logm(q1)) ≈ q1
     @test rotation_angle(q) ≈ 0.1
@@ -96,17 +96,17 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
     @test hmat(r) == SVector(r_pure.s, r_pure.v1, r_pure.v2, r_pure.v3)
 
     # Test Jacobians
-    @test ForwardDiff.jacobian(q -> UnitQuaternion(q, false) * r, params(q)) ≈
+    @test ForwardDiff.jacobian(q -> QuatRotation(q, false) * r, params(q)) ≈
           ∇rotate(q, r)
 
-    @test ForwardDiff.jacobian(q -> params(q2 * UnitQuaternion(q, false)), params(q1)) ≈
+    @test ForwardDiff.jacobian(q -> params(q2 * QuatRotation(q, false)), params(q1)) ≈
           ∇composition1(q2, q1)
-    @test ForwardDiff.jacobian(q -> params(UnitQuaternion(q, false) * q1), params(q2)) ≈
+    @test ForwardDiff.jacobian(q -> params(QuatRotation(q, false) * q1), params(q2)) ≈
           ∇composition2(q2, q1)
 
     b = @SVector rand(4)
     qval = params(q1)
-    ForwardDiff.jacobian(q -> ∇composition1(q2, UnitQuaternion(q))'b,
+    ForwardDiff.jacobian(q -> ∇composition1(q2, QuatRotation(q))'b,
         @SVector [1, 0, 0, 0.0,])
     diffcomp = ϕ -> params(q2 * CayleyMap()(ϕ))
     ∇diffcomp(ϕ) = ForwardDiff.jacobian(diffcomp, ϕ)
@@ -125,9 +125,9 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
 
     # Check ops with Float32
     ϕ = SA_F32[1, 2, 3]
-    @test expm(SA_F32[1, 2, 3]) isa UnitQuaternion{Float32}
+    @test expm(SA_F32[1, 2, 3]) isa QuatRotation{Float32}
 
-    q32 = rand(UnitQuaternion{Float32})
+    q32 = rand(QuatRotation{Float32})
     @test Rotations._log_as_quat(q32) isa Quaternion{Float32}
     @test log(q32) isa SMatrix
     @test eltype(logm(q32)) == Float32

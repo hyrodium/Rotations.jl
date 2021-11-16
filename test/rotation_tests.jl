@@ -66,7 +66,7 @@ end
 #####################################################################################
 
 rot_types = (RotMatrix{3}, AngleAxis, RotationVec,
-             UnitQuaternion, RodriguesParam, MRP,
+             QuatRotation, RodriguesParam, MRP,
              RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
              RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ)
 
@@ -74,7 +74,7 @@ one_types = (RotX, RotY, RotZ)
 two_types = (RotXY, RotYZ, RotZX, RotXZ, RotYX, RotZY)
 taitbyran_types = (RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX)
 all_types = (RotMatrix{3}, AngleAxis, RotationVec,
-             UnitQuaternion, RodriguesParam, MRP,
+             QuatRotation, RodriguesParam, MRP,
              RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
              RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ,
              RotX, RotY, RotZ,
@@ -198,20 +198,20 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
 
     @testset "Quaternion double cover" begin
         repeats = 100
-        Q = UnitQuaternion
+        Q = QuatRotation
         for i = 1 : repeats
-            q = rand(UnitQuaternion)
+            q = rand(QuatRotation)
 
-            q2 = UnitQuaternion(-q.q) # normalize: need a tolerance
+            q2 = QuatRotation(-q.q) # normalize: need a tolerance
             @test Rotations.params(q2) ≈ -Rotations.params(q) atol = 100 * eps()
             @test q ≈ q2 atol = 100 * eps()
 
-            q3 = UnitQuaternion(-q.q.s, -q.q.v1, -q.q.v2, -q.q.v3, false) # don't normalize: everything is exact
+            q3 = QuatRotation(-q.q.s, -q.q.v1, -q.q.v2, -q.q.v3, false) # don't normalize: everything is exact
             @test Rotations.params(q3) == -Rotations.params(q)
             @test q == q3
 
             Δq = q \ q3
-            @test Δq ≈ one(UnitQuaternion) atol = 100 * eps()
+            @test Δq ≈ one(QuatRotation) atol = 100 * eps()
         end
     end
 
@@ -270,14 +270,14 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
     end
 
     #########################################################################
-    # Test robustness of DCM to UnitQuaternion function
+    # Test robustness of DCM to QuatRotation function
     #########################################################################
-    @testset "DCM to UnitQuaternion" begin
+    @testset "DCM to QuatRotation" begin
         pert = 1e-3
         for type_rot in all_types
             for _ = 1:100
                 not_orthonormal = rand(type_rot) + rand(3, 3) * pert
-                quat_ill_cond = UnitQuaternion(not_orthonormal)
+                quat_ill_cond = QuatRotation(not_orthonormal)
                 @test 0 <= real(quat_ill_cond.q)
                 @test norm(quat_ill_cond - nearest_rotation(not_orthonormal)) < 10 * pert
             end
@@ -304,16 +304,16 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
                 @test rotation_axis(r2) ≈ axis
             end
         end
-        @test norm(rotation_axis(UnitQuaternion(1.0, 0.0, 0.0, 0.0))) ≈ 1.0
+        @test norm(rotation_axis(QuatRotation(1.0, 0.0, 0.0, 0.0))) ≈ 1.0
 
         # TODO RotX, RotXY?
     end
 
     #########################################################################
-    # Check construction of UnitQuaternion given two vectors
+    # Check construction of QuatRotation given two vectors
     #########################################################################
 
-    @testset "Testing construction of UnitQuaternion given two vectors" begin
+    @testset "Testing construction of QuatRotation given two vectors" begin
         angle_axis_test(from, to, rot, atol) = isapprox(rot * from * norm(to) / norm(from), to; atol = atol)
 
         for i = 1 : 10000
@@ -442,15 +442,15 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         @test convert(typeof(aa), aa) === aa
 
         w, x, y, z = 1., 2., 3., 4.
-        quat = UnitQuaternion(w, x, y, z)
+        quat = QuatRotation(w, x, y, z)
         @test norm(Rotations.params(quat)) ≈ 1.
-        quat = UnitQuaternion(w, x, y, z, false)
+        quat = QuatRotation(w, x, y, z, false)
         @test norm(Rotations.params(quat)) ≈ norm([w, x, y, z])
 
         w, x, y, z = 1., 2., 3., 4.
-        quat = UnitQuaternion(w, x, y, z)
+        quat = QuatRotation(w, x, y, z)
         @test norm(Rotations.params(quat)) ≈ 1.
-        quat = UnitQuaternion(w, x, y, z, false)
+        quat = QuatRotation(w, x, y, z, false)
         @test norm(Rotations.params(quat)) ≈ norm([w, x, y, z])
     end
 
@@ -490,7 +490,7 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         @test Rotations.params(RotXYZ(p1,p2,p3)) == [p1,p2,p3]
         @test Rotations.params(AngleAxis(p1,p2,p3,p4)) ≈ pushfirst!(normalize([p2,p3,p4]),p1)
         @test Rotations.params(RotationVec(p1,p2,p3)) == [p1,p2,p3]
-        @test Rotations.params(UnitQuaternion(p1,p2,p3,p4)) ≈ normalize([p1,p2,p3,p4])
+        @test Rotations.params(QuatRotation(p1,p2,p3,p4)) ≈ normalize([p1,p2,p3,p4])
         @test Rotations.params(MRP(p1,p2,p3)) == [p1,p2,p3]
         @test Rotations.params(RodriguesParam(p1,p2,p3)) == [p1,p2,p3]
     end

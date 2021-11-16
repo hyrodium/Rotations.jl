@@ -6,13 +6,13 @@ A nonlinear mapping between the space of unit quaternions and three-dimensional
 rotation errors.
 
 These mappings are extremely useful for converting from globally nonsingular 3D rotation
-representations such as `UnitQuaternion` or `RotMatrix3` to a three-parameter error that can
+representations such as `QuatRotation` or `RotMatrix3` to a three-parameter error that can
 be efficiently used in gradient-based optimization methods that optimize deviations about
 a current iterate using first or second-order information.
 
 # Usage
-    errmap(v::AbstractVector)  # "forward" map from a 3D error to a `UnitQuaternion`
-    inv(errmap)(R::Rotation)   # "inverse" map from a rotation (via `UnitQuaternion`) to a 3D error
+    errmap(v::AbstractVector)  # "forward" map from a 3D error to a `QuatRotation`
+    inv(errmap)(R::Rotation)   # "inverse" map from a rotation (via `QuatRotation`) to a 3D error
 
 where `errmap <: ErrorMap`
 
@@ -45,7 +45,7 @@ inverting an `ErrorMap`, i.e.
 
 # Usage
     imap(R::Rotation)             # "inverse" map from a rotation to a 3D error
-    inv(imap)(v::AbstractVector)  # "forward" map from a 3D error to a `UnitQuaternion`
+    inv(imap)(v::AbstractVector)  # "forward" map from a 3D error to a `QuatRotation`
 
 where `imap <: InvErrorMap`.
 
@@ -82,14 +82,14 @@ scaling(m::M) where M <: ErrorMap = scaling(M)
 function (::QuatVecMap)(v::AbstractVector)
     check_length(v, 3)
     μ = 1/scaling(QuatVecMap)
-    UnitQuaternion(sqrt(1-μ^2*v'v), μ*v[1], μ*v[2], μ*v[3])
+    QuatRotation(sqrt(1-μ^2*v'v), μ*v[1], μ*v[2], μ*v[3])
 end
 
 function (::CayleyMap)(g::AbstractVector)
     check_length(g, 3)
     g /= scaling(CayleyMap)
     M = 1/sqrt(1+g'g)
-    UnitQuaternion(M, M*g[1], M*g[2], M*g[3])
+    QuatRotation(M, M*g[1], M*g[2], M*g[3])
 end
 
 function (::MRPMap)(p::AbstractVector)
@@ -97,12 +97,12 @@ function (::MRPMap)(p::AbstractVector)
     p /= scaling(MRPMap)
     n2 = p'p
     M = 2/(1+n2)
-    UnitQuaternion((1-n2)/(1+n2), M*p[1], M*p[2], M*p[3])
+    QuatRotation((1-n2)/(1+n2), M*p[1], M*p[2], M*p[3])
 end
 
 function (::IdentityMap)(q::AbstractVector)
     check_length(q, 3)
-    UnitQuaternion(q[1], q[2], q[3], q[4])
+    QuatRotation(q[1], q[2], q[3], q[4])
 end
 
 
@@ -163,29 +163,29 @@ jacobian(::IdentityMap, q) = I
 ############################################################################################
 # (emap::ErrorMap)(R::Rotation) =
 #     throw(ArgumentError("Must use the inverse map to convert a rotation to an error state, e.g. inv(emap)(q)"))
-# (emap::InvErrorMap)(R::Rotation) = emap(UnitQuaternion(R))  # automatically call the inverse map for rotations
+# (emap::InvErrorMap)(R::Rotation) = emap(QuatRotation(R))  # automatically call the inverse map for rotations
 # NOTE: Julia v1.0 doesn't allow these methods on abstract types. Leave out for now.
 
 for imap in (InvExponentialMap,InvCayleyMap,InvMRPMap,InvQuatVecMap)
     @eval begin
-        @inline (imap::$imap)(R::Rotation) = imap(UnitQuaternion(R))
+        @inline (imap::$imap)(R::Rotation) = imap(QuatRotation(R))
     end
 end
 
-(::InvExponentialMap)(q::UnitQuaternion) = scaling(ExponentialMap)*logm(q)
-(::InvCayleyMap)(q::UnitQuaternion) = scaling(CayleyMap) * vector(q)/real(q.q)
-(::InvMRPMap)(q::UnitQuaternion) = scaling(MRPMap)*vector(q)/(1+real(q.q))
-(::InvQuatVecMap)(q::UnitQuaternion) = scaling(QuatVecMap)*vector(q) * sign(real(q.q))
+(::InvExponentialMap)(q::QuatRotation) = scaling(ExponentialMap)*logm(q)
+(::InvCayleyMap)(q::QuatRotation) = scaling(CayleyMap) * vector(q)/real(q.q)
+(::InvMRPMap)(q::QuatRotation) = scaling(MRPMap)*vector(q)/(1+real(q.q))
+(::InvQuatVecMap)(q::QuatRotation) = scaling(QuatVecMap)*vector(q) * sign(real(q.q))
 
 
 # ~~~~~~~~~~~~~~~ Inverse map Jacobians ~~~~~~~~~~~~~~~ #
 """
-    jacobian(::InvErrorMap, q::UnitQuaternion)
+    jacobian(::InvErrorMap, q::QuatRotation)
 
 Jacobian of the inverse quaternion map, returning a 3×4 matrix.
-For all maps: `jacobian(::InvErrorMap, UnitQuaternion(I)) = [0 I] = Hmat()'`
+For all maps: `jacobian(::InvErrorMap, QuatRotation(I)) = [0 I] = Hmat()'`
 """
-function jacobian(::InvExponentialMap, q::UnitQuaternion, eps=1e-5)
+function jacobian(::InvExponentialMap, q::QuatRotation, eps=1e-5)
     μ = scaling(ExponentialMap)
     s = scalar(q)
     v = vector(q)
@@ -208,7 +208,7 @@ function jacobian(::InvExponentialMap, q::UnitQuaternion, eps=1e-5)
 end
 
 
-function jacobian(::InvQuatVecMap, q::UnitQuaternion)
+function jacobian(::InvQuatVecMap, q::QuatRotation)
     w = q.q.s
 
     μ = scaling(QuatVecMap)
@@ -219,7 +219,7 @@ function jacobian(::InvQuatVecMap, q::UnitQuaternion)
 end
 
 
-function jacobian(::InvCayleyMap, q::UnitQuaternion)
+function jacobian(::InvCayleyMap, q::QuatRotation)
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -233,7 +233,7 @@ function jacobian(::InvCayleyMap, q::UnitQuaternion)
 end
 
 
-function jacobian(::InvMRPMap, q::UnitQuaternion)
+function jacobian(::InvMRPMap, q::QuatRotation)
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -247,17 +247,17 @@ function jacobian(::InvMRPMap, q::UnitQuaternion)
 end
 
 
-jacobian(::IdentityMap, q::UnitQuaternion) = I
+jacobian(::IdentityMap, q::QuatRotation) = I
 
 
 # ~~~~~~~~~~~~~~~ Inverse map Jacobian derivative ~~~~~~~~~~~~~~~ #
 """
-    ∇jacobian(::InvErrorMap, q::UnitQuaternion, b::SVector{3})
+    ∇jacobian(::InvErrorMap, q::QuatRotation, b::SVector{3})
 
 Jacobian of G(q)'b, where G(q) = jacobian(::InvErrorMap, q),
     b is a 3-element vector
 """
-function ∇jacobian(::InvExponentialMap, q::UnitQuaternion, b::SVector{3}, eps=1e-5)
+function ∇jacobian(::InvExponentialMap, q::QuatRotation, b::SVector{3}, eps=1e-5)
     μ = scaling(ExponentialMap)
     s = scalar(q)
     v = vector(q)
@@ -296,7 +296,7 @@ function ∇jacobian(::InvExponentialMap, q::UnitQuaternion, b::SVector{3}, eps=
     end
 end
 
-function ∇jacobian(::InvCayleyMap, q::UnitQuaternion, b::SVector{3})
+function ∇jacobian(::InvCayleyMap, q::QuatRotation, b::SVector{3})
     w = q.q.s
 
     μ = scaling(CayleyMap)
@@ -310,7 +310,7 @@ function ∇jacobian(::InvCayleyMap, q::UnitQuaternion, b::SVector{3})
     ]
 end
 
-function ∇jacobian(::InvMRPMap, q::UnitQuaternion, b::SVector{3})
+function ∇jacobian(::InvMRPMap, q::QuatRotation, b::SVector{3})
     w = q.q.s
 
     μ = scaling(MRPMap)
@@ -324,7 +324,7 @@ function ∇jacobian(::InvMRPMap, q::UnitQuaternion, b::SVector{3})
     ]
 end
 
-function ∇jacobian(::InvQuatVecMap, q::UnitQuaternion, b::SVector{3})
+function ∇jacobian(::InvQuatVecMap, q::QuatRotation, b::SVector{3})
     μ = scaling(QuatVecMap)
     @SMatrix zeros(4,4)
 end

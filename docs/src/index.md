@@ -27,7 +27,7 @@ R_euler = RotXYZ(1,2,3)
 rotation_angle(R_euler), rotation_axis(R_euler)
 
 # Convert the rotation to unit quaternion
-R_quat = UnitQuaternion(R_euler)
+R_quat = QuatRotation(R_euler)
 
 # Get quaternion parameters of the rotation
 Rotations.params(R_quat)

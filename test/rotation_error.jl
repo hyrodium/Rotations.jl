@@ -6,7 +6,7 @@ using Test
 import Rotations: RotationError, rotation_error, add_error, params
 
 @testset "Rotation Error" begin
-q1 = rand(UnitQuaternion)
+q1 = rand(QuatRotation)
 dq = expm(0.1 * normalize(@SVector rand(3)))
 q2 = q1*dq
 @test q1\q2 ≈ dq
@@ -17,8 +17,8 @@ e1 = rotation_error(q2, q1, emap)
 @test e1 ≈ q2 ⊖ q1
 @test e1 ≈ params(dg)
 @test add_error(q1, e1) ≈ q2
-@test q1 ⊕ e1 isa UnitQuaternion
-@test rotation_angle(UnitQuaternion(e1)) ≈ 0.1
+@test q1 ⊕ e1 isa QuatRotation
+@test rotation_angle(QuatRotation(e1)) ≈ 0.1
 
 aa1 = AngleAxis(q1)
 @test add_error(aa1, e1) ≈ q2
@@ -59,6 +59,6 @@ g = inv(emap)(q1)
 @test inv(inv(imap))(q1) ≈ g
 
 g = RodriguesParam(g)
-@test UnitQuaternion(g) ≈ q1
+@test QuatRotation(g) ≈ q1
 @test imap(g) ≈ params(g)
 end

@@ -58,8 +58,8 @@ import Rotations: ∇rotate, ∇composition1, ∇composition2, skew, params
 end
 
 @testset "kinematics" begin
-    # UnitQuaternion
-    q = rand(UnitQuaternion)
+    # QuatRotation
+    q = rand(QuatRotation)
     ω = @SVector rand(3)
     q_ = Rotations.params(q)
     qdot = Rotations.kinematics(q,ω)

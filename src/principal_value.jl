@@ -6,25 +6,25 @@ particular set of numbers is better conditioned (e.g. `MRP`) or obeys a particul
 non-negative rotation). In order to preserve differentiability it is necessary to allow rotation representations to
 travel slightly away from the nominal domain; this is critical for applications such as optimization or dynamics.
 
-This function takes a rotation type (e.g. `UnitQuaternion`, `RotXY`) and outputs a new rotation of the same type that corresponds
+This function takes a rotation type (e.g. `QuatRotation`, `RotXY`) and outputs a new rotation of the same type that corresponds
 to the same `RotMatrix`, but that obeys certain conventions or is better conditioned. The outputs of the function have
 the following properties:
 
 - all angles are between between `-pi` to `pi` (except for `AngleAxis` which is between `0` and `pi`).
-- all `UnitQuaternion have non-negative real part
+- all `QuatRotation have non-negative real part
 - the components of all `MRP` have a norm that is at most 1.
 - the `RotationVec` rotation is at most `pi`
 
 """
 principal_value(r::Rotation) = r
-principal_value(q::Q) where Q <: UnitQuaternion = real(q.q) < zero(eltype(q)) ? Q(-q.q) : q
+principal_value(q::Q) where Q <: QuatRotation = real(q.q) < zero(eltype(q)) ? Q(-q.q) : q
 function principal_value(spq::MRP{T}) where {T}
-    # A quat with positive real part: UnitQuaternion( qw,  qx,  qy,  qz)
+    # A quat with positive real part: QuatRotation( qw,  qx,  qy,  qz)
     #
-    # A mrp corresponding to the UnitQuaternion with a positive real part:
+    # A mrp corresponding to the QuatRotation with a positive real part:
     # MRP( qx / (1 + qw),  qy / (1 + qw),  qz / (1 + qw)) ≡ MRP(spx, spy, spz)
     #
-    # A mrp corresponding to the UnitQuaternion with a negative real part:
+    # A mrp corresponding to the QuatRotation with a negative real part:
     # MRP(-qx / (1 - qw), -qy / (1 - qw), -qz / (1 - qw)) ≡ MRP(snx, sny, snz)
     #
     # Claim:         spx / snx = -1 / (spx^2 + spy^2 + spz^2)
