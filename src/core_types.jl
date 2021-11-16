@@ -23,6 +23,9 @@ Base.zeros(::Type{R}, dims::Base.DimOrInd...) where {R<:Rotation} = zeros(typeof
 Base.zeros(::Type{R}, dims::NTuple{N, Integer}) where {R<:Rotation, N} = zeros(typeof(zero(R)),dims)
 Base.zeros(::Type{R}, dims::Tuple{}) where {R<:Rotation} = zeros(typeof(zero(R)),dims) # avoid ambiguity
 
+# Generate identity rotation matrix
+Base.one(r::Rotation) = one(typeof(r))
+
 # Rotation angles and axes can be obtained by converting to the AngleAxis type
 rotation_angle(r::Rotation{3}) = rotation_angle(AngleAxis(r))
 rotation_axis(r::Rotation{3}) = rotation_axis(AngleAxis(r))

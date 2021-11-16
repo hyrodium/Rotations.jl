@@ -31,7 +31,9 @@ using Unitful
             @test @inferred(size(R)) == (2,2)
             @test @inferred(size(R{Float32})) == (2,2)
             @test one(R)::R == I
+            @test one(one(R))::R == I
             @test one(R{Float32})::R{Float32} == I32
+            @test one(one(R{Float32}))::R{Float32} == I32
         end
     end
 
