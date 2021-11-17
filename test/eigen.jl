@@ -1,6 +1,6 @@
 @testset "Eigen_3D" begin
     all_types = (RotMatrix{3}, AngleAxis, RotationVec,
-                 UnitQuaternion, RodriguesParam, MRP,
+                 QuatRotation, RodriguesParam, MRP,
                  RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
                  RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ,
                  RotX, RotY, RotZ,

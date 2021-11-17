@@ -26,18 +26,18 @@ params(g::MRP) = SVector{3}(g.x, g.y, g.z)
 
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
 function Random.rand(rng::AbstractRNG, ::Random.SamplerType{RP}) where RP <: MRP
-    RP(rand(rng, UnitQuaternion))
+    RP(rand(rng, QuatRotation))
 end
 Base.one(::Type{RP}) where RP <: MRP = RP(0.0, 0.0, 0.0)
 
 # ~~~~~~~~~~~~~~~~ Quaternion <=> MRP ~~~~~~~~~~~~~~~~~~ #
-@inline function (::Type{Q})(p::MRP) where Q <: UnitQuaternion
+@inline function (::Type{Q})(p::MRP) where Q <: QuatRotation
     n2 = p.x * p.x + p.y * p.y + p.z * p.z
     M = 2/(1+n2)
     q = Q((1-n2)/(1+n2), M*p.x, M*p.y, M*p.z, false)
 end
 
-@inline function (::Type{RP})(q::UnitQuaternion) where RP<:MRP
+@inline function (::Type{RP})(q::QuatRotation) where RP<:MRP
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -48,9 +48,9 @@ end
 end
 
 # ~~~~~~~~~~~~~~~ StaticArrays Interface ~~~~~~~~~~~~~~~ #
-@inline (::Type{RP})(t::NTuple{9}) where RP<:MRP = convert(RP, UnitQuaternion(t))
-@inline Base.getindex(p::MRP, i::Int) = convert(UnitQuaternion, p)[i]
-@inline Base.Tuple(p::MRP) = Tuple(convert(UnitQuaternion, p))
+@inline (::Type{RP})(t::NTuple{9}) where RP<:MRP = convert(RP, QuatRotation(t))
+@inline Base.getindex(p::MRP, i::Int) = convert(QuatRotation, p)[i]
+@inline Base.Tuple(p::MRP) = Tuple(convert(QuatRotation, p))
 
 # ~~~~~~~~~~~~~~~ Math Operations ~~~~~~~~~~~~~~~ #
 Base.inv(p::MRP) = MRP(-p.x, -p.y, -p.z)
@@ -91,8 +91,8 @@ end
 
 
 # ~~~~~~~~~~~~~~~ Rotation ~~~~~~~~~~~~~~~ #
-@inline (*)(p::MRP, r::StaticVector) = UnitQuaternion(p)*r
-@inline (\)(p::MRP, r::StaticVector) = UnitQuaternion(p)\r
+@inline (*)(p::MRP, r::StaticVector) = QuatRotation(p)*r
+@inline (\)(p::MRP, r::StaticVector) = QuatRotation(p)\r
 
 
 # ~~~~~~~~~~~~~~~ Kinematics ~~~~~~~~~~~~~~~ #

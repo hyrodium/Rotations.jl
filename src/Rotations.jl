@@ -32,7 +32,7 @@ export
     # Rotation types
     Rotation, RotMatrix, RotMatrix2, RotMatrix3,
     Angle2d,
-    UnitQuaternion,
+    QuatRotation,
     AngleAxis, RotationVec, RodriguesParam, MRP,
     RotX, RotY, RotZ,
     RotXY, RotYX, RotZX, RotXZ, RotYZ, RotZY,
@@ -40,7 +40,7 @@ export
     RotXYZ, RotYXZ, RotZXY, RotXZY, RotYZX, RotZYX,
 
     # Deprecated, but export for compatibility
-    RodriguesVec, Quat, SPQuat,
+    UnitQuaternion,
 
     # Quaternion math ops
     logm, expm, ⊖, ⊕,

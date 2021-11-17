@@ -56,15 +56,15 @@ rotation_angle(r::Rotation)
 #### Initialization
 All rotation types support `one(R)` to construct the identity rotation for the desired parameterization. A random rotation, uniformly sampled over the space of rotations, can be sampled using `rand(R)`. For example:
 ```julia
-r = one(UnitQuaternion)  # equivalent to Quat(1.0, 0.0, 0.0, 0.0)
-q = rand(UnitQuaternion)
+r = one(QuatRotation)  # equivalent to QuatRotation(1.0, 0.0, 0.0, 0.0)
+q = rand(QuatRotation)
 p = rand(MRP{Float32})
 ```
 
 #### Conversion
 All rotatations can be converted to another parameterization by simply calling the constructor for the desired parameterization. For example:
 ```julia
-q = rand(UnitQuaternion)
+q = rand(QuatRotation)
 aa = AngleAxis(q)
 r = RotMatrix(aa)
 ```
@@ -83,12 +83,12 @@ r = rand(RotMatrix{3}) # uses Float64 by default
 # create a point
 p = SVector(1.0, 2.0, 3.0) # from StaticArrays.jl, but could use any AbstractVector...
 
-# convert to a quaternion (Quat) and rotate the point
-q = UnitQuaternion(r)
+# convert to a quaternion (QuatRotation) and rotate the point
+q = QuatRotation(r)
 p_rotated = q * p
 
 # Compose rotations
-q2 = rand(UnitQuaternion)
+q2 = rand(QuatRotation)
 q3 = q * q2
 
 # Take the inverse (equivalent to transpose)
@@ -145,14 +145,14 @@ j2 = Rotations.jacobian(q, p) # How does the rotated point q*p change w.r.t. the
     renormalized by the constructor to be a unit vector, so that `theta` always
     represents the rotation angle in radians.
 
-3. **Quaternions** `UnitQuaternion{T}`
+3. **Quaternions** `QuatRotation{T}`
 
     A 3D rotation parameterized by a unit quaternion. Note that the constructor
     will renormalize the quaternion to be a unit quaternion, and that although
     they follow the same multiplicative *algebra* as quaternions, it is better
-    to think of `UnitQuaternion` as a 3×3 matrix rather than as a quaternion *number*.
+    to think of `QuatRotation` as a 3×3 matrix rather than as a quaternion *number*.
 
-    Previously `Quat`.
+    Previously `Quat`, `UnitQuaternion`.
 
 4. **Rotation Vector** `RotationVec{T}`
 
@@ -219,7 +219,7 @@ differential unit quaternion. This mapping goes singular at 360°.
 differential unit quaternion. This mapping also goes singular at 180° but is
 the computationally cheapest map and often performs well.
 
-Rotations.jl provides the `RotationError` type for representing rotation errors, that act just like a `SVector{3}` but carry the nonlinear map used to compute the error, which can also be used to convert the error back to a `UnitQuaternion` (and, by extention, any other 3D rotation parameterization). The following methods are useful for computing `RotationError`s and adding them back to the nominal rotation:
+Rotations.jl provides the `RotationError` type for representing rotation errors, that act just like a `SVector{3}` but carry the nonlinear map used to compute the error, which can also be used to convert the error back to a `QuatRotation` (and, by extention, any other 3D rotation parameterization). The following methods are useful for computing `RotationError`s and adding them back to the nominal rotation:
 ```julia
 rotation_error(R1::Rotation, R2::Rotation, error_map::ErrorMap)  # compute the error between `R1` and `R2` using `error_map`
 add_error(R::Rotation, err::RotationError)  # "adds" the error to `R` by converting back a `UnitQuaterion` and composing with `R`
@@ -232,7 +232,7 @@ R1 ⊕ err  # alias for `add_error(R1, err)`
 
 For a practical application of these ideas, see the quatenrion-multiplicative Extended Kalman Filter (MEKF). [This article](https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/20040037784.pdf) provides a good description.
 
-When taking derivatives with respect to quaternions we need to account both for these mappings and the fact that local perturbations to a rotation act through composition instead of addition, as they do in vector space (e.g. `q * dq` vs `x + dx`). The following methods are useful for computing these Jacobians for `UnitQuaternion`, `RodriguesParam` or `MRP`
+When taking derivatives with respect to quaternions we need to account both for these mappings and the fact that local perturbations to a rotation act through composition instead of addition, as they do in vector space (e.g. `q * dq` vs `x + dx`). The following methods are useful for computing these Jacobians for `QuatRotation`, `RodriguesParam` or `MRP`
 * `∇rotate(q,r)`: Jacobian of the `q*r` with respect to the rotation
 * `∇composition1(q2,q1)`: Jacobian of `q2*q1` with respect to q1
 * `∇composition2(q2,q1,b)`: Jacobian of `q2*q1` with respect to q2
@@ -251,7 +251,7 @@ All parameterizations can be converted to and from (mutable or immutable)
 using StaticArrays, Rotations
 
 # export
-q = UnitQuaternion(1.0,0,0,0)
+q = QuatRotation(1.0,0,0,0)
 matrix_mutable = Array(q)
 matrix_immutable = SMatrix{3,3}(q)
 

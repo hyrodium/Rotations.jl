@@ -58,7 +58,7 @@ function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Rotat
         T = Float64
     end
 
-    q = UnitQuaternion(randn(rng, T), randn(rng, T), randn(rng, T), randn(rng, T))
+    q = QuatRotation(randn(rng, T), randn(rng, T), randn(rng, T), randn(rng, T))
     return R(q)
 end
 

@@ -52,12 +52,12 @@ import Rotations: CayleyMap, ExponentialMap, MRPMap, IdentityMap, QuatVecMap
             @test inv(emap)(emap(ϕ)) ≈ ϕ
             b = @SVector rand(3)
             @test ForwardDiff.jacobian(
-                q -> jacobian(inv(emap), UnitQuaternion(q, false))'b,
+                q -> jacobian(inv(emap), QuatRotation(q, false))'b,
                 params(q),
             ) ≈ Rotations.∇jacobian(inv(emap), q, b)
         end
 
-        q = rand(UnitQuaternion)
+        q = rand(QuatRotation)
 
         function invmap(q)
             v = @SVector [q[2], q[3], q[4]]

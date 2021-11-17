@@ -4,9 +4,9 @@
 using Rotations
 ```
 
-## `UnitQuaternion`
+## `QuatRotation`
 A 3D rotation parameterized by a unit [quaternion](https://en.wikipedia.org/wiki/Quaternion) ([versor](https://en.wikipedia.org/wiki/Versor)).
-Note that the constructor will renormalize the quaternion to be a unit quaternion, and that although they follow the same multiplicative *algebra* as quaternions, it is better to think of `UnitQuaternion` as a ``3 \times 3`` matrix rather than as a quaternion *number*.
+Note that the constructor will renormalize the quaternion to be a unit quaternion, and that although they follow the same multiplicative *algebra* as quaternions, it is better to think of `QuatRotation` as a ``3 \times 3`` matrix rather than as a quaternion *number*.
 
 ```math
 \begin{aligned}
@@ -17,11 +17,11 @@ Note that the constructor will renormalize the quaternion to be a unit quaternio
 
 **example**
 ```@repl quaternions
-one(UnitQuaternion)  # null rotation
+one(QuatRotation)  # null rotation
 α, β, γ = 1.2, -0.8, 0.1;
-RotX(α) ≈ UnitQuaternion(cos(α/2),sin(α/2),0,0)  # These matrices are equal
-RotY(β) ≈ UnitQuaternion(cos(β/2),0,sin(β/2),0)  # These matrices are equal
-RotZ(γ) ≈ UnitQuaternion(cos(γ/2),0,0,sin(γ/2))  # These matrices are equal
+RotX(α) ≈ QuatRotation(cos(α/2),sin(α/2),0,0)  # These matrices are equal
+RotY(β) ≈ QuatRotation(cos(β/2),0,sin(β/2),0)  # These matrices are equal
+RotZ(γ) ≈ QuatRotation(cos(γ/2),0,0,sin(γ/2))  # These matrices are equal
 ```
 
 ## `RodriguesParam`

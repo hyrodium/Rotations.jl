@@ -28,7 +28,7 @@ To visualize the distribution, try the following script.
 
     # TODO: consider to remove Euler rotations (#155)
     Type_SO3 =  (RotMatrix{3}, AngleAxis, RotationVec,
-                UnitQuaternion, MRP, RodriguesParam,
+                QuatRotation, MRP, RodriguesParam,
                 RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
                 RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ)
 

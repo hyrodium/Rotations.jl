@@ -2,7 +2,7 @@
 """
     RotationError{T<:Real, D<:ErrorMap} <: StaticVector{3,T}
 
-A three-parameter rotation error, converted to/from a `UnitQuaternion` using the
+A three-parameter rotation error, converted to/from a `QuatRotation` using the
 `ErrorMap` `D`.
 
 # Usage
@@ -27,7 +27,7 @@ struct RotationError{T,D} <: StaticVector{3,T}
     end
 end
 
-@inline UnitQuaternion(e::RotationError)::Rotation = e.map(e.err)
+@inline QuatRotation(e::RotationError)::Rotation = e.map(e.err)
 
 """
     rotation_error(R1::Rotation, R2::Rotation, error_map::ErrorMap)
@@ -79,7 +79,7 @@ Equivalent to
     R1 ⊕ e
 """
 function add_error(R1::Rotation, e::RotationError)
-    R1 * UnitQuaternion(e)
+    R1 * QuatRotation(e)
 end
 
 function add_error(R1::R, e::RotationError{<:Any, IdentityMap}) where R <: Rotation

@@ -1,25 +1,25 @@
 import Base: *, /, \, exp, ≈, ==
 
 """
-    UnitQuaternion{T} <: Rotation
+    QuatRotation{T} <: Rotation
 
 4-parameter attitute representation that is singularity-free. Quaternions with unit norm
-represent a double-cover of SO(3). The `UnitQuaternion` does NOT strictly enforce the unit
+represent a double-cover of SO(3). The `QuatRotation` does NOT strictly enforce the unit
 norm constraint, but certain methods will assume you have a unit quaternion.
 Follows the Hamilton convention for quaternions.
 
 # Constructors
 ```julia
-UnitQuaternion(w,x,y,z)
-UnitQuaternion(q::AbstractVector)
+QuatRotation(w,x,y,z)
+QuatRotation(q::AbstractVector)
 ```
 where `w` is the scalar (real) part, `x`,`y`, and `z` are the vector (imaginary) part,
 and `q = [w,x,y,z]`.
 """
-struct UnitQuaternion{T} <: Rotation{3,T}
+struct QuatRotation{T} <: Rotation{3,T}
     q::Quaternion{T}
 
-    @inline function UnitQuaternion{T}(w, x, y, z, normalize::Bool = true) where T
+    @inline function QuatRotation{T}(w, x, y, z, normalize::Bool = true) where T
         if normalize
             inorm = inv(sqrt(w*w + x*x + y*y + z*z))
             new{T}(Quaternion(w*inorm, x*inorm, y*inorm, z*inorm, true))
@@ -28,54 +28,54 @@ struct UnitQuaternion{T} <: Rotation{3,T}
         end
     end
 
-    @inline function UnitQuaternion{T}(q::Quaternion) where T
+    @inline function QuatRotation{T}(q::Quaternion) where T
         if q.norm
             new{T}(q)
         else
             throw(InexactError(nameof(T), T, q))
         end
     end
-    UnitQuaternion{T}(q::UnitQuaternion) where T = new{T}(q.q)
+    QuatRotation{T}(q::QuatRotation) where T = new{T}(q.q)
 end
 
 # ~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~ #
 # Use default map
-function UnitQuaternion(w,x,y,z, normalize::Bool = true)
+function QuatRotation(w,x,y,z, normalize::Bool = true)
     types = promote(w,x,y,z)
-    UnitQuaternion{eltype(types)}(w,x,y,z, normalize)
+    QuatRotation{eltype(types)}(w,x,y,z, normalize)
 end
 
-function UnitQuaternion(q::T) where T<:Quaternion
+function QuatRotation(q::T) where T<:Quaternion
     if q.norm
-        return UnitQuaternion(q.s, q.v1, q.v2, q.v3, false)
+        return QuatRotation(q.s, q.v1, q.v2, q.v3, false)
     else
         throw(InexactError(nameof(T), T, q))
     end
 end
 
-function Quaternions.Quaternion(q::UnitQuaternion)
+function Quaternions.Quaternion(q::QuatRotation)
     return q.q
 end
 
 # Pass in Vectors
-@inline function (::Type{Q})(q::AbstractVector, normalize::Bool = true) where Q <: UnitQuaternion
+@inline function (::Type{Q})(q::AbstractVector, normalize::Bool = true) where Q <: QuatRotation
     check_length(q, 4)
     Q(q[1], q[2], q[3], q[4], normalize)
 end
-@inline (::Type{Q})(q::StaticVector{4}, normalize::Bool = true) where Q <: UnitQuaternion =
+@inline (::Type{Q})(q::StaticVector{4}, normalize::Bool = true) where Q <: QuatRotation =
     Q(q[1], q[2], q[3], q[4], normalize)
 
 # Copy constructors
-UnitQuaternion(q::UnitQuaternion) = q
+QuatRotation(q::QuatRotation) = q
 
-# UnitQuaternion <=> Quat
-# (::Type{Q})(q::Quat) where Q <: UnitQuaternion = Q(q.w, q.x, q.y, q.z, false)
-# (::Type{Q})(q::UnitQuaternion) where Q <: Quat = Q(q.w, q.x, q.y, q.z, false)
-# const AllQuats{T} = Union{<:Quat{T}, <:UnitQuaternion{T}}
+# QuatRotation <=> Quat
+# (::Type{Q})(q::Quat) where Q <: QuatRotation = Q(q.w, q.x, q.y, q.z, false)
+# (::Type{Q})(q::QuatRotation) where Q <: Quat = Q(q.w, q.x, q.y, q.z, false)
+# const AllQuats{T} = Union{<:Quat{T}, <:QuatRotation{T}}
 
 
 # ~~~~~~~~~~~~~~~ StaticArrays Interface ~~~~~~~~~~~~~~~ #
-function (::Type{Q})(t::NTuple{9}) where Q<:UnitQuaternion
+function (::Type{Q})(t::NTuple{9}) where Q<:QuatRotation
     #=
     This function solves the system of equations in Section 3.1
     of https://arxiv.org/pdf/math/0701759.pdf. This cheap method
@@ -110,7 +110,7 @@ function (::Type{Q})(t::NTuple{9}) where Q<:UnitQuaternion
 end
 
 
-function Base.getindex(q::UnitQuaternion, i::Int)
+function Base.getindex(q::QuatRotation, i::Int)
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -172,7 +172,7 @@ function Base.getindex(q::UnitQuaternion, i::Int)
     end
 end
 
-function Base.Tuple(q::UnitQuaternion)
+function Base.Tuple(q::QuatRotation)
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -202,8 +202,8 @@ function Base.Tuple(q::UnitQuaternion)
 end
 
 # ~~~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~ #
-@inline scalar(q::UnitQuaternion) = real(q.q)
-@inline vector(q::UnitQuaternion) = vector(q.q)
+@inline scalar(q::QuatRotation) = real(q.q)
+@inline vector(q::QuatRotation) = vector(q.q)
 @inline vector(q::Quaternion) = SVector{3}(q.v1, q.v2, q.v3)
 
 """
@@ -217,21 +217,21 @@ p = MRP(1.0, 2.0, 3.0)
 Rotations.params(p) == @SVector [1.0, 2.0, 3.0]  # true
 ```
 """
-@inline params(q::UnitQuaternion) = SVector{4}(q.q.s, q.q.v1, q.q.v2, q.q.v3)
+@inline params(q::QuatRotation) = SVector{4}(q.q.s, q.q.v1, q.q.v2, q.q.v3)
 
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{<:UnitQuaternion{T}}) where T
-    _normalize(UnitQuaternion{T}(randn(rng,T), randn(rng,T), randn(rng,T), randn(rng,T)))
+function Random.rand(rng::AbstractRNG, ::Random.SamplerType{<:QuatRotation{T}}) where T
+    _normalize(QuatRotation{T}(randn(rng,T), randn(rng,T), randn(rng,T), randn(rng,T)))
 end
-@inline Base.one(::Type{Q}) where Q <: UnitQuaternion = Q(1.0, 0.0, 0.0, 0.0)
+@inline Base.one(::Type{Q}) where Q <: QuatRotation = Q(1.0, 0.0, 0.0, 0.0)
 
 
 # ~~~~~~~~~~~~~~~ Math Operations ~~~~~~~~~~~~~~~ #
 
 # Inverses
-Base.inv(q::Q) where Q <: UnitQuaternion = Q(conj(q.q))
+Base.inv(q::Q) where Q <: QuatRotation = Q(conj(q.q))
 
-function _normalize(q::Q) where Q <: UnitQuaternion
+function _normalize(q::Q) where Q <: QuatRotation
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -242,7 +242,7 @@ function _normalize(q::Q) where Q <: UnitQuaternion
 end
 
 # Identity
-(::Type{Q})(I::UniformScaling) where Q <: UnitQuaternion = one(Q)
+(::Type{Q})(I::UniformScaling) where Q <: QuatRotation = one(Q)
 
 # Exponentials and Logarithms
 """
@@ -264,10 +264,10 @@ function expm(ϕ::AbstractVector)
     θ = norm(ϕ)
     sθ,cθ = sincos(θ/2)
     M = sinc(θ/π/2)/2
-    UnitQuaternion(cθ, ϕ[1]*M, ϕ[2]*M, ϕ[3]*M, false)
+    QuatRotation(cθ, ϕ[1]*M, ϕ[2]*M, ϕ[3]*M, false)
 end
 
-function _log_as_quat(q::Q, eps=1e-6) where Q <: UnitQuaternion
+function _log_as_quat(q::Q, eps=1e-6) where Q <: QuatRotation
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -283,14 +283,14 @@ function _log_as_quat(q::Q, eps=1e-6) where Q <: UnitQuaternion
     _pure_quaternion(M*vector(q))
 end
 
-function logm(q::UnitQuaternion)
+function logm(q::QuatRotation)
     # Assumes unit quaternion
     return 2*vector(_log_as_quat(q))
 end
 
 # Composition
 """
-    (*)(q::UnitQuaternion, w::UnitQuaternion)
+    (*)(q::QuatRotation, w::QuatRotation)
 
 Quternion Composition
 
@@ -302,26 +302,26 @@ rmult(w) * SVector(q)
 
 Sets the output mapping equal to the mapping of `w`
 """
-function (*)(q1::UnitQuaternion, q2::UnitQuaternion)
-    return UnitQuaternion(q1.q*q2.q)
+function (*)(q1::QuatRotation, q2::QuatRotation)
+    return QuatRotation(q1.q*q2.q)
 end
 
 """
-    (*)(q::UnitQuaternion, r::StaticVector)
+    (*)(q::QuatRotation, r::StaticVector)
 
 Rotate a vector
 
 Equivalent to `hmat()' lmult(q) * rmult(q)' hmat() * r`
 """
-function Base.:*(q::UnitQuaternion, r::StaticVector)  # must be StaticVector to avoid ambiguity
+function Base.:*(q::QuatRotation, r::StaticVector)  # must be StaticVector to avoid ambiguity
     check_length(r, 3)
     w = real(q.q)
     v = vector(q.q)
     (w^2 - v'v)*r + 2*v*(v'r) + 2*w*cross(v,r)
 end
 
-(\)(q1::UnitQuaternion, q2::UnitQuaternion) = inv(q1)*q2
-(/)(q1::UnitQuaternion, q2::UnitQuaternion) = q1*inv(q2)
+(\)(q1::QuatRotation, q2::QuatRotation) = inv(q1)*q2
+(/)(q1::QuatRotation, q2::QuatRotation) = q1*inv(q2)
 
 """
     rotation_between(from, to)
@@ -337,7 +337,7 @@ function rotation_between(from::SVector{3}, to::SVector{3})
     normprod < eps(T) && throw(ArgumentError("Input vectors must be nonzero."))
     w = normprod + dot(from, to)
     v = abs(w) < 100 * eps(T) ? perpendicular_vector(from) : cross(from, to)
-    @inbounds return UnitQuaternion(w, v[1], v[2], v[3]) # relies on normalization in constructor
+    @inbounds return QuatRotation(w, v[1], v[2], v[3]) # relies on normalization in constructor
 end
 
 # ~~~~~~~~~~~~~~~ Kinematics ~~~~~~~~~~~~~~~ $
@@ -361,18 +361,18 @@ The kinematics are extremely useful when computing the dynamics of rigid bodies,
 See "Fundamentals of Spacecraft Attitude Determination and Control" by Markley and Crassidis
 Sections 3.1-3.2 for more details.
 """
-function kinematics(q::Q, ω::AbstractVector) where Q <: UnitQuaternion
+function kinematics(q::Q, ω::AbstractVector) where Q <: QuatRotation
     params(q*Q(0.0, ω[1], ω[2], ω[3], false))/2
 end
 
 # ~~~~~~~~~~~~~~~ Linear Algebraic Conversions ~~~~~~~~~~~~~~~ #
 """
-    lmult(q::UnitQuaternion)
+    lmult(q::QuatRotation)
     lmult(q::StaticVector{4})
 
 `lmult(q2)*params(q1)` returns a vector equivalent to `q2*q1` (quaternion composition)
 """
-function lmult(q::UnitQuaternion)
+function lmult(q::QuatRotation)
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -393,15 +393,15 @@ function lmult(q::Quaternion)
         q.v3 -q.v2  q.v1  q.s;
     ]
 end
-lmult(q::StaticVector{4}) = lmult(UnitQuaternion(q, false))
+lmult(q::StaticVector{4}) = lmult(QuatRotation(q, false))
 
 """
-    rmult(q::UnitQuaternion)
+    rmult(q::QuatRotation)
     rmult(q::StaticVector{4})
 
 `rmult(q1)*params(q2)` return a vector equivalent to `q2*q1` (quaternion composition)
 """
-function rmult(q::UnitQuaternion)
+function rmult(q::QuatRotation)
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -422,12 +422,12 @@ function rmult(q::Quaternion)
         q.v3  q.v2 -q.v1  q.s;
     ]
 end
-rmult(q::SVector{4}) = rmult(UnitQuaternion(q, false))
+rmult(q::SVector{4}) = rmult(QuatRotation(q, false))
 
 """
     tmat()
 
-`tmat()*params(q)`return a vector equivalent to `inv(q)`, where `q` is a `UnitQuaternion`
+`tmat()*params(q)`return a vector equivalent to `inv(q)`, where `q` is a `QuatRotation`
 """
 function tmat(::Type{T}=Float64) where T
     SA{T}[
@@ -477,7 +477,7 @@ end
 
 # ~~~~~~~~~~~~~~~ Useful Jacobians ~~~~~~~~~~~~~~~ #
 """
-    ∇differential(q::UnitQuaternion)
+    ∇differential(q::QuatRotation)
 
 Jacobian of `lmult(q) QuatMap(ϕ)`, when ϕ is near zero.
 
@@ -485,7 +485,7 @@ Useful for converting Jacobians from R⁴ to R³ and
     correctly account for unit norm constraint. Jacobians for different
     differential quaternion parameterization are the same up to a constant.
 """
-function ∇differential(q::UnitQuaternion)
+function ∇differential(q::QuatRotation)
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -500,11 +500,11 @@ function ∇differential(q::UnitQuaternion)
 end
 
 """
-    ∇²differential(q::UnitQuaternion, b::AbstractVector)
+    ∇²differential(q::QuatRotation, b::AbstractVector)
 
 Jacobian of `(∂/∂ϕ lmult(q) QuatMap(ϕ))`b, evaluated at ϕ=0, and `b` has length 4.
 """
-function ∇²differential(q::UnitQuaternion, b::AbstractVector)
+function ∇²differential(q::QuatRotation, b::AbstractVector)
     check_length(b, 4)
     b1 = -params(q)'b
     Diagonal(@SVector fill(b1,3))
@@ -515,9 +515,9 @@ end
 
 Jacobian of `R*r` with respect to the rotation
 """
-function ∇rotate(q::UnitQuaternion, r::AbstractVector)
+function ∇rotate(q::QuatRotation, r::AbstractVector)
     check_length(r, 3)
-    rhat = UnitQuaternion(zero(eltype(r)), r[1], r[2], r[3], false)
+    rhat = QuatRotation(zero(eltype(r)), r[1], r[2], r[3], false)
     2vmat()*rmult(q)'rmult(rhat)
 end
 
@@ -526,7 +526,7 @@ end
 
 Jacobian of `R2*R1` with respect to `R1`
 """
-function ∇composition1(q2::UnitQuaternion, q1::UnitQuaternion)
+function ∇composition1(q2::QuatRotation, q1::QuatRotation)
     lmult(q2)
 end
 
@@ -535,6 +535,6 @@ end
 
 Jacobian of `R2*R1` with respect to `R2`
 """
-function ∇composition2(q2::UnitQuaternion, q1::UnitQuaternion)
+function ∇composition2(q2::QuatRotation, q1::QuatRotation)
     rmult(q1)
 end

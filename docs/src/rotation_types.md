@@ -43,7 +43,7 @@ For more information, see the sidebar page.
     * Rotation around given axis and angle.
 * `RotationVec`
     * Rotation around given axis. The length of axis vector represents its angle.
-* `UnitQuaternion`
+* `QuatRotation`
     * A 3D rotation parameterized by a unit quaternion.
 * `MRP`
     * A 3D rotation encoded by the stereographic projection of a unit quaternion.

@@ -35,7 +35,7 @@ Rotations.params(RotYZY(R))  # Proper Euler angles, (y,z,y)
 Rotations.params(RotXYZ(R))  # Tait–Bryan angles, (y,z,y)
 Rotations.params(AngleAxis(R))  # Rotation around an axis (theta, axis_x, axis_y, axis_z)
 Rotations.params(RotationVec(R))  # Rotation vector (v_x, v_y, v_z)
-Rotations.params(UnitQuaternion(R))  # Quaternion (w, x, y, z)
+Rotations.params(QuatRotation(R))  # Quaternion (w, x, y, z)
 Rotations.params(RodriguesParam(R))  # Rodrigues Parameters (x, y, z)
 Rotations.params(MRP(R))  # Modified Rodrigues Parameters (x, y, z)
 ```
@@ -93,7 +93,7 @@ The following types have an algebraic structure that is homomorphic to ``SO(3)``
 * `RotXYZ` (and other Euler angles)
 * `AngleAxis`
 * `RotationVec`
-* `UnitQuaternion`
+* `QuatRotation`
 * `RodriguesParam`
 * `MRP`
 
@@ -118,4 +118,4 @@ Note that:
 * `rand(RotX)` is same as `RotX(2π*rand())`.
 * `rand(RotXY)` is same as `RotXY(2π*rand(), 2π*rand())`.
 * `rand(RotXYZ)` is **not** same as `RotXYZ(2π*rand(), 2π*rand(), 2π*rand())`.
-* But `rand(RotXYZ)` is same as `RotXYZ(rand(UnitQuaternion))`.
+* But `rand(RotXYZ)` is same as `RotXYZ(rand(QuatRotation))`.

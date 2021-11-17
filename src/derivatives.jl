@@ -30,7 +30,7 @@ to the output parameterization, centered at the value of R.
     jacobian(R::rotation_type, X::AbstractVector)
 Returns the jacobian for rotating the vector X by R.
 """
-function jacobian(::Type{RotMatrix},  q::UnitQuaternion)
+function jacobian(::Type{RotMatrix},  q::QuatRotation)
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -82,10 +82,10 @@ end
 function jacobian(::Type{RotMatrix},  X::MRP)
 
     # get the derivatives of the quaternion w.r.t to the mrp
-    dQdX = jacobian(UnitQuaternion,  X)
+    dQdX = jacobian(QuatRotation,  X)
 
     # get the derivatives of the rotation matrix w.r.t to the mrp
-    dRdQ = jacobian(RotMatrix,  UnitQuaternion(X))
+    dRdQ = jacobian(RotMatrix,  QuatRotation(X))
 
     # and return
     return dRdQ * dQdX
@@ -98,7 +98,7 @@ end
 #
 #######################################################
 
-function jacobian(::Type{UnitQuaternion},  X::MRP)
+function jacobian(::Type{QuatRotation},  X::MRP)
 
     # differentiating
     # q = Quaternion((1-alpha2) / (alpha2 + 1), 2*X.x / (alpha2 + 1),   2*X.y  / (alpha2 + 1), 2*X.z / (alpha2 + 1), true)
@@ -137,7 +137,7 @@ end
 #
 # Jacobian converting from a Quaternion to an MRP
 #
-function jacobian(::Type{MRP}, q::UnitQuaternion{T}) where T
+function jacobian(::Type{MRP}, q::QuatRotation{T}) where T
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -183,7 +183,7 @@ end
 end
 
 # TODO: should this be jacobian(:rotate, q,  X)   # or something?
-function jacobian(q::UnitQuaternion, X::AbstractVector)
+function jacobian(q::QuatRotation, X::AbstractVector)
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -209,8 +209,8 @@ function jacobian(q::UnitQuaternion, X::AbstractVector)
 end
 
 function jacobian(spq::MRP, X::AbstractVector)
-    dQ = jacobian(UnitQuaternion, spq)
-    q = UnitQuaternion(spq)
+    dQ = jacobian(QuatRotation, spq)
+    q = QuatRotation(spq)
     return jacobian(q, X) * dQ
 end
 

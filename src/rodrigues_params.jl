@@ -24,17 +24,17 @@ params(g::RodriguesParam) = SVector{3}(g.x, g.y, g.z)
 
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
 @inline function Random.rand(rng::AbstractRNG, ::Random.SamplerType{RP}) where RP <: RodriguesParam
-    RP(rand(rng, UnitQuaternion))
+    RP(rand(rng, QuatRotation))
 end
 @inline Base.one(::Type{RP}) where RP <: RodriguesParam = RP(0.0, 0.0, 0.0)
 
 # ~~~~~~~~~~~~~~~ Quaternion <=> RP ~~~~~~~~~~~~~~~~~~ #
-@inline function (::Type{Q})(g::RodriguesParam) where Q<:UnitQuaternion
+@inline function (::Type{Q})(g::RodriguesParam) where Q<:QuatRotation
     M = 1/sqrt(1 + g.x*g.x + g.y*g.y + g.z*g.z)
     return Q(M, M*g.x, M*g.y, M*g.z, false)
 end
 
-@inline function (::Type{G})(q::UnitQuaternion) where G<:RodriguesParam
+@inline function (::Type{G})(q::QuatRotation) where G<:RodriguesParam
     w = q.q.s
     x = q.q.v1
     y = q.q.v2
@@ -44,9 +44,9 @@ end
 end
 
 # ~~~~~~~~~~~~~~~ StaticArrays Interface ~~~~~~~~~~~~~~~ #
-@inline (::Type{RP})(t::NTuple{9}) where RP<:RodriguesParam = convert(RP, UnitQuaternion(t))
-@inline Base.getindex(rp::RodriguesParam, i::Int) = convert(UnitQuaternion, rp)[i]
-@inline Base.Tuple(rp::RodriguesParam) = Tuple(convert(UnitQuaternion, rp))
+@inline (::Type{RP})(t::NTuple{9}) where RP<:RodriguesParam = convert(RP, QuatRotation(t))
+@inline Base.getindex(rp::RodriguesParam, i::Int) = convert(QuatRotation, rp)[i]
+@inline Base.Tuple(rp::RodriguesParam) = Tuple(convert(QuatRotation, rp))
 
 # ~~~~~~~~~~~~~~~ Math Operations ~~~~~~~~~~~~~~~ #
 Base.inv(p::RodriguesParam) = RodriguesParam(-p.x, -p.y, -p.z)
@@ -71,8 +71,8 @@ function (/)(g1::RodriguesParam, g2::RodriguesParam)
 end
 
 # ~~~~~~~~~~~~~~~ Rotation ~~~~~~~~~~~~~~~ #
-(*)(g::RodriguesParam, r::StaticVector) = UnitQuaternion(g)*r
-(\)(g::RodriguesParam, r::StaticVector) = inv(UnitQuaternion(g))*r
+(*)(g::RodriguesParam, r::StaticVector) = QuatRotation(g)*r
+(\)(g::RodriguesParam, r::StaticVector) = inv(QuatRotation(g))*r
 
 
 # ~~~~~~~~~~~~~~~ Kinematics ~~~~~~~~~~~~~~~ #
