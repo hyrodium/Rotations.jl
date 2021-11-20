@@ -25,6 +25,9 @@ Base.ones(::Type{R}) where {R<:InfinitesimalRotation} = ones(R, ()) # avoid Stat
 # Generate identity rotation matrix
 Base.zero(r::InfinitesimalRotation) = zero(typeof(r))
 
+# difference
+Base.:-(r1::InfinitesimalRotation, r2::InfinitesimalRotation) = r1 + (-r2)
+
 # `convert` goes through the constructors, similar to e.g. `Number`
 Base.convert(::Type{R}, rot::InfinitesimalRotation{N}) where {N,R<:InfinitesimalRotation{N}} = R(rot)
 
