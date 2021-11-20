@@ -102,6 +102,7 @@ Base.:-(r::InfinitesimalRotMatrix) = InfinitesimalRotMatrix(-r.mat)
 
 @inline Base.:*(t::Number, r::InfinitesimalRotMatrix) = InfinitesimalRotMatrix(t*r.mat)
 @inline Base.:*(r::InfinitesimalRotMatrix, t::Number) = t*r
+@inline Base.:/(r::InfinitesimalRotMatrix, t::Number) = InfinitesimalRotMatrix(r.mat/t)
 
 # Special case multiplication of 2×2 rotation matrices: speedup using skew-symmetricity
 @inline function Base.:+(r1::InfinitesimalRotMatrix{2}, r2::InfinitesimalRotMatrix{2})
@@ -150,6 +151,7 @@ end
 @inline Base.:-(r1::InfinitesimalAngle2d, r2::InfinitesimalAngle2d) = InfinitesimalAngle2d(r1.v - r2.v)
 @inline Base.:*(t::Number, r::InfinitesimalAngle2d) = InfinitesimalAngle2d(t*r.v)
 @inline Base.:*(r::InfinitesimalAngle2d, t::Number) = t*r
+@inline Base.:/(r::InfinitesimalAngle2d, t::Number) = InfinitesimalAngle2d(r.v/t)
 @inline Base.:-(r::InfinitesimalAngle2d) = InfinitesimalAngle2d(-r.v)
 
 @inline function Base.getindex(r::InfinitesimalAngle2d{T}, i::Int) where T
@@ -199,6 +201,7 @@ end
 @inline Base.:-(r1::InfinitesimalRotationVec, r2::InfinitesimalRotationVec) = InfinitesimalRotationVec(r1.x - r2.x, r1.y - r2.y, r1.z - r2.z)
 @inline Base.:*(t::Number, r::InfinitesimalRotationVec) = InfinitesimalRotationVec(t*r.x, t*r.y, t*r.z)
 @inline Base.:*(r::InfinitesimalRotationVec, t::Number) = t*r
+@inline Base.:/(r::InfinitesimalRotationVec, t::Number) = InfinitesimalRotationVec(r.x/t, r.y/t, r.z/t)
 @inline Base.:-(r::InfinitesimalRotationVec) = InfinitesimalRotationVec(-r.x, -r.y, -r.z)
 
 @inline function Base.getindex(r::InfinitesimalRotationVec{T}, i::Int) where T
