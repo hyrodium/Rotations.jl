@@ -9,7 +9,7 @@
             r = zero(T)
             @test r isa InfinitesimalRotation
             @test r === zero(r)
-
+            @test zeros(T,2,3) == [zero(T) for i in 1:2, j in 1:3]
         end
     end
 
@@ -18,6 +18,7 @@
             r = one(T)
             @test r isa SMatrix
             @test r == one(r)
+            @test ones(T,2,3) == [one(T) for i in 1:2, j in 1:3]
         end
     end
 
@@ -65,6 +66,9 @@
             @test_throws BoundsError zero(InfinitesimalAngle2d)[2,4]
             @test_throws BoundsError zero(InfinitesimalAngle2d)[4,1]
         end
+
+        @test_throws ErrorException zero(InfinitesimalRotation)
+        @test_throws ErrorException one(InfinitesimalRotation)
 
         @test_throws DimensionMismatch InfinitesimalAngle2d(1) + InfinitesimalRotationVec(2,3,4)
     end
