@@ -10,6 +10,7 @@
     @testset "$(T)" for T in all_types, F in (one, rand)
         R = F(T)
         @test R ≈ exp(log(R))
-        @test log(R) isa SMatrix
+        @test log(R) isa InfinitesimalRotation
+        @test exp(log(R)) isa Rotation
     end
 end
