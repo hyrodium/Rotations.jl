@@ -4,7 +4,29 @@
     types_2d = (InfinitesimalRotMatrix{2}, InfinitesimalAngle2d)
     types_3d = (InfinitesimalRotMatrix{3}, InfinitesimalRotationVec)
 
-    @testset "constructor" begin
+    @testset "constructor-2d" begin
+        m = rand(2,2)
+        s1 = InfinitesimalRotMatrix{2}(m - m')
+        s2 = InfinitesimalRotMatrix{2, BigFloat}(m - m')
+        s3 = InfinitesimalRotMatrix{2}(0)
+        s4 = InfinitesimalRotMatrix{2, BigFloat}(0)
+        s5 = InfinitesimalRotMatrix(0)
+        s6 = InfinitesimalRotMatrix(BigFloat(0))
+        s7 = InfinitesimalAngle2d(0)
+        s8 = InfinitesimalAngle2d(BigFloat(0))
+        s9 = InfinitesimalAngle2d{BigFloat}(0)
+        @test s1 isa InfinitesimalRotMatrix{2, Float64}
+        @test s2 isa InfinitesimalRotMatrix{2, BigFloat}
+        @test s3 isa InfinitesimalRotMatrix{2, Int}
+        @test s4 isa InfinitesimalRotMatrix{2, BigFloat}
+        @test s5 isa InfinitesimalRotMatrix{2, Int}
+        @test s6 isa InfinitesimalRotMatrix{2, BigFloat}
+        @test s7 isa InfinitesimalAngle2d{Int}
+        @test s8 isa InfinitesimalAngle2d{BigFloat}
+        @test s9 isa InfinitesimalAngle2d{BigFloat}
+    end
+
+    @testset "constructor-3d" begin
         m = rand(3,3)
         s1 = InfinitesimalRotMatrix{3}(m - m')
         s2 = InfinitesimalRotMatrix{3, BigFloat}(m - m')
@@ -121,6 +143,8 @@
 
         @test_throws ErrorException zero(InfinitesimalRotation)
         @test_throws ErrorException one(InfinitesimalRotation)
+        @test_throws ErrorException zero(InfinitesimalRotMatrix)
+        @test_throws ErrorException one(InfinitesimalRotMatrix)
 
         @test_throws DimensionMismatch InfinitesimalAngle2d(1) + InfinitesimalRotationVec(2,3,4)
     end
