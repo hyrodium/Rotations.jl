@@ -52,4 +52,20 @@
             @test r*a == a*r == a*SMatrix(r)
         end
     end
+
+    @testset "error case" begin
+        for T in types_2d
+            @test_throws BoundsError zero(InfinitesimalAngle2d)[5]
+            @test_throws BoundsError zero(InfinitesimalAngle2d)[2,3]
+            @test_throws BoundsError zero(InfinitesimalAngle2d)[3,1]
+        end
+
+        for T in types_3d
+            @test_throws BoundsError zero(InfinitesimalAngle2d)[10]
+            @test_throws BoundsError zero(InfinitesimalAngle2d)[2,4]
+            @test_throws BoundsError zero(InfinitesimalAngle2d)[4,1]
+        end
+
+        @test_throws DimensionMismatch InfinitesimalAngle2d(1) + InfinitesimalRotationVec(2,3,4)
+    end
 end
