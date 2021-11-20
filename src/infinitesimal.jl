@@ -188,7 +188,7 @@ end
 end
 
 @inline InfinitesimalRotationVec(r::InfinitesimalRotation{3}) = InfinitesimalRotationVec(r[6], r[7], r[2])
-@inline InfinitesimalRotationVec{T}(r::InfinitesimalRotation{3}) where {T} = InfinitesimalRotationVec{T}(r[6], r[7], r[x])
+@inline InfinitesimalRotationVec{T}(r::InfinitesimalRotation{3}) where {T} = InfinitesimalRotationVec{T}(r[6], r[7], r[2])
 
 @inline Base.zero(::Type{R}) where {R<: InfinitesimalRotationVec} = R(0.0,0.0,0.0)
 
