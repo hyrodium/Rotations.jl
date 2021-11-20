@@ -19,8 +19,8 @@ Base.one(::Type{InfinitesimalRotation}) = error("The dimension of rotation is no
 Base.one(::Type{<:InfinitesimalRotation{N}}) where N = one(SMatrix{N,N})
 Base.one(::Type{<:InfinitesimalRotation{N,T}}) where {N,T} = one(SMatrix{N,N,T})
 Base.ones(::Type{R}) where {R<:InfinitesimalRotation} = ones(R, ()) # avoid StaticArray constructor
-# Base.ones(::Type{R}, dims::Base.DimOrInd...) where {R<:InfinitesimalRotation} = ones(typeof(one(R)),dims...)
-# Base.ones(::Type{R}, dims::NTuple{N, Integer}) where {R<:InfinitesimalRotation, N} = ones(typeof(one(R)),dims)
+Base.ones(::Type{R}, dims::Base.DimOrInd...) where {R<:InfinitesimalRotation} = ones(typeof(one(R)),dims...)
+Base.ones(::Type{R}, dims::NTuple{N, Integer}) where {R<:InfinitesimalRotation, N} = ones(typeof(one(R)),dims)
 
 # Generate identity rotation matrix
 Base.zero(r::InfinitesimalRotation) = zero(typeof(r))
