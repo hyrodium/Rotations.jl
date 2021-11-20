@@ -37,4 +37,19 @@
             @test -r == r' == transpose(r)
         end
     end
+
+    @testset "multiply" begin
+        for T in all_types
+            r = T(log(rand(typeof(exp(zero(T))))))
+            a = 4.2
+            @test r isa T
+            @test r*1 isa T
+            @test 1*r isa T
+            @test a*r isa T
+
+            @test r*1 == 1*r == r
+            @test r*2 == 2*r == r+r
+            @test r*a == a*r == a*SMatrix(r)
+        end
+    end
 end
