@@ -83,12 +83,12 @@ end
 Base.@propagate_inbounds Base.getindex(r::InfinitesimalRotMatrix, i::Int) = r.mat[i]
 @inline Base.Tuple(r::InfinitesimalRotMatrix) = Tuple(r.mat)
 
-@inline InfinitesimalRotMatrix(θ::Real) = InfinitesimalRotMatrix{2}(θ)
-@inline function (::Type{InfinitesimalRotMatrix{2}})(θ::Real)
-    InfinitesimalRotMatrix(@SMatrix [zero(θ) -θ; θ zero(θ)])
+@inline InfinitesimalRotMatrix(v::Number) = InfinitesimalRotMatrix{2}(v)
+@inline function (::Type{InfinitesimalRotMatrix{2}})(v::Number)
+    InfinitesimalRotMatrix(@SMatrix [zero(v) -v; v zero(v)])
 end
-@inline function InfinitesimalRotMatrix{2,T}(θ::Real) where T
-    InfinitesimalRotMatrix(@SMatrix T[zero(θ) -θ; θ zero(θ)])
+@inline function InfinitesimalRotMatrix{2,T}(v::Number) where T
+    InfinitesimalRotMatrix(@SMatrix T[zero(v) -v; v zero(v)])
 end
 
 # A rotation is more-or-less defined as being an orthogonal (or unitary) matrix
