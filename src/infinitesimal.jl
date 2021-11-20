@@ -14,13 +14,16 @@ Base.transpose(r::InfinitesimalRotation{N,T}) where {N,T<:Real} = -r
 
 # Generate identity-matrix with SMatrix
 # Note that zeros(InfinitesimalRotation3,dims...) is not Array{<:InfinitesimalRotation} but Array{<:StaticMatrix{3,3}}
-Base.one(::InfinitesimalRotation{N,T}) where {N,T} = @SMatrix ones(T,N,N)
+Base.one(::InfinitesimalRotation{N,T}) where {N,T} = one(SMatrix{N,N,T})
 Base.one(::Type{InfinitesimalRotation}) = error("The dimension of rotation is not specified.")
-Base.one(::Type{<:InfinitesimalRotation{N}}) where N = @SMatrix ones(N,N)
-Base.one(::Type{<:InfinitesimalRotation{N,T}}) where {N,T} = @SMatrix ones(T,N,N)
+Base.one(::Type{<:InfinitesimalRotation{N}}) where N = one(SMatrix{N,N})
+Base.one(::Type{<:InfinitesimalRotation{N,T}}) where {N,T} = one(SMatrix{N,N,T})
 Base.ones(::Type{R}) where {R<:InfinitesimalRotation} = ones(R, ()) # avoid StaticArray constructor
-Base.ones(::Type{R}, dims::Base.DimOrInd...) where {R<:InfinitesimalRotation} = ones(typeof(one(R)),dims...)
-Base.ones(::Type{R}, dims::NTuple{N, Integer}) where {R<:InfinitesimalRotation, N} = ones(typeof(one(R)),dims)
+# Base.ones(::Type{R}, dims::Base.DimOrInd...) where {R<:InfinitesimalRotation} = ones(typeof(one(R)),dims...)
+# Base.ones(::Type{R}, dims::NTuple{N, Integer}) where {R<:InfinitesimalRotation, N} = ones(typeof(one(R)),dims)
+
+# Generate identity rotation matrix
+Base.zero(r::InfinitesimalRotation) = zero(typeof(r))
 
 # `convert` goes through the constructors, similar to e.g. `Number`
 Base.convert(::Type{R}, rot::InfinitesimalRotation{N}) where {N,R<:InfinitesimalRotation{N}} = R(rot)
@@ -85,8 +88,6 @@ end
     InfinitesimalRotMatrix(@SMatrix T[zero(θ) -θ; θ zero(θ)])
 end
 
-Base.one(::Type{R}) where {N,R<:InfinitesimalRotMatrix{N}} = R(I)
-
 # A rotation is more-or-less defined as being an orthogonal (or unitary) matrix
 Base.:-(r::InfinitesimalRotMatrix) = InfinitesimalRotMatrix(-r.mat)
 
@@ -98,10 +99,9 @@ Base.:-(r::InfinitesimalRotMatrix) = InfinitesimalRotMatrix(-r.mat)
 
 # Special case multiplication of 2×2 rotation matrices: speedup using skew-symmetricity
 @inline function Base.:+(r1::InfinitesimalRotMatrix{2}, r2::InfinitesimalRotMatrix{2})
-    s12 = r1[2,1]+r2[2,1]
-    s = @SMatrix [0    s12 -s31
-                 -s12  0    s23
-                  s31 -s23  0]
+    v = r1[2,1]+r2[2,1]
+    s = @SMatrix [0  -v
+                  v   0]
     return InfinitesimalRotMatrix(s)
 end
 
@@ -138,7 +138,7 @@ end
 @inline InfinitesimalAngle2d(r::InfinitesimalRotation{2}) = InfinitesimalAngle2d(r[2,1])
 @inline InfinitesimalAngle2d{T}(r::InfinitesimalRotation{2}) where {T} = InfinitesimalAngle2d{T}(r[2,1])
 
-@inline Base.zero(::Type{A}) where {A<: InfinitesimalAngle2d} = A(0)
+@inline Base.zero(::Type{A}) where {A<: InfinitesimalAngle2d} = A(0.0)
 
 @inline Base.:+(r1::InfinitesimalAngle2d, r2::InfinitesimalAngle2d) = InfinitesimalAngle2d(r1.v + r2.v)
 @inline Base.:-(r1::InfinitesimalAngle2d, r2::InfinitesimalAngle2d) = InfinitesimalAngle2d(r1.v - r2.v)
@@ -187,7 +187,7 @@ end
 @inline InfinitesimalRotationVec(r::InfinitesimalRotation{3}) = InfinitesimalRotationVec(r[6], r[7], r[2])
 @inline InfinitesimalRotationVec{T}(r::InfinitesimalRotation{3}) where {T} = InfinitesimalRotationVec{T}(r[6], r[7], r[x])
 
-@inline Base.zero(::Type{A}) where {A<: InfinitesimalRotationVec} = A(0)
+@inline Base.zero(::Type{R}) where {R<: InfinitesimalRotationVec} = R(0.0,0.0,0.0)
 
 @inline Base.:+(r1::InfinitesimalRotationVec, r2::InfinitesimalRotationVec) = InfinitesimalRotationVec(r1.x + r2.x, r1.y + r2.y, r1.z + r2.z)
 @inline Base.:-(r1::InfinitesimalRotationVec, r2::InfinitesimalRotationVec) = InfinitesimalRotationVec(r1.x - r2.x, r1.y - r2.y, r1.z - r2.z)
