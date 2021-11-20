@@ -14,3 +14,14 @@
         @test exp(log(R)) isa Rotation
     end
 end
+
+@testset "exp(zero)" begin
+    all_types = (InfinitesimalRotMatrix{3}, InfinitesimalRotationVec,
+                 InfinitesimalRotMatrix{2}, InfinitesimalAngle2d)
+
+    @testset "$(T)" for T in all_types
+        r = zero(T)
+        @test one(exp(r)) ≈ exp(r)
+        @test exp(r) isa Rotation
+    end
+end
