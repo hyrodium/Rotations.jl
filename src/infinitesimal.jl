@@ -97,6 +97,9 @@ Base.:-(r::InfinitesimalRotMatrix) = InfinitesimalRotMatrix(-r.mat)
 @inline Base.:+(r1::InfinitesimalRotation, r2::InfinitesimalRotMatrix) = InfinitesimalRotMatrix(r1) + r2
 @inline Base.:+(r1::InfinitesimalRotMatrix, r2::InfinitesimalRotMatrix) = InfinitesimalRotMatrix(r1.mat + r2.mat)
 
+@inline Base.:*(t::Number, r::InfinitesimalRotMatrix) = InfinitesimalRotMatrix(t*r.mat)
+@inline Base.:*(r::InfinitesimalRotMatrix, t::Number) = t*r
+
 # Special case multiplication of 2×2 rotation matrices: speedup using skew-symmetricity
 @inline function Base.:+(r1::InfinitesimalRotMatrix{2}, r2::InfinitesimalRotMatrix{2})
     v = r1[2,1]+r2[2,1]
