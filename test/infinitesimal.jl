@@ -78,14 +78,14 @@
             R = InfinitesimalRotMatrix
 
             @test zero(T)           + zero(R{N})        isa R{N, Float64}
-            @test zero(R{T})        + zero(T)           isa R{N, Float64}
+            @test zero(R{N})        + zero(T)           isa R{N, Float64}
             @test zero(T{Int})      + zero(R{N,Int})    isa R{N, Int}
             @test zero(R{N,Int})    + zero(T{Int})      isa R{N, Int}
             @test zero(T{Int})      + zero(T{BigFloat}) isa T{BigFloat}
             @test zero(T{BigFloat}) + zero(T{Int})      isa T{BigFloat}
 
             @test zero(T)           - zero(R{N})        isa R{N, Float64}
-            @test zero(R{T})        - zero(T)           isa R{N, Float64}
+            @test zero(R{N})        - zero(T)           isa R{N, Float64}
             @test zero(T{Int})      - zero(R{N,Int})    isa R{N, Int}
             @test zero(R{N,Int})    - zero(T{Int})      isa R{N, Int}
             @test zero(T{Int})      - zero(T{BigFloat}) isa T{BigFloat}
