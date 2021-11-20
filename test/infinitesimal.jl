@@ -66,6 +66,11 @@
             r = one(T{BigFloat})
             @test r isa SMatrix{3,3,BigFloat}
         end
+
+        @test one(InfinitesimalRotation{2}) isa SMatrix{2, 2, Float64}
+        @test one(InfinitesimalRotation{2,BigFloat}) isa SMatrix{2, 2, BigFloat}
+        @test one(InfinitesimalRotation{3}) isa SMatrix{3, 3, Float64}
+        @test one(InfinitesimalRotation{3,BigFloat}) isa SMatrix{3, 3, BigFloat}
     end
 
     @testset "minus" begin
