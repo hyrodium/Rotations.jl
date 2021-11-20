@@ -24,6 +24,7 @@ include("principal_value.jl")
 include("rodrigues_params.jl")
 include("error_maps.jl")
 include("rotation_error.jl")
+include("infinitesimal.jl")
 include("log.jl")
 include("eigen.jl")
 include("deprecated.jl")
@@ -41,6 +42,12 @@ export
 
     # Deprecated, but export for compatibility
     UnitQuaternion,
+
+    # infinitesimal rotations
+    InfinitesimalRotation,
+    InfinitesimalRotMatrix,
+    InfinitesimalAngle2d,
+    InfinitesimalRotationVec,
 
     # Quaternion math ops
     logm, expm, ⊖, ⊕,
