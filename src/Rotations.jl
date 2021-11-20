@@ -46,6 +46,8 @@ export
     # infinitesimal rotations
     InfinitesimalRotation,
     InfinitesimalRotMatrix,
+    InfinitesimalRotMatrix2,
+    InfinitesimalRotMatrix3,
     InfinitesimalAngle2d,
     InfinitesimalRotationVec,
 
