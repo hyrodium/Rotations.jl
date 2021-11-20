@@ -48,6 +48,7 @@
 
     @testset "minus" begin
         for T in all_types
+            # TODO: add rand method for InfinitesimalRotation
             r = T(log(rand(typeof(exp(zero(T))))))
             @test r isa T
             @test -r isa T
@@ -65,6 +66,7 @@
 
     @testset "multiply" begin
         for T in all_types
+            # TODO: add rand method for InfinitesimalRotation
             r = T(log(rand(typeof(exp(zero(T))))))
             a = 4.2
             @test r isa T
@@ -80,6 +82,7 @@
 
     @testset "division" begin
         for T in all_types
+            # TODO: add rand method for InfinitesimalRotation
             r = T(log(rand(typeof(exp(zero(T))))))
             a = 4.2
             @test r isa T
@@ -94,6 +97,7 @@
 
     @testset "matrix multiplication" begin
         for T in all_types
+            # TODO: add rand method for InfinitesimalRotation
             r = T(log(rand(typeof(exp(zero(T))))))
             @test r isa T
             @test r*r isa SMatrix
