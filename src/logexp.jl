@@ -31,6 +31,9 @@ function Base.exp(R::RotationGenerator{3})
     exp(RotationVecGenerator(R))
 end
 
+function Base.exp(R::RotMatrixGenerator{3})
+    RotMatrix(exp(RotationVecGenerator(R)))
+end
 
 # 2d
 function Base.exp(R::Angle2dGenerator)
@@ -39,4 +42,8 @@ end
 
 function Base.exp(R::RotationGenerator{2})
     exp(Angle2dGenerator(R))
+end
+
+function Base.exp(R::RotMatrixGenerator{2})
+    RotMatrix(exp(Angle2dGenerator(R)))
 end
