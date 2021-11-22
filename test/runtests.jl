@@ -29,7 +29,7 @@ include("rotation_error.jl")
 include("distribution_tests.jl")
 include("eigen.jl")
 include("nearest_rotation.jl")
-include("infinitesimal.jl")
+include("rotation_generator.jl")
 include("logexp.jl")
 include("deprecated.jl")
 
