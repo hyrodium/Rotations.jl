@@ -25,3 +25,11 @@ end
         @test exp(r) isa Rotation
     end
 end
+
+@testset "exp(::RotMatrixGenerator)" begin
+    for N in 2:3
+        r = zero(RotMatrixGenerator{N})
+        @test r isa RotMatrixGenerator{N}
+        @test exp(r) isa RotMatrix{N}
+    end
+end
