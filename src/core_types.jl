@@ -62,18 +62,6 @@ function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Rotat
     return R(q)
 end
 
-# Useful for converting arrays of rotations to another rotation eltype, for instance.
-# Only works because parameters of all the rotations are of a similar form
-# Would need to be more sophisticated if we have arbitrary dimensions, etc
-@inline function Base.promote_op(::Type{R1}, ::Type{R2}) where {R1 <: Rotation, R2 <: Rotation}
-    size(R1) == size(R2) || throw(DimensionMismatch("cannot promote rotations of $(size(R1)[1]) and $(size(R2)[1]) dimensions"))
-    if isleaftype(R1)
-        return R1
-    else
-        return R1{eltype(R2)}
-    end
-end
-
 @inline function Base.:/(r1::Rotation, r2::Rotation)
     r1 * inv(r2)
 end

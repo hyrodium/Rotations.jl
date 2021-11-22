@@ -37,18 +37,6 @@ Base.convert(::Type{R}, rot::RotationGenerator{N}) where {N,R<:RotationGenerator
 Base.@pure StaticArrays.similar_type(::Union{R,Type{R}}) where {R <: RotationGenerator} = SMatrix{size(R)..., eltype(R), prod(size(R))}
 Base.@pure StaticArrays.similar_type(::Union{R,Type{R}}, ::Type{T}) where {R <: RotationGenerator, T} = SMatrix{size(R)..., T, prod(size(R))}
 
-# Useful for converting arrays of rotations to another rotation eltype, for instance.
-# Only works because parameters of all the rotations are of a similar form
-# Would need to be more sophisticated if we have arbitrary dimensions, etc
-@inline function Base.promote_op(::Type{R1}, ::Type{R2}) where {R1 <: RotationGenerator, R2 <: RotationGenerator}
-    size(R1) == size(R2) || throw(DimensionMismatch("cannot promote rotations of $(size(R1)[1]) and $(size(R2)[1]) dimensions"))
-    if isleaftype(R1)
-        return R1
-    else
-        return R1{eltype(R2)}
-    end
-end
-
 ################################################################################
 ################################################################################
 """
