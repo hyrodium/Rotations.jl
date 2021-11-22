@@ -18,6 +18,8 @@ using Unitful
         # don't extraneously contain those units (see issue #55)
         @test eltype(Angle2d(10u"°")) <: Real
         @test eltype(Angle2d(20u"rad")) <: Real
+        @test eltype(RotMatrix{2}(10u"°")) <: Real
+        @test eltype(RotMatrix{2}(20u"rad")) <: Real
     end
 
     ###############################
