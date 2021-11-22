@@ -75,8 +75,12 @@
 
     @testset "minus" begin
         for T in all_types
-            # TODO: add rand method for RotationGenerator
-            r = T(log(rand(typeof(exp(zero(T))))))
+            # TODO: These should be replaced with `r = rand(T)`
+            if T in types_2d
+                r = T(Angle2dGenerator(1.2))
+            elseif T in types_3d
+                r = T(RotationVecGenerator(1.2,-0.8,0.1))
+            end
             @test r isa T
             @test -r isa T
             @test r' isa T
@@ -93,8 +97,12 @@
 
     @testset "multiply" begin
         for T in all_types
-            # TODO: add rand method for RotationGenerator
-            r = T(log(rand(typeof(exp(zero(T))))))
+            # TODO: These should be replaced with `r = rand(T)`
+            if T in types_2d
+                r = T(Angle2dGenerator(1.2))
+            elseif T in types_3d
+                r = T(RotationVecGenerator(1.2,-0.8,0.1))
+            end
             a = 4.2
             @test r isa T
             @test r*1 isa T
@@ -109,8 +117,12 @@
 
     @testset "division" begin
         for T in all_types
-            # TODO: add rand method for RotationGenerator
-            r = T(log(rand(typeof(exp(zero(T))))))
+            # TODO: These should be replaced with `r = rand(T)`
+            if T in types_2d
+                r = T(Angle2dGenerator(1.2))
+            elseif T in types_3d
+                r = T(RotationVecGenerator(1.2,-0.8,0.1))
+            end
             a = 4.2
             @test r isa T
             @test r/1 isa T
@@ -124,8 +136,12 @@
 
     @testset "matrix multiplication" begin
         for T in all_types
-            # TODO: add rand method for RotationGenerator
-            r = T(log(rand(typeof(exp(zero(T))))))
+            # TODO: These should be replaced with `r = rand(T)`
+            if T in types_2d
+                r = T(Angle2dGenerator(1.2))
+            elseif T in types_3d
+                r = T(RotationVecGenerator(1.2,-0.8,0.1))
+            end
             @test r isa T
             @test r*r isa SMatrix
             @test r/r isa SMatrix
