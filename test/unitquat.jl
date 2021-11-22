@@ -129,7 +129,7 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
 
     q32 = rand(QuatRotation{Float32})
     @test Rotations._log_as_quat(q32) isa Quaternion{Float32}
-    @test log(q32) isa InfinitesimalRotation{3}
+    @test log(q32) isa RotationGenerator{3}
     @test eltype(logm(q32)) == Float32
     @test expm(logm(q32)) ≈ q32
 

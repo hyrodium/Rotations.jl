@@ -44,12 +44,12 @@ export
     UnitQuaternion,
 
     # infinitesimal rotations
-    InfinitesimalRotation,
-    InfinitesimalRotMatrix,
-    InfinitesimalRotMatrix2,
-    InfinitesimalRotMatrix3,
-    InfinitesimalAngle2d,
-    InfinitesimalRotationVec,
+    RotationGenerator,
+    RotMatrixGenerator,
+    RotMatrixGenerator2,
+    RotMatrixGenerator3,
+    Angle2dGenerator,
+    RotationVecGenerator,
 
     # Quaternion math ops
     logm, expm, ⊖, ⊕,

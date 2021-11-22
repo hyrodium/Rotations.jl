@@ -2,7 +2,7 @@
 # 3d
 function Base.log(R::RotationVec)
     x, y, z = params(R)
-    return InfinitesimalRotationVec(x,y,z)
+    return RotationVecGenerator(x,y,z)
 end
 
 function Base.log(R::Rotation{3})
@@ -13,7 +13,7 @@ end
 # 2d
 function Base.log(R::Angle2d)
     θ, = params(R)
-    return InfinitesimalAngle2d(θ)
+    return Angle2dGenerator(θ)
 end
 
 function Base.log(R::Rotation{2})
@@ -23,20 +23,20 @@ end
 
 ## exp
 # 3d
-function Base.exp(R::InfinitesimalRotationVec)
+function Base.exp(R::RotationVecGenerator)
     return RotationVec(R.x,R.y,R.z)
 end
 
-function Base.exp(R::InfinitesimalRotation{3})
-    exp(InfinitesimalRotationVec(R))
+function Base.exp(R::RotationGenerator{3})
+    exp(RotationVecGenerator(R))
 end
 
 
 # 2d
-function Base.exp(R::InfinitesimalAngle2d)
+function Base.exp(R::Angle2dGenerator)
     return Angle2d(R.v)
 end
 
-function Base.exp(R::InfinitesimalRotation{2})
-    exp(InfinitesimalAngle2d(R))
+function Base.exp(R::RotationGenerator{2})
+    exp(Angle2dGenerator(R))
 end

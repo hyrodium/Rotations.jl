@@ -10,14 +10,14 @@
     @testset "$(T)" for T in all_types, F in (one, rand)
         R = F(T)
         @test R ≈ exp(log(R))
-        @test log(R) isa InfinitesimalRotation
+        @test log(R) isa RotationGenerator
         @test exp(log(R)) isa Rotation
     end
 end
 
 @testset "exp(zero)" begin
-    all_types = (InfinitesimalRotMatrix{3}, InfinitesimalRotationVec,
-                 InfinitesimalRotMatrix{2}, InfinitesimalAngle2d)
+    all_types = (RotMatrixGenerator{3}, RotationVecGenerator,
+                 RotMatrixGenerator{2}, Angle2dGenerator)
 
     @testset "$(T)" for T in all_types
         r = zero(T)
