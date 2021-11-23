@@ -1,7 +1,7 @@
 using ForwardDiff
 
 import Rotations: jacobian, ∇rotate, ∇composition1, ∇composition2
-import Rotations: kinematics, _pure_quaternion, params
+import Rotations: kinematics, pure_quaternion, params
 import Rotations: vmat, rmult, lmult, hmat, tmat
 
 @testset "Unit Quaternions" begin
@@ -24,9 +24,9 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
 
     r = @SVector rand(3)
     r32 = SVector{3,Float32}(r)
-    @test _pure_quaternion(r) isa Quaternion{Float64}
-    @test _pure_quaternion(r32) isa Quaternion{Float32}
-    @test real(_pure_quaternion(r)) == 0
+    @test pure_quaternion(r) isa Quaternion{Float64}
+    @test pure_quaternion(r32) isa Quaternion{Float32}
+    @test real(pure_quaternion(r)) == 0
 
     @test QuatRotation{Float64}(1, 0, 0, 0) isa QuatRotation{Float64}
     @test QuatRotation{Float32}(1, 0, 0, 0) isa QuatRotation{Float32}
@@ -52,7 +52,7 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
 
     ϕ = inv(ExponentialMap())(q1)
     @test expm(ϕ * 2) ≈ q1
-    q = Rotations._pure_quaternion(ϕ)
+    q = Rotations.pure_quaternion(ϕ)
     @test QuatRotation(exp(q)) ≈ q1
     @test exp(q) isa Quaternion
 
@@ -83,7 +83,7 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
     @test q3 ⊖ q2 ≈ inv(CayleyMap())(q1)
 
     q = q1
-    rhat = Rotations._pure_quaternion(r)
+    rhat = Rotations.pure_quaternion(r)
     @test q * r ≈ vmat() * lmult(q) * rmult(q)' * vmat()'r
     @test q * r ≈ vmat() * lmult(q) * rmult(q)' * hmat(r)
     @test q * r ≈ vmat() * lmult(q) * lmult(rhat) * tmat() * params(q)
@@ -92,7 +92,7 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
 
     @test rmult(params(q)) == rmult(q)
     @test lmult(params(q)) == lmult(q)
-    r_pure = _pure_quaternion(r)
+    r_pure = pure_quaternion(r)
     @test hmat(r) == SVector(r_pure.s, r_pure.v1, r_pure.v2, r_pure.v3)
 
     # Test Jacobians
