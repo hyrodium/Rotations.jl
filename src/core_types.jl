@@ -125,12 +125,12 @@ end
 Base.@propagate_inbounds Base.getindex(r::RotMatrix, i::Int) = r.mat[i]
 @inline Base.Tuple(r::RotMatrix) = Tuple(r.mat)
 
-@inline RotMatrix(θ::Real) = RotMatrix{2}(θ)
-@inline function (::Type{RotMatrix{2}})(θ::Real)
+@inline RotMatrix(θ::Number) = RotMatrix{2}(θ)
+@inline function (::Type{RotMatrix{2}})(θ::Number)
     s, c = sincos(θ)
     RotMatrix(@SMatrix [c -s; s c])
 end
-@inline function RotMatrix{2,T}(θ::Real) where T
+@inline function RotMatrix{2,T}(θ::Number) where T
     s, c = sincos(θ)
     RotMatrix(@SMatrix T[c -s; s c])
 end
