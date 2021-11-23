@@ -21,10 +21,11 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
     q32 = SVector{4,Float32}(q)
     @test QuatRotation(q) isa QuatRotation{Float64}
     @test QuatRotation(q32) isa QuatRotation{Float32}
-    @test q.w == q.q.s
-    @test q.x == q.q.v1
-    @test q.y == q.q.v2
-    @test q.z == q.q.v3
+    r = QuatRotation(q)
+    @test r.w == r.q.s
+    @test r.x == r.q.v1
+    @test r.y == r.q.v2
+    @test r.z == r.q.v3
 
     r = @SVector rand(3)
     r32 = SVector{3,Float32}(r)
