@@ -38,6 +38,20 @@ struct QuatRotation{T} <: Rotation{3,T}
     QuatRotation{T}(q::QuatRotation) where T = new{T}(q.q)
 end
 
+function Base.getproperty(q::QuatRotation, f::Symbol)
+    if f == :w
+        q.q.s
+    elseif f == :x
+        q.q.v1
+    elseif f == :y
+        q.q.v2
+    elseif f == :z
+        q.q.v3
+    else
+        getfield(q,f)
+    end
+end
+
 # ~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~ #
 # Use default map
 function QuatRotation(w,x,y,z, normalize::Bool = true)
