@@ -41,11 +41,11 @@ end
 function Base.getproperty(q::QuatRotation, f::Symbol)
     if f === :w
         q.q.s
-    elseif f == :x
+    elseif f === :x
         q.q.v1
-    elseif f == :y
+    elseif f === :y
         q.q.v2
-    elseif f == :z
+    elseif f === :z
         q.q.v3
     else
         getfield(q,f)
