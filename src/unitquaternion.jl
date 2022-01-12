@@ -39,7 +39,7 @@ struct QuatRotation{T} <: Rotation{3,T}
 end
 
 function Base.getproperty(q::QuatRotation, f::Symbol)
-    if f == :w
+    if f === :w
         q.q.s
     elseif f == :x
         q.q.v1
