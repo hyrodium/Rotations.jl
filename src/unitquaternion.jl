@@ -38,6 +38,20 @@ struct QuatRotation{T} <: Rotation{3,T}
     QuatRotation{T}(q::QuatRotation) where T = new{T}(q.q)
 end
 
+function Base.getproperty(q::QuatRotation, f::Symbol)
+    if f === :w
+        q.q.s
+    elseif f === :x
+        q.q.v1
+    elseif f === :y
+        q.q.v2
+    elseif f === :z
+        q.q.v3
+    else
+        getfield(q,f)
+    end
+end
+
 # ~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~ #
 # Use default map
 function QuatRotation(w,x,y,z, normalize::Bool = true)
@@ -246,17 +260,17 @@ end
 
 # Exponentials and Logarithms
 """
-    _pure_quaternion(v::AbstractVector)
-    _pure_quaternion(x, y, z)
+    pure_quaternion(v::AbstractVector)
+    pure_quaternion(x, y, z)
 
 Create a `Quaternion` with zero scalar part (i.e. `q.q.s == 0`).
 """
-function _pure_quaternion(v::AbstractVector)
+function pure_quaternion(v::AbstractVector)
     check_length(v, 3)
     Quaternion(zero(eltype(v)), v[1], v[2], v[3], false)
 end
 
-@inline _pure_quaternion(x::Real, y::Real, z::Real) =
+@inline pure_quaternion(x::Real, y::Real, z::Real) =
     Quaternion(zero(x), x, y, z, false)
 
 function expm(ϕ::AbstractVector)
@@ -280,7 +294,7 @@ function _log_as_quat(q::Q, eps=1e-6) where Q <: QuatRotation
     else
         M = (1-(θ^2/(3w^2)))/w
     end
-    _pure_quaternion(M*vector(q))
+    pure_quaternion(M*vector(q))
 end
 
 function logm(q::QuatRotation)
