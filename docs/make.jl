@@ -25,6 +25,7 @@ makedocs(;
             "Angle and Axis" => "3d_angleaxis.md",
             "Quaternion and Related Parameters" => "3d_quaternion.md",
             ],
+        "Rotation Generator Types" => "rotation_generator_types.md",
         "Common Methods for Rotations" => "functions.md",
         "Visualizing Rotations" => "visualizing.md",
         "Function Reference" => "functionreference.md",

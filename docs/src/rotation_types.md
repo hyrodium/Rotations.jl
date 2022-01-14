@@ -1,4 +1,4 @@
-# Types in Rotations.jl
+# Rotation Types
 
 ## Abstract rotations
 A matrix ``R`` is called [*rotation matrix*](https://en.wikipedia.org/wiki/Rotation_matrix) if ``R`` satisfies
