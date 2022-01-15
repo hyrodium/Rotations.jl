@@ -19,7 +19,10 @@ R ≈ AngleAxis(θ, n...)
 ```
 
 ### 2D
-(TBW)
+```@repl angle_and_axis
+R = Angle2d(2.4)
+θ = rotation_angle(R)
+```
 
 ## `Rotations.params`
 The parameters of the rotation can be obtained by `Rotations.params`.
