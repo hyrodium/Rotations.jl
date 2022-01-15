@@ -1,16 +1,16 @@
 # Rotation Generator Types
 
 ## Abstract rotation generators
-A matrix ``R`` is called *rotation generator matrix* if ``R`` satisfies
+A matrix ``R`` is called *skew-symmetric matrix* if ``R`` satisfies
 
 ```math
 \begin{aligned}
-R^\top &= -R^{-1}.
+R^\top &= -R.
 \end{aligned}
 ```
 
-In `Rotations.jl`, there's an abstract type for rotations generator matrix, `RotationGenerator{L}`.
-Where `L` is a size of the rotation generator matrix.
+In `Rotations.jl`, there's an abstract type for skew-symmetric matrix, `RotationGenerator{L}`.
+Where `L` is a size of the skew-symmetric matrix.
 
 ## Type hierarchy
 
