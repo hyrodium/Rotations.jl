@@ -8,7 +8,7 @@ A 3×3 rotation matrix parameterized by a 3D rotation by angle θ about an
 arbitrary axis `[x, y, z]`.
 
 Note that the axis is not unique for θ = 0, and that this parameterization does
-not continuously map the neighbourhood of the null rotation (and therefore
+not continuously map the neighbourhood of the identity rotation (and therefore
 might not be suitable for autodifferentation and optimization purposes).
 
 Note: by default, the constructor will renormalize the input so that the axis
@@ -131,7 +131,7 @@ end
 @inline Base.:^(aa::AngleAxis, t::Integer) = AngleAxis(aa.theta*t, aa.axis_x, aa.axis_y, aa.axis_z) # to avoid ambiguity
 
 
-# define null rotations for convenience
+# define identity rotations for convenience
 @inline Base.one(::Type{AngleAxis}) = AngleAxis(0.0, 1.0, 0.0, 0.0)
 @inline Base.one(::Type{AngleAxis{T}}) where {T} = AngleAxis{T}(zero(T), one(T), zero(T), zero(T))
 
@@ -216,6 +216,6 @@ function rotation_axis(rv::RotationVec)     # what should this return for theta 
     return (theta > 0 ? SVector(rv.sx / theta, rv.sy / theta, rv.sz / theta) : SVector(one(theta), zero(theta), zero(theta)))
 end
 
-# define null rotations for convenience
+# define identity rotations for convenience
 @inline Base.one(::Type{RotationVec}) = RotationVec(0.0, 0.0, 0.0)
 @inline Base.one(::Type{RotationVec{T}}) where {T} = RotationVec{T}(zero(T), zero(T), zero(T))
