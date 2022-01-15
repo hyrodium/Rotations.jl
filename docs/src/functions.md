@@ -32,7 +32,7 @@ using Rotations
 ```@repl params
 R = one(RotMatrix{3})  # Identity matrix
 Rotations.params(RotYZY(R))  # Proper Euler angles, (y,z,y)
-Rotations.params(RotXYZ(R))  # Tait–Bryan angles, (y,z,y)
+Rotations.params(RotXYZ(R))  # Tait–Bryan angles, (x,y,z)
 Rotations.params(AngleAxis(R))  # Rotation around an axis (theta, axis_x, axis_y, axis_z)
 Rotations.params(RotationVec(R))  # Rotation vector (v_x, v_y, v_z)
 Rotations.params(QuatRotation(R))  # Quaternion (w, x, y, z)
