@@ -156,6 +156,7 @@ end
     end
 end
 
+@inline params(r::Angle2dGenerator) = SVector{1}(r.v)
 
 """
     struct RotationVecGenerator{T} <: RotationGenerator{2,T}
@@ -216,6 +217,7 @@ end
     end
 end
 
+@inline params(r::RotationVecGenerator) = SVector{3}(r.x,r.y,r.z)
 
 ################################################################################
 ################################################################################
