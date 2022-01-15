@@ -10,7 +10,7 @@ Note that the constructor will renormalize the quaternion to be a unit quaternio
 
 ```math
 \begin{aligned}
-    \left\{w_{\mathrm{U}} + ix_{\mathrm{U}} + jy_{\mathrm{U}} + kz_{\mathrm{U}} \in \mathbb{H} \ | \ x_{\mathrm{U}}, y_{\mathrm{U}}, z_{\mathrm{U}} \in \mathbb{R} \right\}
+    \left\{w_{\mathrm{Q}} + ix_{\mathrm{Q}} + jy_{\mathrm{Q}} + kz_{\mathrm{Q}} \in \mathbb{H} \ | \ x_{\mathrm{Q}}, y_{\mathrm{Q}}, z_{\mathrm{Q}} \in \mathbb{R} \right\}
     \simeq S^3
 \end{aligned}
 ```
@@ -33,9 +33,9 @@ They are computationally efficient and do not have a sign ambiguity of unit quat
 \left\{
 \begin{aligned}
     \begin{aligned}
-    x_{\mathrm{R}} &= x_{\mathrm{U}}/w_{\mathrm{U}} \\
-    y_{\mathrm{R}} &= y_{\mathrm{U}}/w_{\mathrm{U}} \\
-    z_{\mathrm{R}} &= z_{\mathrm{U}}/w_{\mathrm{U}}
+    x_{\mathrm{R}} &= x_{\mathrm{Q}}/w_{\mathrm{Q}} \\
+    y_{\mathrm{R}} &= y_{\mathrm{Q}}/w_{\mathrm{Q}} \\
+    z_{\mathrm{R}} &= z_{\mathrm{Q}}/w_{\mathrm{Q}}
     \end{aligned}
 \end{aligned}
 \right.
@@ -66,9 +66,9 @@ In practice, the singularity can be avoided with some switching logic between on
 \left\{
 \begin{aligned}
     \begin{aligned}
-    x_{\mathrm{M}} &= \dfrac{x_{\mathrm{U}}}{w_{\mathrm{U}}-1} \\
-    y_{\mathrm{M}} &= \dfrac{y_{\mathrm{U}}}{w_{\mathrm{U}}-1} \\
-    z_{\mathrm{M}} &= \dfrac{z_{\mathrm{U}}}{w_{\mathrm{U}}-1}
+    x_{\mathrm{M}} &= \dfrac{x_{\mathrm{Q}}}{w_{\mathrm{Q}}-1} \\
+    y_{\mathrm{M}} &= \dfrac{y_{\mathrm{Q}}}{w_{\mathrm{Q}}-1} \\
+    z_{\mathrm{M}} &= \dfrac{z_{\mathrm{Q}}}{w_{\mathrm{Q}}-1}
     \end{aligned}
 \end{aligned}
 \right.
