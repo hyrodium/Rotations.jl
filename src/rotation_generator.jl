@@ -244,3 +244,30 @@ function Base.show(io::IO, ::MIME"text/plain", X::RotationGenerator)
     io = IOContext(io, :typeinfo => eltype(X))
     Base.print_array(io, X)
 end
+
+"""
+    isrotationgenerator(r)
+    isrotationgenerator(r, tol)
+
+Check whether `r` is a rotation generator matrix (skew-symmetric matrix).
+"""
+isrotationgenerator
+
+function isrotationgenerator(r::StaticMatrix{N,N,T}) where {N,T<:Real}
+    m = SMatrix(r)
+    return iszero(m+m')
+end
+
+function isrotationgenerator(r::AbstractMatrix{T}) where T<:Real
+    if !=(size(r)...)
+        return false
+    end
+    return iszero(r+r')
+end
+
+function isrotationgenerator(r::AbstractMatrix{T}) where T<:Number
+    if !isreal(r)
+        return false
+    end
+    return isrotationgenerator(real(r))
+end

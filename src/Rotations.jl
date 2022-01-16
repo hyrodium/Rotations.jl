@@ -57,8 +57,10 @@ export
     # Quaternion maps
     ExponentialMap, QuatVecMap, CayleyMap, MRPMap, IdentityMap,
 
-    # check validity of the rotation (is it close to unitary?)
+    # check validity of the rotation (is it close to orthonormal?)
     isrotation,
+    # check validity of the rotation (is it skew-symmetric?)
+    isrotationgenerator,
 
     # Get nearest rotation matrix
     nearest_rotation,
