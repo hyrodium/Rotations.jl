@@ -403,27 +403,30 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
     # Check that isrotation works
     #########################################################################
     @testset "Testing isrotation" begin
-      a=[1.0 0.0 0.0
-         0.0 0.0 -1.0
-         0.0 1.0 0.0]
-      @test isrotation(a)
-      foreach(rot_types) do rot_type
-        foreach(1:20) do idx
-          @test isrotation(rand(rot_type))
-        end
-      end
-      a=[40.0 0.0 0.0
-         0.0 0.0 1.0
-         0.0 1.0 0.0]
-      @test !isrotation(a)
-      a=[1.0 0.0 0.0
-         0.0 0.0 1.0
-         0.0 1.0 0.0]
-      @test !isrotation(a)
+        a=[1.0 0.0 0.0
+           0.0 0.0 -1.0
+           0.0 1.0 0.0]
+        @test isrotation(a)
 
-      # isrotation should work for integer (or boolean) matrices (issue #94)
-      @test isrotation([0 1 0; -1 0 0; 0 0 1])
-      @test isrotation(Matrix(I,3,3))
+        foreach(rot_types) do rot_type
+            foreach(1:20) do idx
+            @test isrotation(rand(rot_type))
+            end
+        end
+
+        a=[40.0 0.0 0.0
+           0.0 0.0 1.0
+           0.0 1.0 0.0]
+        @test !isrotation(a)
+
+        a=[1.0 0.0 0.0
+           0.0 0.0 1.0
+           0.0 1.0 0.0]
+        @test !isrotation(a)
+
+        # isrotation should work for integer (or boolean) matrices (issue #94)
+        @test isrotation([0 1 0; -1 0 0; 0 0 1])
+        @test isrotation(Matrix(I,3,3))
     end
 
     @testset "Testing type aliases" begin
