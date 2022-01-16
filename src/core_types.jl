@@ -221,26 +221,31 @@ _isrotation_eps(T) = eps(T)
     isrotation(r)
     isrotation(r, tol)
 
-Check whether `r` is a 2×2 or 3×3 rotation matrix, where `r * r'` is within
+Check whether `r` is a rotation matrix, where `r * r'` is within
 `tol` of the identity matrix (using the Frobenius norm). `tol` defaults to
 `1000 * eps(float(eltype(r)))` or `zero(T)` for integer `T`.
 """
-function isrotation(r::AbstractMatrix{T}, tol::Real = 1000 * _isrotation_eps(eltype(T))) where T
-    if size(r) == (2,2)
-        # Transpose is overloaded for many of our types, so we do it explicitly:
-        r_trans = @SMatrix [conj(r[1,1])  conj(r[2,1]);
-                            conj(r[1,2])  conj(r[2,2])]
-        d = norm((r * r_trans) - one(SMatrix{2,2}))
-    elseif size(r) == (3,3)
-        r_trans = @SMatrix [conj(r[1,1])  conj(r[2,1])  conj(r[3,1]);
-                            conj(r[1,2])  conj(r[2,2])  conj(r[3,2]);
-                            conj(r[1,3])  conj(r[2,3])  conj(r[3,3])]
-        d = norm((r * r_trans) - one(SMatrix{3,3}))
-    else
+isrotation
+
+function isrotation(r::StaticMatrix{N,N,T}, tol::Real = 1000 * _isrotation_eps(eltype(T))) where {N,T<:Real}
+    m = SMatrix(r)
+    d = norm(m*m'-one(SMatrix{N,N}))
+    return d ≤ tol && det(m) > 0
+end
+
+function isrotation(r::AbstractMatrix{T}, tol::Real = 1000 * _isrotation_eps(eltype(T))) where T<:Real
+    if !=(size(r)...)
         return false
     end
+    d = norm(r*r'-one(r))
+    return d ≤ tol && det(r) > 0
+end
 
-    return d <= tol && det(r) > 0
+function isrotation(r::AbstractMatrix{T}, tol::Real = 1000 * _isrotation_eps(eltype(real(T)))) where T<:Number
+    if !isreal(r)
+        return false
+    end
+    return isrotation(real(r), tol)
 end
 
 """
