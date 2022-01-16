@@ -194,6 +194,56 @@
         end
     end
 
+    #########################################################################
+    # Check that isrotationgenerator works
+    #########################################################################
+    @testset "Testing isrotationgenerator" begin
+        # Rotation generator around x-axis
+        a=[0.0 0.0 0.0
+           0.0 0.0 -1.0
+           0.0 1.0 0.0]
+        @test isrotationgenerator(a)
+
+        # Scaling in x-axis is not rotation generator
+        a=[4.0 0.0 0.0
+           0.0 0.0 0.0
+           0.0 0.0 0.0]
+        @test !isrotationgenerator(a)
+
+        # Non-square matrix is not rotation generator
+        @test !isrotationgenerator(zeros(2,3))
+        @test !isrotationgenerator(@SMatrix zeros(2,3))
+
+        # isrotationgenerator should work for integer
+        @test isrotationgenerator([0 1 0; -1 0 0; 0 0 0])
+
+        # zero matrix is rotation generator
+        @test isrotationgenerator(zeros(1,1))
+        @test isrotationgenerator(zeros(3,3))
+        @test isrotationgenerator(zeros(4,4))
+        @test isrotationgenerator(zero(SMatrix{1,1}))
+        @test isrotationgenerator(zero(SMatrix{3,3}))
+        @test isrotationgenerator(zero(SMatrix{4,4}))
+        @test isrotationgenerator(zero(RotMatrix{1}))
+        @test isrotationgenerator(zero(RotMatrix{3}))
+        @test isrotationgenerator(zero(RotMatrix{4}))
+
+        # Rotation matrix can be AbstractMatrix{<:Complex}
+        @test isrotationgenerator(zeros(3,3) .+ 0im)
+        @test isrotationgenerator(zero(SMatrix{4,4}) .+ 0im)
+
+        # Including NaNs are not rotaion
+        @test !isrotationgenerator(RotationVecGenerator(0, 0, NaN))
+        @test !isrotationgenerator(Angle2d(NaN))
+
+        # Complex unitary matrix is not rotation
+        M = randn(Complex{Float64},3,3)
+        @test !isrotationgenerator(M+M')
+        @test !isrotationgenerator(M+transpose(M))
+        @test !isrotationgenerator(real(M+M'))
+        @test !isrotationgenerator(real(M+transpose(M)))
+    end
+
     @testset "Testing show" begin
         io = IOBuffer()
         r = zero(RotMatrixGenerator{2})
