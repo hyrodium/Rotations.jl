@@ -1,5 +1,5 @@
 @testset "nearest_rotation" begin
-    @testset "$(N)-dim" for N in [2,3]
+    @testset "$(N)-dim" for N in [2,3,4]
         for _ in 1:100
             M = randn(N,N)
             R = nearest_rotation(M)
