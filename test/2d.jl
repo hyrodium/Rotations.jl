@@ -91,10 +91,8 @@ using Unitful
             for i = 1:repeats
                 r = rand(R)
                 @test norm(r) ≈ norm(Matrix(r))
-                if VERSION ≥ v"1.5"
-                    @test normalize(r) ≈ normalize(Matrix(r))
-                    @test normalize(r) isa SMatrix
-                end
+                @test normalize(r) ≈ normalize(Matrix(r))
+                @test normalize(r) isa SMatrix
             end
         end
     end
