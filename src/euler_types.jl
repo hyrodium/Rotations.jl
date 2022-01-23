@@ -30,7 +30,7 @@ for axis in [:X, :Y, :Z]
 
         @inline Base.inv(r::$RotType) = $RotType(-r.theta)
 
-        # define null rotations for convenience
+        # define identity rotations for convenience
         @inline Base.one(::Type{$RotType}) = $RotType(0.0)
         @inline Base.one(::Type{$RotType{T}}) where {T} = $RotType{T}(zero(T))
 
@@ -252,7 +252,7 @@ for axis1 in [:X, :Y, :Z]
 
             @inline Base.inv(r::$RotType) = $InvRotType(-r.theta2, -r.theta1)
 
-            # define null rotations for convenience
+            # define identity rotations for convenience
             @inline Base.one(::Type{$RotType}) = $RotType(0.0, 0.0)
             @inline Base.one(::Type{$RotType{T}}) where {T} = $RotType{T}(zero(T), zero(T))
 
@@ -564,7 +564,7 @@ for axis1 in [:X, :Y, :Z]
 
                 @inline Base.inv(r::$RotType) = $InvRotType(-r.theta3, -r.theta2, -r.theta1)
 
-                # define null rotations for convenience
+                # define identity rotations for convenience
                 @inline Base.one(::Type{$RotType}) = $RotType(0.0, 0.0, 0.0)
                 @inline Base.one(::Type{$RotType{T}}) where {T} = $RotType{T}(zero(T), zero(T), zero(T))
 

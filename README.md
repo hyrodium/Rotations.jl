@@ -74,7 +74,7 @@ r = RotMatrix(aa)
 ```julia
 using Rotations, StaticArrays
 
-# create the null rotation (identity matrix)
+# create the identity rotation (identity matrix)
 id = one(RotMatrix{3, Float64})
 
 # create a random rotation matrix (uniformly distributed over all 3D rotations)
@@ -171,7 +171,7 @@ j2 = Rotations.jacobian(q, p) # How does the rotated point q*p change w.r.t. the
     A 3-parameter representation of 3D rotations that has a singularity at 180 degrees. They can be interpreted as a projection of the unit quaternion onto the plane tangent to the quaternion identity. They are computationally efficient and do not have a sign ambiguity.
 
 7. **Modified Rodrigues Parameter** `MRP{T}`
-    A 3D rotation encoded by the stereographic projection of a unit quaternion.  This projection can be visualized as a pin hole camera, with the pin hole matching the quaternion `[-1,0,0,0]` and the image plane containing the origin and having normal direction `[1,0,0,0]`.  The "null rotation" `Quaternion(1.0,0,0,0)` then maps to the `MRP(0,0,0)`
+    A 3D rotation encoded by the stereographic projection of a unit quaternion.  This projection can be visualized as a pin hole camera, with the pin hole matching the quaternion `[-1,0,0,0]` and the image plane containing the origin and having normal direction `[1,0,0,0]`.  The "identity rotation" `Quaternion(1.0,0,0,0)` then maps to the `MRP(0,0,0)`
 
     These are similar to the Rodrigues vector in that the axis direction is stored in an unnormalized form, and the rotation angle is encoded in the length of the axis.  This type has the nice property that the derivatives of the rotation matrix w.r.t. the `MRP` parameters are rational functions, making the `MRP` type a good choice for differentiation / optimization.
 
