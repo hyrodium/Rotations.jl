@@ -170,6 +170,11 @@
         @test_throws DimensionMismatch Angle2dGenerator(1) + RotationVecGenerator(2,3,4)
     end
 
+    @testset "params" begin
+        @test Rotations.params(Angle2dGenerator(1)) == [1]
+        @test Rotations.params(RotationVecGenerator(2,3,4)) == [2,3,4]
+    end
+
     @testset "type promotion" begin
         for (T, N) in ((Angle2dGenerator, 2), (RotationVecGenerator, 3))
             R = RotMatrixGenerator
