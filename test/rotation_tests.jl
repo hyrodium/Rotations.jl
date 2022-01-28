@@ -163,10 +163,8 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
             for i = 1:repeats
                 r = rand(R)
                 @test norm(r) ≈ norm(Matrix(r))
-                if VERSION ≥ v"1.5"
-                    @test normalize(r) ≈ normalize(Matrix(r))
-                    @test normalize(r) isa SMatrix
-                end
+                @test normalize(r) ≈ normalize(Matrix(r))
+                @test normalize(r) isa SMatrix
             end
         end
     end
@@ -464,11 +462,7 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         r = rand(RotMatrix{2})
         show(io, MIME("text/plain"), r)
         str = String(take!(io))
-        if VERSION ≥ v"1.6"
-            @test startswith(str, "2×2 RotMatrix2{Float64}")
-        else
-            @test startswith(str, "2×2 RotMatrix{2,Float64,4}")
-        end
+        @test startswith(str, "2×2 RotMatrix2{Float64}")
 
         rxyz = RotXYZ(1.0, 2.0, 3.0)
         show(io, MIME("text/plain"), rxyz)

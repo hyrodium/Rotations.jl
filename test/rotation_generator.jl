@@ -204,11 +204,7 @@
         r = zero(RotMatrixGenerator{2})
         show(io, MIME("text/plain"), r)
         str = String(take!(io))
-        if VERSION ≥ v"1.6"
-            @test startswith(str, "2×2 RotMatrixGenerator2{Float64}")
-        else
-            @test startswith(str, "2×2 RotMatrixGenerator{2,Float64,4}")
-        end
+        @test startswith(str, "2×2 RotMatrixGenerator2{Float64}")
 
         rvec = RotationVecGenerator(1.0, 2.0, 3.0)
         show(io, MIME("text/plain"), rvec)
