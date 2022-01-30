@@ -1,49 +1,28 @@
 ## log
-# 3d
-function Base.log(R::RotationVec)
-    x, y, z = params(R)
-    return RotationVecGenerator(x,y,z)
-end
-
-function Base.log(R::Rotation{3})
-    log(RotationVec(R))
-end
-
-
 # 2d
-function Base.log(R::Angle2d)
-    θ, = params(R)
-    return Angle2dGenerator(θ)
-end
+Base.log(R::Angle2d) = Angle2dGenerator(R.theta)
+Base.log(R::Rotation{2}) = log(Angle2d(R))
+Base.log(R::RotMatrix{2}) = RotMatrixGenerator(log(Angle2d(R)))
 
-function Base.log(R::Rotation{2})
-    log(Angle2d(R))
-end
+# 3d
+Base.log(R::RotationVec) = RotationVecGenerator(R.sx,R.sy,R.sz)
+Base.log(R::Rotation{3}) = log(RotationVec(R))
+Base.log(R::RotMatrix{3}) = RotMatrixGenerator(log(RotationVec(R)))
 
+# General dimensions
+# This will be faster when log(::SMatrix) is implemented in StaticArrays.jl
+Base.log(R::RotMatrix{N}) where N = RotMatrixGenerator(SMatrix{N,N}(log(Matrix(R))))
 
 ## exp
-# 3d
-function Base.exp(R::RotationVecGenerator)
-    return RotationVec(R.x,R.y,R.z)
-end
-
-function Base.exp(R::RotationGenerator{3})
-    exp(RotationVecGenerator(R))
-end
-
-function Base.exp(R::RotMatrixGenerator{3})
-    RotMatrix(exp(RotationVecGenerator(R)))
-end
-
 # 2d
-function Base.exp(R::Angle2dGenerator)
-    return Angle2d(R.v)
-end
+Base.exp(R::Angle2dGenerator) = Angle2d(R.v)
+Base.exp(R::RotationGenerator{2}) = exp(Angle2dGenerator(R))
+Base.exp(R::RotMatrixGenerator{2}) = RotMatrix(exp(Angle2dGenerator(R)))
 
-function Base.exp(R::RotationGenerator{2})
-    exp(Angle2dGenerator(R))
-end
+# 3d
+Base.exp(R::RotationVecGenerator) = RotationVec(R.x,R.y,R.z)
+Base.exp(R::RotationGenerator{3}) = exp(RotationVecGenerator(R))
+Base.exp(R::RotMatrixGenerator{3}) = RotMatrix(exp(RotationVecGenerator(R)))
 
-function Base.exp(R::RotMatrixGenerator{2})
-    RotMatrix(exp(Angle2dGenerator(R)))
-end
+# General dimensions
+Base.exp(R::RotMatrixGenerator{N}) where N = RotMatrix(exp(SMatrix(R)))
