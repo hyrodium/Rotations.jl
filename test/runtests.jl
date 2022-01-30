@@ -8,10 +8,6 @@ import Unitful
 
 import Random
 
-if VERSION < v"1.2.0"
-    Base.:<(x) = Base.Fix2(<, x)
-end
-
 # Check that there are no ambiguities beyond those present in StaticArrays
 ramb = detect_ambiguities(Rotations, Base, Core)
 samb = detect_ambiguities(StaticArrays, Base, Core)

@@ -170,6 +170,11 @@
         @test_throws DimensionMismatch Angle2dGenerator(1) + RotationVecGenerator(2,3,4)
     end
 
+    @testset "params" begin
+        @test Rotations.params(Angle2dGenerator(1)) == [1]
+        @test Rotations.params(RotationVecGenerator(2,3,4)) == [2,3,4]
+    end
+
     @testset "type promotion" begin
         for (T, N) in ((Angle2dGenerator, 2), (RotationVecGenerator, 3))
             R = RotMatrixGenerator
@@ -249,11 +254,7 @@
         r = zero(RotMatrixGenerator{2})
         show(io, MIME("text/plain"), r)
         str = String(take!(io))
-        if VERSION ≥ v"1.6"
-            @test startswith(str, "2×2 RotMatrixGenerator2{Float64}")
-        else
-            @test startswith(str, "2×2 RotMatrixGenerator{2,Float64,4}")
-        end
+        @test startswith(str, "2×2 RotMatrixGenerator2{Float64}")
 
         rvec = RotationVecGenerator(1.0, 2.0, 3.0)
         show(io, MIME("text/plain"), rvec)

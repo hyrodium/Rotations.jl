@@ -10,14 +10,14 @@ Note that the constructor will renormalize the quaternion to be a unit quaternio
 
 ```math
 \begin{aligned}
-    \left\{w_{\mathrm{U}} + ix_{\mathrm{U}} + jy_{\mathrm{U}} + kz_{\mathrm{U}} \in \mathbb{H} \ | \ x_{\mathrm{U}}, y_{\mathrm{U}}, z_{\mathrm{U}} \in \mathbb{R} \right\}
+    \left\{w_{\mathrm{Q}} + ix_{\mathrm{Q}} + jy_{\mathrm{Q}} + kz_{\mathrm{Q}} \in \mathbb{H} \ | \ x_{\mathrm{Q}}, y_{\mathrm{Q}}, z_{\mathrm{Q}} \in \mathbb{R} \right\}
     \simeq S^3
 \end{aligned}
 ```
 
 **example**
 ```@repl quaternions
-one(QuatRotation)  # null rotation
+one(QuatRotation)  # identity rotation
 α, β, γ = 1.2, -0.8, 0.1;
 RotX(α) ≈ QuatRotation(cos(α/2),sin(α/2),0,0)  # These matrices are equal
 RotY(β) ≈ QuatRotation(cos(β/2),0,sin(β/2),0)  # These matrices are equal
@@ -33,9 +33,9 @@ They are computationally efficient and do not have a sign ambiguity of unit quat
 \left\{
 \begin{aligned}
     \begin{aligned}
-    x_{\mathrm{R}} &= x_{\mathrm{U}}/w_{\mathrm{U}} \\
-    y_{\mathrm{R}} &= y_{\mathrm{U}}/w_{\mathrm{U}} \\
-    z_{\mathrm{R}} &= z_{\mathrm{U}}/w_{\mathrm{U}}
+    x_{\mathrm{R}} &= x_{\mathrm{Q}}/w_{\mathrm{Q}} \\
+    y_{\mathrm{R}} &= y_{\mathrm{Q}}/w_{\mathrm{Q}} \\
+    z_{\mathrm{R}} &= z_{\mathrm{Q}}/w_{\mathrm{Q}}
     \end{aligned}
 \end{aligned}
 \right.
@@ -43,7 +43,7 @@ They are computationally efficient and do not have a sign ambiguity of unit quat
 
 **example**
 ```@repl quaternions
-one(RodriguesParam)  # null rotation
+one(RodriguesParam)  # identity rotation
 α, β, γ = 1.2, -0.8, 0.1;
 RotX(α) ≈ RodriguesParam(tan(α/2),0,0)  # These matrices are equal
 RotY(β) ≈ RodriguesParam(0,tan(β/2),0)  # These matrices are equal
@@ -54,7 +54,7 @@ RotZ(γ) ≈ RodriguesParam(0,0,tan(γ/2))  # These matrices are equal
 
 A 3D rotation encoded by the stereographic projection of a unit quaternion.
 This projection can be visualized as a pin hole camera, with the pin hole matching the quaternion ``-1+0i+0j+0k`` and the image plane containing the origin and having normal direction ``1+0i+0j+0k``.
-The "null rotation" `Quaternion(1.0,0,0,0)` then maps to the `MRP(0,0,0)`
+The "identity rotation" `Quaternion(1.0,0,0,0)` then maps to the `MRP(0,0,0)`
 
 These are similar to the Rodrigues vector in that the axis direction is stored in an unnormalized form, and the rotation angle is encoded in the length of the axis.
 This type has the nice property that the derivatives of the rotation matrix w.r.t. the `MRP` parameters are rational functions, making the `MRP` type a good choice for differentiation / optimization.
@@ -66,9 +66,9 @@ In practice, the singularity can be avoided with some switching logic between on
 \left\{
 \begin{aligned}
     \begin{aligned}
-    x_{\mathrm{M}} &= \dfrac{x_{\mathrm{U}}}{w_{\mathrm{U}}-1} \\
-    y_{\mathrm{M}} &= \dfrac{y_{\mathrm{U}}}{w_{\mathrm{U}}-1} \\
-    z_{\mathrm{M}} &= \dfrac{z_{\mathrm{U}}}{w_{\mathrm{U}}-1}
+    x_{\mathrm{M}} &= \dfrac{x_{\mathrm{Q}}}{w_{\mathrm{Q}}-1} \\
+    y_{\mathrm{M}} &= \dfrac{y_{\mathrm{Q}}}{w_{\mathrm{Q}}-1} \\
+    z_{\mathrm{M}} &= \dfrac{z_{\mathrm{Q}}}{w_{\mathrm{Q}}-1}
     \end{aligned}
 \end{aligned}
 \right.
@@ -76,7 +76,7 @@ In practice, the singularity can be avoided with some switching logic between on
 
 **example**
 ```@repl quaternions
-one(MRP)  # null rotation
+one(MRP)  # identity rotation
 α, β, γ = 1.2, -0.8, 0.1;
 RotX(α) ≈ MRP(sin(α/2)/(cos(α/2)-1),0,0)  # These matrices are equal
 RotY(β) ≈ MRP(0,sin(β/2)/(cos(β/2)-1),0)  # These matrices are equal

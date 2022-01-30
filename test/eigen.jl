@@ -21,7 +21,7 @@
         @test norm(v3) ≈ 1
         @test E.values == λs
         @test E.vectors == vs
-        if !(T in oneaxis_types) && VERSION ≥ v"1.2"
+        if !(T in oneaxis_types)
             # If the rotation angle is in [0°, 180°], then the eigvals will be equal.
             # Note that the randomized RotX (and etc.) have rotation angle in [0°, 360°].
             # This needs Julia(≥1.2) to get sorted eigenvalues in a canonical order
@@ -46,12 +46,10 @@ end
         @test norm(v2) ≈ 1
         @test E.values == λs
         @test E.vectors == vs
-        if VERSION ≥ v"1.2"
-            # If the rotation angle θ is in [0°, 180°], then the eigvals will be equal.
-            # Note that the randomized RotX (and etc.) have rotation angle in [0°, 360°].
-            # This needs Julia(≥1.2) to get sorted eigenvalues in a canonical order
-            # See https://github.com/JuliaLang/julia/pull/21598
-            @test eigvals(R) ≈ eigvals(collect(R))
-        end
+        # If the rotation angle θ is in [0°, 180°], then the eigvals will be equal.
+        # Note that the randomized RotX (and etc.) have rotation angle in [0°, 360°].
+        # This needs Julia(≥1.2) to get sorted eigenvalues in a canonical order
+        # See https://github.com/JuliaLang/julia/pull/21598
+        @test eigvals(R) ≈ eigvals(collect(R))
     end
 end
