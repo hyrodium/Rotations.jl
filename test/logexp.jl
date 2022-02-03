@@ -13,6 +13,14 @@
         @test log(R) isa RotationGenerator
         @test exp(log(R)) isa Rotation
     end
+
+    @testset "$(N)-dim" for N in 1:5
+        M = @SMatrix rand(N,N)
+        R = nearest_rotation(M)
+        @test isrotationgenerator(log(R))
+        @test log(R) isa RotMatrixGenerator
+        @test exp(log(R)) isa RotMatrix
+    end
 end
 
 @testset "exp(zero)" begin
