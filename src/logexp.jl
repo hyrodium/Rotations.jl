@@ -10,8 +10,11 @@ Base.log(R::Rotation{3}) = log(RotationVec(R))
 Base.log(R::RotMatrix{3}) = RotMatrixGenerator(log(RotationVec(R)))
 
 # General dimensions
-# This will be faster when log(::SMatrix) is implemented in StaticArrays.jl
-Base.log(R::RotMatrix{N}) where N = RotMatrixGenerator(SMatrix{N,N}(log(Matrix(R))))
+function Base.log(R::RotMatrix{N}) where N
+    # This will be faster when log(::SMatrix) is implemented in StaticArrays.jl
+    S = SMatrix{N,N}(log(Matrix(R)))
+    RotMatrixGenerator((S-S')/2)
+end
 
 ## exp
 # 2d
