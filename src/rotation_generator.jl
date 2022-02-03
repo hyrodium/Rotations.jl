@@ -261,7 +261,7 @@ function isrotationgenerator(r::StaticMatrix{N,N,T}) where {N,T<:Real}
 end
 
 function isrotationgenerator(r::AbstractMatrix{T}) where T<:Real
-    if !=(size(r)...)
+    if size(r,1) != size(r, 2)
         return false
     end
     return iszero(r+r')
