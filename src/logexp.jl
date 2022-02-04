@@ -10,10 +10,20 @@ Base.log(R::Rotation{3}) = log(RotationVec(R))
 Base.log(R::RotMatrix{3}) = RotMatrixGenerator(log(RotationVec(R)))
 
 # General dimensions
-function Base.log(R::RotMatrix{N}) where N
-    # This will be faster when log(::SMatrix) is implemented in StaticArrays.jl
-    S = SMatrix{N,N}(log(Matrix(R)))
-    RotMatrixGenerator((S-S')/2)
+if VERSION < v"1.7"
+    # This if block is related to this PR.
+    # https://github.com/JuliaLang/julia/pull/40573
+    function Base.log(R::RotMatrix{N}) where N
+        # This will be faster when log(::SMatrix) is implemented in StaticArrays.jl
+        S = SMatrix{N,N}(real(log(Matrix(R))))
+        RotMatrixGenerator((S-S')/2)
+    end
+else
+    function Base.log(R::RotMatrix{N}) where N
+        # This will be faster when log(::SMatrix) is implemented in StaticArrays.jl
+        S = SMatrix{N,N}(log(Matrix(R)))
+        RotMatrixGenerator((S-S')/2)
+    end
 end
 
 ## exp
