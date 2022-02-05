@@ -26,10 +26,6 @@ Base.zeros(::Type{R}, dims::Tuple{}) where {R<:Rotation} = zeros(typeof(zero(R))
 # Generate identity rotation matrix
 Base.one(r::Rotation) = one(typeof(r))
 
-# Rotation angles and axes can be obtained by converting to the AngleAxis type
-rotation_angle(r::Rotation{3}) = rotation_angle(AngleAxis(r))
-rotation_axis(r::Rotation{3}) = rotation_axis(AngleAxis(r))
-
 # `convert` goes through the constructors, similar to e.g. `Number`
 Base.convert(::Type{R}, rot::R) where {N,R<:Rotation{N}} = rot
 Base.convert(::Type{R}, rot::Rotation{N}) where {N,R<:Rotation{N}} = R(rot)
@@ -175,13 +171,6 @@ Angle2d{T}(r::Rotation{2}) where {T} = Angle2d{T}(rotation_angle(r))
 
 Base.one(::Type{A}) where {A<: Angle2d} = A(0)
 
-rotation_angle(rot::Angle2d) = rot.theta
-function rotation_angle(rot::Rotation{2})
-    c = @inbounds rot[1,1]
-    s = @inbounds rot[2,1]
-    atan(s, c)
-end
-
 @inline function Base.:*(r::Angle2d, v::StaticVector)
     if length(v) != 2
         throw(DimensionMismatch("Cannot rotate a vector of length $(length(v))"))
@@ -213,6 +202,25 @@ end
 
 ################################################################################
 ################################################################################
+
+# 2-dimensional rotation rotation_angle
+rotation_angle(r::Angle2d) = r.theta
+function rotation_angle(r::RotMatrix{2})
+    c = @inbounds r[1,1]
+    s = @inbounds r[2,1]
+    return atan(s, c)
+end
+
+# 3-dimensional rotation angles and axes can be obtained by converting to the AngleAxis type
+rotation_angle(r::Rotation{3}) = rotation_angle(AngleAxis(r))
+rotation_angle(r::RotMatrix{3}) = rotation_angle(AngleAxis(r)) # avoid general dimensional definition
+rotation_axis(r::Rotation{3}) = rotation_axis(AngleAxis(r))
+
+# N-dimensional rotation angles can be obtained by logarithm (RotMatrixGenerator)
+function rotation_angle(r::RotMatrix{N,T}) where {N,T}
+    s = log(r)
+    return norm(s)/sqrt(T(2))
+end
 
 _isrotation_eps(T::Type{<:Integer}) = zero(T)
 _isrotation_eps(T) = eps(T)
