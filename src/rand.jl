@@ -1,4 +1,6 @@
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Rotation{2}
+function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Union{<:Rotation{2},<:RotMatrix{2}}
+    # Union{<:Rotation{2},<:RotMatrix{2}} seems meaningless,
+    # but it avoids the method for general dimensional RotMatrix
     T = eltype(R)
     if T == Any
         T = Float64
@@ -10,7 +12,9 @@ end
 # A random rotation can be obtained easily with unit quaternions
 # The unit sphere in R⁴ parameterizes quaternion rotations according to the
 # Haar measure of SO(3) - see e.g. http://math.stackexchange.com/questions/184086/uniform-distributions-on-the-space-of-rotations-in-3d
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Rotation{3}
+function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Union{<:Rotation{3},<:RotMatrix{3}}
+    # Union{<:Rotation{3},<:RotMatrix{3}} seems meaningless,
+    # but it avoids the method for general dimensional RotMatrix
     T = eltype(R)
     if T == Any
         T = Float64
