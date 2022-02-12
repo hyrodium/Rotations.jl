@@ -269,6 +269,17 @@ function nearest_rotation(M::AbstractMatrix{T}) where T
     return nearest_rotation(M_)
 end
 
+# A random rotation can be obtained via random matrix and nearest_rotation.
+function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: RotMatrix{N} where N
+    T = eltype(R)
+    if T == Any
+        T = Float64
+    end
+
+    m = @SMatrix randn(N,N)
+    return nearest_rotation(m)
+end
+
 # A simplification and specialization of the Base.show function for AbstractArray makes
 # everything sensible at the REPL.
 function Base.show(io::IO, ::MIME"text/plain", X::Rotation)
