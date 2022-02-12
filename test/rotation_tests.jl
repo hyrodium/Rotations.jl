@@ -307,18 +307,6 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
         # TODO RotX, RotXY?
     end
 
-    @testset "$(N)-dimensional rotation_angle" for N in 2:5
-        Random.seed!(0)
-        repeats = 100
-        for i in 1:repeats
-            angle = rand()
-            m = one(MMatrix{N,N})
-            m[1:2,1:2] = Angle2d(angle)
-            r = RotMatrix(m)
-            @test rotation_angle(r) ≈ angle
-        end
-    end
-
     #########################################################################
     # Check construction of QuatRotation given two vectors
     #########################################################################
