@@ -40,28 +40,6 @@ Base.convert(::Type{R}, rot::Rotation{N}) where {N,R<:Rotation{N}} = R(rot)
 Base.@pure StaticArrays.similar_type(::Union{R,Type{R}}) where {R <: Rotation} = SMatrix{size(R)..., eltype(R), prod(size(R))}
 Base.@pure StaticArrays.similar_type(::Union{R,Type{R}}, ::Type{T}) where {R <: Rotation, T} = SMatrix{size(R)..., T, prod(size(R))}
 
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Rotation{2}
-    T = eltype(R)
-    if T == Any
-        T = Float64
-    end
-
-    R(2π * rand(rng, T))
-end
-
-# A random rotation can be obtained easily with unit quaternions
-# The unit sphere in R⁴ parameterizes quaternion rotations according to the
-# Haar measure of SO(3) - see e.g. http://math.stackexchange.com/questions/184086/uniform-distributions-on-the-space-of-rotations-in-3d
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Rotation{3}
-    T = eltype(R)
-    if T == Any
-        T = Float64
-    end
-
-    q = QuatRotation(randn(rng, T), randn(rng, T), randn(rng, T), randn(rng, T))
-    return R(q)
-end
-
 @inline function Base.:/(r1::Rotation, r2::Rotation)
     r1 * inv(r2)
 end
@@ -267,17 +245,6 @@ function nearest_rotation(M::AbstractMatrix{T}) where T
     L = N^2
     M_ = convert(SMatrix{N,N,T,L}, M)
     return nearest_rotation(M_)
-end
-
-# A random rotation can be obtained via random matrix and nearest_rotation.
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: RotMatrix{N} where N
-    T = eltype(R)
-    if T == Any
-        T = Float64
-    end
-
-    m = @SMatrix randn(N,N)
-    return nearest_rotation(m)
 end
 
 # A simplification and specialization of the Base.show function for AbstractArray makes
