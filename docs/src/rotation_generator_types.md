@@ -30,12 +30,12 @@ For more information, see the sidebar page.
 
 ### 2D rotations
 * `RotMatrixGenerator2{T}`
-    * Rotation matrix in 2 dimensional Euclidean space.
+    * Skew symmetric matrix in 2 dimensional Euclidean space.
 * `Angle2dGenerator`
-    * Parametrized with rotational angle.
+    * Parametrized with one real number like `Angle2d`.
 
 ### 3D rotations
 * `RotMatrixGenerator3{T}`
-    * Rotation matrix in 3 dimensional Euclidean space.
+    * Skew symmetric matrix in 3 dimensional Euclidean space.
 * `RotationVecGenerator`
-    * Rotation around given axis. The length of axis vector represents its angle.
+    * Rotation generator around given axis. The length of axis vector represents its angle.
