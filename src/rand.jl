@@ -32,6 +32,6 @@ function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: RotMa
         T = Float64
     end
 
-    m = @SMatrix randn(T,N,N)
+    m = randn(rng, SMatrix{N,N,T})
     return nearest_rotation(m)
 end
