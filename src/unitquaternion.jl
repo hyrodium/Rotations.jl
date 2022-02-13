@@ -234,9 +234,6 @@ Rotations.params(p) == @SVector [1.0, 2.0, 3.0]  # true
 @inline params(q::QuatRotation) = SVector{4}(q.q.s, q.q.v1, q.q.v2, q.q.v3)
 
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{<:QuatRotation{T}}) where T
-    _normalize(QuatRotation{T}(randn(rng,T), randn(rng,T), randn(rng,T), randn(rng,T)))
-end
 @inline Base.one(::Type{Q}) where Q <: QuatRotation = Q(1.0, 0.0, 0.0, 0.0)
 
 

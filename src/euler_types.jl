@@ -38,16 +38,6 @@ for axis in [:X, :Y, :Z]
     end
 end
 
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Union{RotX,RotY,RotZ}
-    T = eltype(R)
-    if T == Any
-        T = Float64
-    end
-
-    return R(2π*rand(rng, T))
-end
-
-
 """
     struct RotX{T} <: Rotation{3,T}
     RotX(theta)
@@ -260,19 +250,6 @@ for axis1 in [:X, :Y, :Z]
         end
     end
 end
-
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Union{RotXY,RotYZ,RotZX, RotXZ, RotYX, RotZY}
-    T = eltype(R)
-    if T == Any
-        T = Float64
-    end
-
-    # Not really sure what this distribution is, but it's also not clear what
-    # it should be! rand(RotXY) *is* invariant to pre-rotations by a RotX and
-    # post-rotations by a RotY...
-    return R(2π*rand(rng, T), 2π*rand(rng, T))
-end
-
 
 """
     struct RotXY{T} <: Rotation{3,T}

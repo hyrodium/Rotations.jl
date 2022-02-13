@@ -35,3 +35,36 @@ function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: RotMa
     m = randn(rng, SMatrix{N,N,T})
     return nearest_rotation(m)
 end
+
+function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Union{RotX,RotY,RotZ}
+    T = eltype(R)
+    if T == Any
+        T = Float64
+    end
+
+    return R(2π*rand(rng, T))
+end
+
+function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Union{RotXY,RotYZ,RotZX, RotXZ, RotYX, RotZY}
+    T = eltype(R)
+    if T == Any
+        T = Float64
+    end
+
+    # Not really sure what this distribution is, but it's also not clear what
+    # it should be! rand(RotXY) *is* invariant to pre-rotations by a RotX and
+    # post-rotations by a RotY...
+    return R(2π*rand(rng, T), 2π*rand(rng, T))
+end
+
+function Random.rand(rng::AbstractRNG, ::Random.SamplerType{RP}) where RP <: MRP
+    RP(rand(rng, QuatRotation))
+end
+
+@inline function Random.rand(rng::AbstractRNG, ::Random.SamplerType{RP}) where RP <: RodriguesParam
+    RP(rand(rng, QuatRotation))
+end
+
+function Random.rand(rng::AbstractRNG, ::Random.SamplerType{<:QuatRotation{T}}) where T
+    _normalize(QuatRotation{T}(randn(rng,T), randn(rng,T), randn(rng,T), randn(rng,T)))
+end
