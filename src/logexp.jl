@@ -21,7 +21,6 @@ function Base.log(R::RotMatrix{N}) where N
     end
     RotMatrixGenerator((S-S')/2)
 end
-end
 
 ## exp
 # 2d
