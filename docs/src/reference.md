@@ -13,9 +13,9 @@
 * [Rotation matrix](https://en.wikipedia.org/wiki/Rotation_matrix)
 * [Quaternion](https://en.wikipedia.org/wiki/Quaternion)
 * [Wahba's problem](https://en.wikipedia.org/wiki/Wahba%27s_problem)
-    * Wahba's problem is related with `nearest_rotation` funciton.
+    * Wahba's problem is related to the `nearest_rotation` function.
 * [Polar decomposition](https://en.wikipedia.org/wiki/Polar_decomposition)
-    * Polar decomposition is also related with `nearest_rotation` funciton.
+    * Polar decomposition is also related to the `nearest_rotation` function.
 
 ## Others
 * ["Quaternions and 3d rotation, explained interactively" by 3Blue1Brown](https://www.youtube.com/watch?v=zjMuIxRvygQ)
