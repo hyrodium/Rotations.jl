@@ -141,10 +141,10 @@ of `getindex` etc. are computed on the fly.
 """
 struct Angle2d{T} <: Rotation{2,T}
     theta::T
-    Angle2d{T}(theta) where T = new{T}(theta)
+    Angle2d{T}(theta::Number) where T = new{T}(theta)
 end
 
-@inline function Angle2d(theta)
+@inline function Angle2d(theta::Number)
     Angle2d{rot_eltype(typeof(theta))}(theta)
 end
 
