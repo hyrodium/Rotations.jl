@@ -76,14 +76,6 @@ RotMatrix(x::SMatrix{N,N,T,L}) where {N,T,L} = RotMatrix{N,T,L}(x)
 
 Base.zero(::Type{RotMatrix}) = error("The dimension of rotation is not specified.")
 
-for N = 2:3
-    L = N*N
-    RotMatrixN = Symbol(:RotMatrix, N)
-    @eval begin
-        const $RotMatrixN{T} = RotMatrix{$N, T, $L}
-    end
-end
-
 # These functions (plus size) are enough to satisfy the entire StaticArrays interface:
 @inline function RotMatrix(t::NTuple{L}) where L
     n = sqrt(L)
@@ -97,11 +89,21 @@ end
 @inline RotMatrix{N,T}(t::NTuple) where {N,T} = RotMatrix(SMatrix{N,N,T}(t))
 @inline RotMatrix{N,T,L}(t::NTuple{L}) where {N,T,L} = RotMatrix(SMatrix{N,N,T}(t))
 
+# Create aliases RotMatrix2{T} = RotMatrix{2,T,4} and RotMatrix3{T} = RotMatrix{3,T,9}
+for N = 2:3
+    L = N*N
+    RotMatrixN = Symbol(:RotMatrix, N)
+    @eval begin
+        const $RotMatrixN{T} = RotMatrix{$N, T, $L}
+        @inline $RotMatrixN(t::NTuple{$L}) = RotMatrix(SMatrix{$N,$N}(t))
+    end
+end
+
 Base.@propagate_inbounds Base.getindex(r::RotMatrix, i::Int) = r.mat[i]
 @inline Base.Tuple(r::RotMatrix) = Tuple(r.mat)
 
 @inline RotMatrix(θ::Number) = RotMatrix{2}(θ)
-@inline function (::Type{RotMatrix{2}})(θ::Number)
+@inline function (::Type{<:RotMatrix{2}})(θ::Number)
     s, c = sincos(θ)
     RotMatrix(@SMatrix [c -s; s c])
 end
