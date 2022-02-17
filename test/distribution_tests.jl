@@ -27,12 +27,12 @@ To visualize the distribution, try the following script.
 @testset "Distribution" begin
 
     # TODO: consider to remove Euler rotations (#155)
-    Type_SO3 =  (RotMatrix{3}, AngleAxis, RotationVec,
+    Type_SO3 =  (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
                 QuatRotation, MRP, RodriguesParam,
                 RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
                 RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ)
 
-    Type_SO2 = (RotMatrix{2}, Angle2d, RotX, RotY, RotZ)
+    Type_SO2 = (RotMatrix2, RotMatrix{2}, Angle2d, RotX, RotY, RotZ)
 
     # Number of sampling
     N = 100000

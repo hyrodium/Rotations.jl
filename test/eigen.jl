@@ -1,5 +1,5 @@
 @testset "Eigen_3D" begin
-    all_types = (RotMatrix{3}, AngleAxis, RotationVec,
+    all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
                  QuatRotation, RodriguesParam, MRP,
                  RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
                  RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ,
@@ -32,7 +32,7 @@
 end
 
 @testset "Eigen_2D" begin
-    all_types = (RotMatrix{2}, Angle2d)
+    all_types = (RotMatrix2, RotMatrix{2}, Angle2d)
 
     @testset "$(T)" for T in all_types, θ in 0.0:0.1:π
         R = T(Angle2d(θ))

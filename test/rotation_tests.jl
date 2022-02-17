@@ -65,7 +65,7 @@ end
 # build a full list of rotation types including the different angle ordering schemas
 #####################################################################################
 
-rot_types = (RotMatrix{3}, AngleAxis, RotationVec,
+rot_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
              QuatRotation, RodriguesParam, MRP,
              RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
              RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ)
@@ -73,7 +73,7 @@ rot_types = (RotMatrix{3}, AngleAxis, RotationVec,
 one_types = (RotX, RotY, RotZ)
 two_types = (RotXY, RotYZ, RotZX, RotXZ, RotYX, RotZY)
 taitbyran_types = (RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX)
-all_types = (RotMatrix{3}, AngleAxis, RotationVec,
+all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
              QuatRotation, RodriguesParam, MRP,
              RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
              RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ,
@@ -86,7 +86,8 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
 
 @testset "Rotations Tests" begin
     # Ensure we're testing all 3D rotation types
-    @test length(all_types) == length(setdiff(subtypes(Rotation), [Angle2d]))
+    @test setdiff(subtypes(Rotation), all_types) == [Angle2d, RotMatrix]
+    @test setdiff(all_types, subtypes(Rotation)) == [RotMatrix3, RotMatrix{3}]
 
     ###############################
     # Check fixed relationships
