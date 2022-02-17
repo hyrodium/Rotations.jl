@@ -16,7 +16,7 @@ To visualize the distribution, try the following script.
     cdf_true(t) = t-sinpi(t)/π
 
     # Probability density function and histogram of sampling distribution
-    histogram(angles, normed = true, label=false)
+    histogram(angles, normed=true, label=false)
     plot!(t->1-cospi(t), 0, 1, label=false)
 
     # Cumulative distribution function
@@ -76,4 +76,25 @@ To visualize the distribution, try the following script.
         @test norm(cdf_true.(ts) - cdf_sampled.(ts), Inf) < 0.01
     end
 
+    @testset "distribution $(N)-dimensinal RotMatrix" for N in 2:5
+        # Sampling
+        RotType = RotMatrix{N}
+        n = 1000000
+        rs = rand(RotType, n)
+        q = rand(RotType)
+        norms1 = norm.([(r/q - one(SMatrix{N,N})) for r in rs])
+        norms2 = norm.([(r - one(SMatrix{N,N})) for r in rs])
+
+        # Check sampled rotations are rotations
+        @test all(isrotation.(rs))
+        @test isrotation(q)
+
+        # Cumulative distribution function
+        cdf_sampled1(t) = count(<(t), norms1)/n
+        cdf_sampled2(t) = count(<(t), norms2)/n
+
+        # Check the CDFs are approximately equal
+        ts = 0:0.01:1
+        @test norm(cdf_sampled1.(ts) - cdf_sampled2.(ts), Inf) < 0.01
+    end
 end

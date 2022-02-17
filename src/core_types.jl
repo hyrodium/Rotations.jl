@@ -40,28 +40,6 @@ Base.convert(::Type{R}, rot::Rotation{N}) where {N,R<:Rotation{N}} = R(rot)
 Base.@pure StaticArrays.similar_type(::Union{R,Type{R}}) where {R <: Rotation} = SMatrix{size(R)..., eltype(R), prod(size(R))}
 Base.@pure StaticArrays.similar_type(::Union{R,Type{R}}, ::Type{T}) where {R <: Rotation, T} = SMatrix{size(R)..., T, prod(size(R))}
 
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Rotation{2}
-    T = eltype(R)
-    if T == Any
-        T = Float64
-    end
-
-    R(2π * rand(rng, T))
-end
-
-# A random rotation can be obtained easily with unit quaternions
-# The unit sphere in R⁴ parameterizes quaternion rotations according to the
-# Haar measure of SO(3) - see e.g. http://math.stackexchange.com/questions/184086/uniform-distributions-on-the-space-of-rotations-in-3d
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Rotation{3}
-    T = eltype(R)
-    if T == Any
-        T = Float64
-    end
-
-    q = QuatRotation(randn(rng, T), randn(rng, T), randn(rng, T), randn(rng, T))
-    return R(q)
-end
-
 @inline function Base.:/(r1::Rotation, r2::Rotation)
     r1 * inv(r2)
 end
@@ -98,18 +76,27 @@ RotMatrix(x::SMatrix{N,N,T,L}) where {N,T,L} = RotMatrix{N,T,L}(x)
 
 Base.zero(::Type{RotMatrix}) = error("The dimension of rotation is not specified.")
 
-# These functions (plus size) are enough to satisfy the entire StaticArrays interface:
 for N = 2:3
     L = N*N
     RotMatrixN = Symbol(:RotMatrix, N)
     @eval begin
-        @inline RotMatrix(t::NTuple{$L})  = RotMatrix(SMatrix{$N,$N}(t))
-        @inline (::Type{RotMatrix{$N}})(t::NTuple{$L}) = RotMatrix(SMatrix{$N,$N}(t))
-        @inline RotMatrix{$N,T}(t::NTuple{$L}) where {T} = RotMatrix(SMatrix{$N,$N,T}(t))
-        @inline RotMatrix{$N,T,$L}(t::NTuple{$L}) where {T} = RotMatrix(SMatrix{$N,$N,T}(t))
         const $RotMatrixN{T} = RotMatrix{$N, T, $L}
     end
 end
+
+# These functions (plus size) are enough to satisfy the entire StaticArrays interface:
+@inline function RotMatrix(t::NTuple{L}) where L
+    n = sqrt(L)
+    if !isinteger(n)
+        throw(DimensionMismatch("The length of input tuple $(t) must be square number."))
+    end
+    N = Int(n)
+    RotMatrix(SMatrix{N,N}(t))
+end
+@inline (::Type{RotMatrix{N}})(t::NTuple) where N = RotMatrix(SMatrix{N,N}(t))
+@inline RotMatrix{N,T}(t::NTuple) where {N,T} = RotMatrix(SMatrix{N,N,T}(t))
+@inline RotMatrix{N,T,L}(t::NTuple{L}) where {N,T,L} = RotMatrix(SMatrix{N,N,T}(t))
+
 Base.@propagate_inbounds Base.getindex(r::RotMatrix, i::Int) = r.mat[i]
 @inline Base.Tuple(r::RotMatrix) = Tuple(r.mat)
 
@@ -212,26 +199,31 @@ _isrotation_eps(T) = eps(T)
     isrotation(r)
     isrotation(r, tol)
 
-Check whether `r` is a 2×2 or 3×3 rotation matrix, where `r * r'` is within
+Check whether `r` is a rotation matrix, where `r * r'` is within
 `tol` of the identity matrix (using the Frobenius norm). `tol` defaults to
 `1000 * eps(float(eltype(r)))` or `zero(T)` for integer `T`.
 """
-function isrotation(r::AbstractMatrix{T}, tol::Real = 1000 * _isrotation_eps(eltype(T))) where T
-    if size(r) == (2,2)
-        # Transpose is overloaded for many of our types, so we do it explicitly:
-        r_trans = @SMatrix [conj(r[1,1])  conj(r[2,1]);
-                            conj(r[1,2])  conj(r[2,2])]
-        d = norm((r * r_trans) - one(SMatrix{2,2}))
-    elseif size(r) == (3,3)
-        r_trans = @SMatrix [conj(r[1,1])  conj(r[2,1])  conj(r[3,1]);
-                            conj(r[1,2])  conj(r[2,2])  conj(r[3,2]);
-                            conj(r[1,3])  conj(r[2,3])  conj(r[3,3])]
-        d = norm((r * r_trans) - one(SMatrix{3,3}))
-    else
+isrotation
+
+function isrotation(r::StaticMatrix{N,N,T}, tol::Real = 1000 * _isrotation_eps(eltype(T))) where {N,T<:Real}
+    m = SMatrix(r)
+    d = norm(m*m'-one(SMatrix{N,N}))
+    return d ≤ tol && det(m) > 0
+end
+
+function isrotation(r::AbstractMatrix{T}, tol::Real = 1000 * _isrotation_eps(eltype(T))) where T<:Real
+    if !=(size(r)...)
         return false
     end
+    d = norm(r*r'-one(r))
+    return d ≤ tol && det(r) > 0
+end
 
-    return d <= tol && det(r) > 0
+function isrotation(r::AbstractMatrix{T}, tol::Real = 1000 * _isrotation_eps(eltype(real(T)))) where T<:Number
+    if !isreal(r)
+        return false
+    end
+    return isrotation(real(r), tol)
 end
 
 """

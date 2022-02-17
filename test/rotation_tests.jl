@@ -401,27 +401,68 @@ all_types = (RotMatrix{3}, AngleAxis, RotationVec,
     # Check that isrotation works
     #########################################################################
     @testset "Testing isrotation" begin
-      a=[1.0 0.0 0.0
-         0.0 0.0 -1.0
-         0.0 1.0 0.0]
-      @test isrotation(a)
-      foreach(rot_types) do rot_type
-        foreach(1:20) do idx
-          @test isrotation(rand(rot_type))
-        end
-      end
-      a=[40.0 0.0 0.0
-         0.0 0.0 1.0
-         0.0 1.0 0.0]
-      @test !isrotation(a)
-      a=[1.0 0.0 0.0
-         0.0 0.0 1.0
-         0.0 1.0 0.0]
-      @test !isrotation(a)
+        # Rotate 90° around x-axis
+        a=[1.0 0.0 0.0
+           0.0 0.0 -1.0
+           0.0 1.0 0.0]
+        @test isrotation(a)
 
-      # isrotation should work for integer (or boolean) matrices (issue #94)
-      @test isrotation([0 1 0; -1 0 0; 0 0 1])
-      @test isrotation(Matrix(I,3,3))
+        # Random generated Rotation must be rotation
+        foreach(rot_types) do rot_type
+            foreach(1:20) do idx
+            @test isrotation(rand(rot_type))
+            end
+        end
+
+        # Scaling in x-axis is not rotation
+        a=[4.0 0.0 0.0
+           0.0 1.0 0.0
+           0.0 0.0 1.0]
+        @test !isrotation(a)
+
+        # Flipping y-axis and z-axis is not rotation
+        a=[1.0 0.0 0.0
+           0.0 0.0 1.0
+           0.0 1.0 0.0]
+        @test !isrotation(a)
+
+        # Non-square matrix is not rotation
+        @test !isrotation(zeros(2,3))
+        @test !isrotation(@SMatrix zeros(2,3))
+
+        # isrotation should work for integer (or boolean) matrices (issue #94)
+        @test isrotation([0 1 0; -1 0 0; 0 0 1])
+
+        # identity matrix is rotation
+        @test isrotation(I(1))
+        @test isrotation(I(3))
+        @test isrotation(I(4))
+        @test isrotation(Matrix(I,1,1))
+        @test isrotation(Matrix(I,3,3))
+        @test isrotation(Matrix(I,4,4))
+        @test isrotation(one(SMatrix{1,1}))
+        @test isrotation(one(SMatrix{3,3}))
+        @test isrotation(one(SMatrix{4,4}))
+        @test isrotation(one(RotMatrix{1}))
+        @test isrotation(one(RotMatrix{3}))
+        @test isrotation(one(RotMatrix{4}))
+
+        # Rotation matrix can be AbstractMatrix{<:Complex}
+        @test isrotation(I(3) .+ 0im)
+        @test isrotation(one(SMatrix{4,4}) .+ 0im)
+
+        # Including NaNs are not rotaion
+        @test !isrotation(MRP(0, 0, NaN))
+        @test !isrotation(RotXYZ(0, NaN, NaN))
+        @test !isrotation(RotX(NaN))
+        @test !isrotation(AngleAxis(1.,0.,0.,0.))
+        @test !isrotation(QuatRotation(0.,0.,0.,0.))
+
+        # Complex unitary matrix is not rotation
+        M = Hermitian(randn(Complex{Float64},3,3))
+        A = eigvecs(M)
+        @test A*A' ≈ one(A)
+        @test !isrotation(A)
     end
 
     @testset "Testing type aliases" begin

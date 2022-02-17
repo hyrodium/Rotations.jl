@@ -80,7 +80,7 @@ end
 end
 
 # A rotation is more-or-less defined as being an orthogonal (or unitary) matrix
-Base.:-(r::RotMatrixGenerator) = RotMatrixGenerator(-r.mat)
+Base.:-(r::RotMatrixGenerator) = RotMatrixGenerator(r.mat')
 
 # By default, composition of rotations will go through RotMatrixGenerator, unless overridden
 @inline Base.:+(r1::RotationGenerator, r2::RotationGenerator) = RotMatrixGenerator(r1) + RotMatrixGenerator(r2)
@@ -245,4 +245,37 @@ function Base.show(io::IO, ::MIME"text/plain", X::RotationGenerator)
     println(io)
     io = IOContext(io, :typeinfo => eltype(X))
     Base.print_array(io, X)
+end
+
+"""
+    isrotationgenerator(r)
+
+Check whether `r` is a rotation generator matrix (skew-symmetric matrix).
+"""
+isrotationgenerator
+
+function isrotationgenerator(r::StaticMatrix{N,N,T}) where {N,T<:Real}
+    # This method can be removed, but is a little faster than isrotationgenerator(r::AbstractMatrix{T}).
+    m = SMatrix(r)
+    return m == -m'
+end
+
+function isrotationgenerator(r::AbstractMatrix{T}) where T<:Real
+    indsm, indsn = axes(r)
+    if indsm != indsn
+        return false
+    end
+    for i in indsn, j in i:last(indsn)
+        if r[i,j] != -r[j,i]
+            return false
+        end
+    end
+    return true
+end
+
+function isrotationgenerator(r::AbstractMatrix{T}) where T<:Number
+    if !isreal(r)
+        return false
+    end
+    return isrotationgenerator(real(r))
 end

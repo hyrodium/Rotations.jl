@@ -23,9 +23,6 @@ RodriguesParam(x::X, y::Y, z::Z) where {X,Y,Z} = RodriguesParam{promote_type(X,Y
 params(g::RodriguesParam) = SVector{3}(g.x, g.y, g.z)
 
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
-@inline function Random.rand(rng::AbstractRNG, ::Random.SamplerType{RP}) where RP <: RodriguesParam
-    RP(rand(rng, QuatRotation))
-end
 @inline Base.one(::Type{RP}) where RP <: RodriguesParam = RP(0.0, 0.0, 0.0)
 
 # ~~~~~~~~~~~~~~~ Quaternion <=> RP ~~~~~~~~~~~~~~~~~~ #

@@ -25,9 +25,6 @@ MRP(x::X, y::Y, z::Z) where {X,Y,Z} = MRP{promote_type(X,Y,Z)}(x, y, z)
 params(g::MRP) = SVector{3}(g.x, g.y, g.z)
 
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
-function Random.rand(rng::AbstractRNG, ::Random.SamplerType{RP}) where RP <: MRP
-    RP(rand(rng, QuatRotation))
-end
 Base.one(::Type{RP}) where RP <: MRP = RP(0.0, 0.0, 0.0)
 
 # ~~~~~~~~~~~~~~~~ Quaternion <=> MRP ~~~~~~~~~~~~~~~~~~ #
