@@ -13,7 +13,7 @@ end
 # The unit sphere in R⁴ parameterizes quaternion rotations according to the
 # Haar measure of SO(3) - see e.g. http://math.stackexchange.com/questions/184086/uniform-distributions-on-the-space-of-rotations-in-3d
 function Random.rand(rng::AbstractRNG, ::Random.SamplerType{R}) where R <: Union{<:Rotation{3},<:RotMatrix{3}}
-    # We use the awkward Union{<:Rotation{2},<:RotMatrix{2}} here rather than `Rotation{2}`
+    # We use the awkward Union{<:Rotation{3},<:RotMatrix{3}} here rather than `Rotation{3}`
     # to make this efficient 3D method more specific than the method for general `RotMatrix`.
     T = eltype(R)
     if T == Any
