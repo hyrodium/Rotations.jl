@@ -8,9 +8,14 @@ using Unitful
     #################################
 
     @testset "Core" begin
-        r = one(RotMatrix{2,Float32})
-        @test RotMatrix((1,0,0,1)) == RotMatrix(@SMatrix [1 0; 0 1])
+        @test RotMatrix((1,0,0,1)) == RotMatrix(@SMatrix [1 0;0 1]) == one(SMatrix{2,2})
+        @test Angle2d((1,0,0,1))   == RotMatrix(@SMatrix [1 0;0 1]) == one(SMatrix{2,2})
+        @test RotMatrix((1,0,0,1)) isa RotMatrix2{Int}
+        @test Angle2d((1,0,0,1))   isa Angle2d{Float64}
+        @test RotMatrix{2,Float32}((1,0,0,1)) isa RotMatrix2{Float32}
+        @test Angle2d{Float32}((1,0,0,1))   isa Angle2d{Float32}
         @test_throws DimensionMismatch RotMatrix((1,0,0,1,0))
+        @test_throws DimensionMismatch Angle2d((1,0,0,1,0))
     end
 
     @testset "Unitful" begin

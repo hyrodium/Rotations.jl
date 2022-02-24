@@ -141,10 +141,10 @@ of `getindex` etc. are computed on the fly.
 """
 struct Angle2d{T} <: Rotation{2,T}
     theta::T
-    Angle2d{T}(theta) where T = new{T}(theta)
+    Angle2d{T}(theta::Number) where T = new{T}(theta)
 end
 
-@inline function Angle2d(theta)
+@inline function Angle2d(theta::Number)
     Angle2d{rot_eltype(typeof(theta))}(theta)
 end
 
@@ -152,6 +152,7 @@ params(r::Angle2d) = SVector{1}(r.theta)
 
 Angle2d(r::Rotation{2}) = Angle2d(rotation_angle(r))
 Angle2d{T}(r::Rotation{2}) where {T} = Angle2d{T}(rotation_angle(r))
+@inline (::Type{R})(t::NTuple{4}) where R<:Angle2d = convert(R, RotMatrix(t))
 
 Base.one(::Type{A}) where {A<: Angle2d} = A(0)
 
