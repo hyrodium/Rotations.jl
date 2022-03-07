@@ -31,10 +31,8 @@ to the output parameterization, centered at the value of R.
 Returns the jacobian for rotating the vector X by R.
 """
 function jacobian(::Type{RotMatrix},  q::QuatRotation)
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     # let q = s * qhat where qhat is a unit quaternion and  s is a scalar,
     # then R = RotMatrix(q) = RotMatrix(s * qhat) = s * RotMatrix(qhat)
@@ -138,10 +136,8 @@ end
 # Jacobian converting from a Quaternion to an MRP
 #
 function jacobian(::Type{MRP}, q::QuatRotation{T}) where T
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     den = 1 + w
     scale = 1 / den
@@ -184,10 +180,8 @@ end
 
 # TODO: should this be jacobian(:rotate, q,  X)   # or something?
 function jacobian(q::QuatRotation, X::AbstractVector)
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     @assert length(X) === 3
     T = eltype(q)

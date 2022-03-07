@@ -68,7 +68,7 @@ end
     @test ω ≈ 2*vmat()*lmult(q)'qdot
     @test ω ≈ 2*vmat()*lmult(inv(q))*qdot
     q2 = Quaternion(q)*pure_quaternion(ω)
-    @test qdot ≈ SVector(q2.s, q2.v1, q2.v2, q2.v3)/2
+    @test qdot ≈ SVector(real(q2), imag_part(q2)...)/2
 
     # MRPs
     ω = @SVector rand(3)
