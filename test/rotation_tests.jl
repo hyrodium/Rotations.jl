@@ -205,7 +205,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
             @test Rotations.params(q2) ≈ -Rotations.params(q) atol = 100 * eps()
             @test q ≈ q2 atol = 100 * eps()
 
-            q3 = QuatRotation(-real(q.q), (-).imag_part(q.q)..., false) # don't normalize: everything is exact
+            q3 = QuatRotation(-real(q.q), (-).(imag_part(q.q))..., false) # don't normalize: everything is exact
             @test Rotations.params(q3) == -Rotations.params(q)
             @test q == q3
 
