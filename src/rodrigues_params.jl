@@ -32,10 +32,8 @@ params(g::RodriguesParam) = SVector{3}(g.x, g.y, g.z)
 end
 
 @inline function (::Type{G})(q::QuatRotation) where G<:RodriguesParam
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     return G(x/w, y/w, z/w)
 end

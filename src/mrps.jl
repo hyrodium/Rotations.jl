@@ -35,10 +35,8 @@ Base.one(::Type{RP}) where RP <: MRP = RP(0.0, 0.0, 0.0)
 end
 
 @inline function (::Type{RP})(q::QuatRotation) where RP<:MRP
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     M = 1/(1+w)
     RP(x*M, y*M, z*M)

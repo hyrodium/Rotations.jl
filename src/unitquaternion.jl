@@ -61,7 +61,7 @@ end
 
 function QuatRotation(q::T) where T<:Quaternion
     if q.norm
-        return QuatRotation(q.s, q.v1, q.v2, q.v3, false)
+        return QuatRotation(real(q), imag_part(q)..., false)
     else
         throw(InexactError(nameof(T), T, q))
     end
@@ -125,10 +125,8 @@ end
 
 
 function Base.getindex(q::QuatRotation, i::Int)
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     if i == 1
         ww = (w * w)
@@ -187,10 +185,8 @@ function Base.getindex(q::QuatRotation, i::Int)
 end
 
 function Base.Tuple(q::QuatRotation)
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     ww = (w * w)
     xx = (x * x)
@@ -218,7 +214,7 @@ end
 # ~~~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~ #
 @inline scalar(q::QuatRotation) = real(q.q)
 @inline vector(q::QuatRotation) = vector(q.q)
-@inline vector(q::Quaternion) = SVector{3}(q.v1, q.v2, q.v3)
+@inline vector(q::Quaternion) = SVector{3}(imag_part(q))
 
 """
     params(R::Rotation)
@@ -231,7 +227,7 @@ p = MRP(1.0, 2.0, 3.0)
 Rotations.params(p) == @SVector [1.0, 2.0, 3.0]  # true
 ```
 """
-@inline params(q::QuatRotation) = SVector{4}(q.q.s, q.q.v1, q.q.v2, q.q.v3)
+@inline params(q::QuatRotation) = SVector{4}(real(q.q), imag_part(q.q)...)
 
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
 @inline Base.one(::Type{Q}) where Q <: QuatRotation = Q(1.0, 0.0, 0.0, 0.0)
@@ -243,10 +239,8 @@ Rotations.params(p) == @SVector [1.0, 2.0, 3.0]  # true
 Base.inv(q::Q) where Q <: QuatRotation = Q(conj(q.q))
 
 function _normalize(q::Q) where Q <: QuatRotation
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     n = norm(params(q))
     Q(w/n, x/n, y/n, z/n)
@@ -279,10 +273,8 @@ function expm(ϕ::AbstractVector)
 end
 
 function _log_as_quat(q::Q, eps=1e-6) where Q <: QuatRotation
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     # Assumes unit quaternion
     θ = sqrt(x^2 + y^2 + z^2)
@@ -384,10 +376,8 @@ end
 `lmult(q2)*params(q1)` returns a vector equivalent to `q2*q1` (quaternion composition)
 """
 function lmult(q::QuatRotation)
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     SA[
         w -x -y -z;
@@ -397,11 +387,14 @@ function lmult(q::QuatRotation)
     ]
 end
 function lmult(q::Quaternion)
+    w = real(q)
+    x, y, z = imag_part(q)
+
     SA[
-        q.s  -q.v1 -q.v2 -q.v3;
-        q.v1  q.s  -q.v3  q.v2;
-        q.v2  q.v3  q.s  -q.v1;
-        q.v3 -q.v2  q.v1  q.s;
+        w -x -y -z;
+        x  w -z  y;
+        y  z  w -x;
+        z -y  x  w;
     ]
 end
 lmult(q::StaticVector{4}) = lmult(QuatRotation(q, false))
@@ -413,10 +406,8 @@ lmult(q::StaticVector{4}) = lmult(QuatRotation(q, false))
 `rmult(q1)*params(q2)` return a vector equivalent to `q2*q1` (quaternion composition)
 """
 function rmult(q::QuatRotation)
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     SA[
         w -x -y -z;
@@ -426,11 +417,14 @@ function rmult(q::QuatRotation)
     ]
 end
 function rmult(q::Quaternion)
+    w = real(q)
+    x, y, z = imag_part(q)
+
     SA[
-        q.s  -q.v1 -q.v2 -q.v3;
-        q.v1  q.s   q.v3 -q.v2;
-        q.v2 -q.v3  q.s   q.v1;
-        q.v3  q.v2 -q.v1  q.s;
+        w -x -y -z;
+        x  w  z -y;
+        y -z  w  x;
+        z  y -x  w;
     ]
 end
 rmult(q::SVector{4}) = rmult(QuatRotation(q, false))
@@ -497,10 +491,8 @@ Useful for converting Jacobians from R⁴ to R³ and
     differential quaternion parameterization are the same up to a constant.
 """
 function ∇differential(q::QuatRotation)
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     SA[
         -x -y -z;

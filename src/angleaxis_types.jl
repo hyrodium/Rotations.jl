@@ -78,10 +78,8 @@ end
 end
 
 @inline function (::Type{AA})(q::QuatRotation) where AA <: AngleAxis
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
     s2 = x * x + y * y + z * z
     sin_t2 = sqrt(s2)
     theta = 2 * atan(sin_t2, w)

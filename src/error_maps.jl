@@ -220,10 +220,8 @@ end
 
 
 function jacobian(::InvCayleyMap, q::QuatRotation)
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     μ = scaling(CayleyMap)
     si = 1/w
@@ -234,10 +232,8 @@ end
 
 
 function jacobian(::InvMRPMap, q::QuatRotation)
-    w = q.q.s
-    x = q.q.v1
-    y = q.q.v2
-    z = q.q.v3
+    w = real(q.q)
+    x, y, z = imag_part(q.q)
 
     μ = scaling(MRPMap)
     si = 1/(1+w)
