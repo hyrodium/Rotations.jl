@@ -11,6 +11,7 @@ Base.@pure StaticArrays.Size(::Type{Rotation{N,T}}) where {N,T} = Size(N,N)
 Base.@pure StaticArrays.Size(::Type{R}) where {R<:Rotation} = Size(supertype(R))
 Base.adjoint(r::Rotation) = inv(r)
 Base.transpose(r::Rotation{N,T}) where {N,T<:Real} = inv(r)
+Base.real(R::Type{<:Rotation}) = R
 
 # Generate zero-matrix with SMatrix
 # Note that zeros(Rotation3,dims...) is not Array{<:Rotation} but Array{<:StaticMatrix{3,3}}
