@@ -73,6 +73,15 @@
         @test one(RotationGenerator{3,BigFloat}) isa SMatrix{3, 3, BigFloat}
     end
 
+    @testset "real" begin
+        @testset "$(R)" for R in all_types
+            @test real(R) === R
+            @test real(one(R)) === one(R)
+        end
+        @test real(RotationGenerator) === RotationGenerator
+        @test real(RotMatrixGenerator) === RotMatrixGenerator
+    end
+
     @testset "minus" begin
         for T in all_types
             # TODO: These should be replaced with `r = rand(T)`
