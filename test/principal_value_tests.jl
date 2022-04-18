@@ -52,41 +52,32 @@ end
     @test Rotations.params(rv_prin) ≈ Rotations.params(rv)
 end
 
-@testset "Principal Value ($(rot_type))" for rot_type in [:RotX, :RotY, :RotZ, :Angle2d] begin
-        @eval begin
-            for i = 1:1000
-                r = $(rot_type)(100.0 * randn())
-                r_prin = principal_value(r)
-                @test -π ≤ r_prin.theta ≤ π
-                @test r_prin ≈ r
-            end
-        end
+@testset "Principal Value ($(rot_type))" for rot_type in (RotX, RotY, RotZ, Angle2d)
+    for i = 1:1000
+        r = rot_type(100.0 * randn())
+        r_prin = principal_value(r)
+        @test -π ≤ r_prin.theta ≤ π
+        @test r_prin ≈ r
     end
 end
 
-@testset "Principal Value ($(rot_type))" for rot_type in [:RotXY, :RotYX, :RotZX, :RotXZ, :RotYZ, :RotZY] begin
-        @eval begin
-            for i = 1:1000
-                r = $rot_type(100.0 * randn(), 100.0 * randn())
-                r_prin = principal_value(r)
-                @test -π ≤ r_prin.theta1 ≤ π
-                @test -π ≤ r_prin.theta2 ≤ π
-                @test r_prin ≈ r
-            end
-        end
+@testset "Principal Value ($(rot_type))" for rot_type in (RotXY, RotYX, RotZX, RotXZ, RotYZ, RotZY)
+    for i = 1:1000
+        r = rot_type(100.0 * randn(), 100.0 * randn())
+        r_prin = principal_value(r)
+        @test -π ≤ r_prin.theta1 ≤ π
+        @test -π ≤ r_prin.theta2 ≤ π
+        @test r_prin ≈ r
     end
 end
 
-@testset "Principal Value ($(rot_type))" for rot_type in [:RotXYX, :RotYXY, :RotZXZ, :RotXZX, :RotYZY, :RotZYZ, :RotXYZ, :RotYXZ, :RotZXY, :RotXZY, :RotYZX, :RotZYX] begin
-        @eval begin
-            for i = 1:1000
-                r = $(rot_type)(100.0 * randn(), 100.0 * randn(), 100.0 * randn())
-                r_prin = principal_value(r)
-                @test -π ≤ r_prin.theta1 ≤ π
-                @test -π ≤ r_prin.theta2 ≤ π
-                @test -π ≤ r_prin.theta3 ≤ π
-                @test r_prin ≈ r
-            end
-        end
+@testset "Principal Value ($(rot_type))" for rot_type in (RotXYX, RotYXY, RotZXZ, RotXZX, RotYZY, RotZYZ, RotXYZ, RotYXZ, RotZXY, RotXZY, RotYZX, RotZYX)
+    for i = 1:1000
+        r = rot_type(100.0 * randn(), 100.0 * randn(), 100.0 * randn())
+        r_prin = principal_value(r)
+        @test -π ≤ r_prin.theta1 ≤ π
+        @test -π ≤ r_prin.theta2 ≤ π
+        @test -π ≤ r_prin.theta3 ≤ π
+        @test r_prin ≈ r
     end
 end
