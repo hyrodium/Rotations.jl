@@ -30,7 +30,7 @@ import Rotations: ∇rotate, ∇composition1, ∇composition2, skew, params
         @test params(one(R)) === @SVector [0,0,0.]
     end
 
-    @tesetset "Math operations" begin
+    @testset "Math operations" begin
         g = rand(R)
         @test norm(g) == norm(Matrix(g))
     end
