@@ -11,6 +11,7 @@ Base.@pure StaticArrays.Size(::Type{RotationGenerator{N,T}}) where {N,T} = Size(
 Base.@pure StaticArrays.Size(::Type{R}) where {R<:RotationGenerator} = Size(supertype(R))
 Base.adjoint(r::RotationGenerator) = -r
 Base.transpose(r::RotationGenerator{N,T}) where {N,T<:Real} = -r
+Base.real(R::Type{<:RotationGenerator}) = R
 
 # Generate identity-matrix with SMatrix
 # Note that ones(RotationGenerator3,dims...) is not Array{<:RotationGenerator} but Array{<:StaticMatrix{3,3}}

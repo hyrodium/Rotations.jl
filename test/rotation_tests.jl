@@ -128,6 +128,19 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
         @test_throws ErrorException zero(RotMatrix)
     end
 
+    ###############################
+    # Check real function
+    ###############################
+
+    @testset "real checks" begin
+        @testset "$(R)" for R in all_types
+            @test real(R) === R
+            @test real(one(R)) === one(R)
+        end
+        @test real(Rotation) === Rotation
+        @test real(RotMatrix) === RotMatrix
+    end
+
     ################################
     # check on the inverse function
     ################################
