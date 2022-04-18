@@ -51,12 +51,12 @@ end
 Base.inv(p::MRP) = MRP(-p.x, -p.y, -p.z)
 
 # ~~~~~~~~~~~~~~~ Composition ~~~~~~~~~~~~~~~ #
-function (*)(p2::MRP, p1::MRP)
+function Base.:*(p2::MRP, p1::MRP)
     p2, p1 = params(p2), params(p1)
     MRP(((1-p2'p2)*p1 + (1-p1'p1)*p2 - cross(2p1, p2) ) / (1+p1'p1*p2'p2 - 2p1'p2))
 end
 
-function (\)(p1::MRP, p2::MRP)
+function Base.:\(p1::MRP, p2::MRP)
     q1,q2 = params(p1), params(p2)
     n1,n2 = q1'q1, q2'q2
     θ = 1/((1+n1)*(1+n2))
@@ -70,7 +70,7 @@ function (\)(p1::MRP, p2::MRP)
     return MRP(v*M)
 end
 
-function (/)(p1::MRP, p2::MRP)
+function Base.:/(p1::MRP, p2::MRP)
     q1,q2 = params(p1), params(p2)
     n1,n2 = q1'q1, q2'q2
     θ = 1/((1+n1)*(1+n2))
@@ -86,8 +86,8 @@ end
 
 
 # ~~~~~~~~~~~~~~~ Rotation ~~~~~~~~~~~~~~~ #
-@inline (*)(p::MRP, r::StaticVector) = QuatRotation(p)*r
-@inline (\)(p::MRP, r::StaticVector) = QuatRotation(p)\r
+@inline Base.:*(p::MRP, r::StaticVector) = QuatRotation(p)*r
+@inline Base.:\(p::MRP, r::StaticVector) = QuatRotation(p)\r
 
 
 # ~~~~~~~~~~~~~~~ Kinematics ~~~~~~~~~~~~~~~ #

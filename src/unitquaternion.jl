@@ -1,5 +1,3 @@
-import Base: *, /, \, exp, ≈, ==
-
 """
     QuatRotation{T} <: Rotation
 
@@ -305,7 +303,7 @@ rmult(w) * SVector(q)
 
 Sets the output mapping equal to the mapping of `w`
 """
-function (*)(q1::QuatRotation, q2::QuatRotation)
+function Base.:*(q1::QuatRotation, q2::QuatRotation)
     return QuatRotation(q1.q*q2.q)
 end
 
@@ -323,8 +321,8 @@ function Base.:*(q::QuatRotation, r::StaticVector)  # must be StaticVector to av
     (w^2 - v'v)*r + 2*v*(v'r) + 2*w*cross(v,r)
 end
 
-(\)(q1::QuatRotation, q2::QuatRotation) = inv(q1)*q2
-(/)(q1::QuatRotation, q2::QuatRotation) = q1*inv(q2)
+Base.:\(q1::QuatRotation, q2::QuatRotation) = inv(q1)*q2
+Base.:/(q1::QuatRotation, q2::QuatRotation) = q1*inv(q2)
 
 """
     rotation_between(from, to)
