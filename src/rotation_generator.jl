@@ -58,7 +58,7 @@ RotMatrixGenerator(x::SMatrix{N,N,T,L}) where {N,T,L} = RotMatrixGenerator{N,T,L
 Base.zero(::Type{RotMatrixGenerator}) = error("The dimension of rotation is not specified.")
 
 # These functions (plus size) are enough to satisfy the entire StaticArrays interface:
-for N = 2:3
+for N in 2:3
     L = N*N
     RotMatrixGeneratorN = Symbol(:RotMatrixGenerator, N)
     @eval begin
@@ -234,7 +234,7 @@ function Base.show(io::IO, ::MIME"text/plain", X::RotationGenerator)
     if !isa(X, RotMatrixGenerator)
         n_fields = length(fieldnames(typeof(X)))
         print(io, "(")
-        for i = 1:n_fields
+        for i in 1:n_fields
             print(io, getfield(X, i))
             if i < n_fields
                 print(io, ", ")

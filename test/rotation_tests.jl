@@ -14,7 +14,7 @@ macro contents_approx_eq(a, b)
     quote
         n = numel($(esc(a)))
         @test n == numel($(esc(b)))
-        for i = 1:n
+        for i in 1:n
             ai, bi = getindex($(esc(a)), i), getindex($(esc(b)), i)
             @test typeof(ai) == typeof(bi)
             @test_approx_eq ai bi
@@ -25,7 +25,7 @@ macro contents_approx_eq_eps(a, b, eps)
     quote
         n = numel($(esc(a)))
         @test n == numel($(esc(b)))
-        for i = 1:n
+        for i in 1:n
             ai, bi = getindex($(esc(a)), i), getindex($(esc(b)), i)
             @test typeof(ai) == typeof(bi)
             @test_approx_eq_eps ai bi $(esc(eps))
@@ -53,7 +53,7 @@ macro contents_approx_eq_notype(a, b)
     quote
         n = numel($(esc(a)))
         @test n == numel($(esc(b)))
-        for i = 1:n
+        for i in 1:n
             ai, bi = getindex($(esc(a)), i), getindex($(esc(b)), i)
             @test_approx_eq ai bi
         end
@@ -150,7 +150,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
         I = one(RotMatrix{3,Float64})
         @testset "$(R)" for R in all_types
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 r1 = rand(R)
                 r2 = rand(R)
                 v = @SVector rand(3)
@@ -176,7 +176,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
         for R in all_types
             I = one(R)
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 r = rand(R)
                 @test norm(r) ≈ norm(Matrix(r))
                 @test normalize(r) ≈ normalize(Matrix(r))
@@ -196,7 +196,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
             I = one(R)::R
 
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 r = rand(R)
                 m = SMatrix(r)
                 v1 = randn(SVector{3})
@@ -213,7 +213,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
     @testset "Quaternion double cover" begin
         repeats = 100
         Q = QuatRotation
-        for i = 1 : repeats
+        for i in 1 : repeats
             q = rand(QuatRotation)
 
             q2 = QuatRotation(-q.q) # normalize: need a tolerance
@@ -234,7 +234,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
         repeats = 100
         @testset "$(R1) * $(R2)" for R1 in all_types, R2 in all_types
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 r1 = rand(R1)
                 m1 = SMatrix(r1)
 
@@ -254,7 +254,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
         repeats = 100
         @testset "convert $(R1) -> $(R2)" for R1 in all_types, R2 in rot_types
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 r1 = rand(R1)
                 m1 = SMatrix(r1)
 
@@ -271,7 +271,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
             # Check if the two-axis include one-axis
             if string(R1)[end] in string(R2)[end-1:end]
                 Random.seed!(0)
-                for i = 1:repeats
+                for i in 1:repeats
                     r1 = rand(R1)
                     m1 = SMatrix(r1)
 
@@ -306,7 +306,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
         repeats = 100
         @testset "$(R)" for R in rot_types
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 r1 = rand(AngleAxis)
 
                 angle = rotation_angle(r1)
@@ -330,7 +330,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
     @testset "Testing construction of QuatRotation given two vectors" begin
         angle_axis_test(from, to, rot, atol) = isapprox(rot * from * norm(to) / norm(from), to; atol = atol)
 
-        for i = 1 : 10000
+        for i in 1 : 10000
             from = randn(SVector{3, Float64})
             to = rand(SVector{3, Float64})
             rot = rotation_between(from, to)
@@ -338,16 +338,16 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
         end
 
         # degenerate cases
-        for i = 1 : 10000
+        for i in 1 : 10000
             from = randn(SVector{3, Float64})
             to = randn() * from # either from and to are aligned, or in opposite directions
             rot = rotation_between(from, to)
             # @show rot
             @test angle_axis_test(from, to, rot, 1e-7)
         end
-        for direction = 1 : 3
-            for i = 1 : 10000
-                from = @SVector [ifelse(i == direction, 1., 0.) for i = 1 : 3] # unit vector in direction 'direction'
+        for direction in 1 : 3
+            for i in 1 : 10000
+                from = @SVector [ifelse(i == direction, 1., 0.) for i in 1 : 3] # unit vector in direction 'direction'
                 to = randn() * from
                 rot = rotation_between(from, to)
                 @test angle_axis_test(from, to, rot, 1e-7)
@@ -366,7 +366,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
         s = 1e-4
         @testset "$(R)" for R in taitbyran_types
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 roll = s*(rand()-0.5)
                 pitch = s*(rand()-0.5)
                 yaw = s*(rand()-0.5)
