@@ -347,14 +347,18 @@ end
 
 The time derivative of the rotation R, according to the definition
 
-``Ṙ = \\lim_{Δt → 0} \\frac{R(t + Δt) - R(t)}{Δt}``
+```math
+Ṙ = \\lim_{Δt → 0} \\frac{R(t + Δt) - R(t)}{Δt}
+```
 
 where `ω` is the angular velocity. This is equivalent to
 
-``Ṙ = \\lim_{Δt → 0} \\frac{R δR - R}{Δt}``
+```math
+Ṙ = \\lim_{Δt → 0} \\frac{R δR - R}{Δt}
+```
 
 where ``δR`` is some small rotation, parameterized by a small rotation ``δθ`` about
-an axis ``r``, such that ``lim_{Δt → 0} \\frac{δθ r}{Δt} = ω``
+an axis ``r``, such that ``\\lim_{Δt → 0} \\frac{δθ r}{Δt} = ω``
 
 The kinematics are extremely useful when computing the dynamics of rigid bodies, since
 `Ṙ = kinematics(R,ω)` is the first-order ODE for the evolution of the attitude dynamics.
