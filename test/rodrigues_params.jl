@@ -86,6 +86,7 @@ end
     end
 
     @testset "RodriguesParam" begin
+        ω = @SVector rand(3)
         g = rand(RodriguesParam)
         p = Rotations.params(g)
         gdot = Rotations.kinematics(g, ω)
