@@ -62,36 +62,43 @@ import Rotations: ∇rotate, ∇composition1, ∇composition2, skew, params
 end
 
 @testset "kinematics" begin
+    repeats = 100
 
     @testset "QuatRotation" begin
-        q = rand(QuatRotation)
-        ω = @SVector rand(3)
-        q_ = Rotations.params(q)
-        qdot = Rotations.kinematics(q,ω)
-        @test qdot ≈ 0.5*lmult(q)*hmat()*ω
-        @test qdot ≈ 0.5*lmult(q)*hmat(ω)
-        @test ω ≈ 2*vmat()*lmult(q)'qdot
-        @test ω ≈ 2*vmat()*lmult(inv(q))*qdot
-        q2 = Quaternion(q)*pure_quaternion(ω)
-        @test qdot ≈ SVector(real(q2), imag_part(q2)...)/2
+        for _ in 1:repeats
+            q = rand(QuatRotation)
+            ω = @SVector rand(3)
+            q_ = Rotations.params(q)
+            qdot = Rotations.kinematics(q,ω)
+            @test qdot ≈ 0.5*lmult(q)*hmat()*ω
+            @test qdot ≈ 0.5*lmult(q)*hmat(ω)
+            @test ω ≈ 2*vmat()*lmult(q)'qdot
+            @test ω ≈ 2*vmat()*lmult(inv(q))*qdot
+            q2 = Quaternion(q)*pure_quaternion(ω)
+            @test qdot ≈ SVector(real(q2), imag_part(q2)...)/2
+        end
     end
 
     @testset "MRP" begin
-        ω = @SVector rand(3)
-        g = rand(MRP)
-        p = Rotations.params(g)
-        A = Diagonal(I,3) + 2*(skew(p)^2 + skew(p))/(1+p'p)
-        @test Rotations.kinematics(g, ω) ≈ 0.25*(1 + p'p) * A*ω
-        @test ω ≈ 4/(1+p'p) * A'Rotations.kinematics(g,ω)
+        for _ in 1:repeats
+            ω = @SVector rand(3)
+            g = rand(MRP)
+            p = Rotations.params(g)
+            A = Diagonal(I,3) + 2*(skew(p)^2 + skew(p))/(1+p'p)
+            @test Rotations.kinematics(g, ω) ≈ 0.25*(1 + p'p) * A*ω
+            @test ω ≈ 4/(1+p'p) * A'Rotations.kinematics(g,ω)
+        end
     end
 
     @testset "RodriguesParam" begin
-        ω = @SVector rand(3)
-        g = rand(RodriguesParam)
-        p = Rotations.params(g)
-        gdot = Rotations.kinematics(g, ω)
-        @test gdot ≈ 0.5*(Diagonal(I,3) + skew(p) + p*p')*ω
-        @test ω ≈ 2/(1+p'p)*(gdot - p × gdot)
+        for _ in 1:repeats
+            ω = @SVector rand(3)
+            g = rand(RodriguesParam)
+            p = Rotations.params(g)
+            gdot = Rotations.kinematics(g, ω)
+            @test gdot ≈ 0.5*(Diagonal(I,3) + skew(p) + p*p')*ω
+            @test ω ≈ 2/(1+p'p)*(gdot - p × gdot)
+        end
     end
 
 end
