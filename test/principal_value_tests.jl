@@ -3,8 +3,7 @@
         p = MRP(5.0 * randn(), 5.0 * randn(), 5.0 * randn())
         p_prin = principal_value(p)
         @test p_prin ≈ p
-        @test (p_prin.x^2 + p_prin.y^2 + p_prin.z^2) < (1.0 + 1.0e-13)
-        # end
+        @test (p_prin.x^2 + p_prin.y^2 + p_prin.z^2) ≤ 1
     end
 end
 
