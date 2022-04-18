@@ -153,6 +153,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
             for i = 1:repeats
                 r1 = rand(R)
                 r2 = rand(R)
+                v = @SVector rand(3)
                 @test inv(r1) == adjoint(r1)
                 @test inv(r1) == transpose(r1)
                 @test inv(r1)*r1 ≈ I
@@ -161,6 +162,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
                 @test r1\r1 ≈ I
                 @test r1/r2 ≈ r1*inv(r2)
                 @test r1\r2 ≈ inv(r1)*r2
+                @test r1\v ≈ inv(r1)*v ≈ Matrix(r1)\Vector(v)
             end
         end
     end
