@@ -47,27 +47,27 @@ end
 Base.inv(p::RodriguesParam) = RodriguesParam(-p.x, -p.y, -p.z)
 
 # ~~~~~~~~~~~~~~~ Composition ~~~~~~~~~~~~~~~ #
-function (*)(g2::RodriguesParam, g1::RodriguesParam)
+function Base.:*(g2::RodriguesParam, g1::RodriguesParam)
     g2 = params(g2)
     g1 = params(g1)
     RodriguesParam((g2+g1 + g2 × g1)/(1-g2'g1))
 end
 
-function (\)(g1::RodriguesParam, g2::RodriguesParam)
+function Base.:\(g1::RodriguesParam, g2::RodriguesParam)
     g2 = params(g2)
     g1 = params(g1)
     RodriguesParam((g2-g1 + g2 × g1)/(1+g1'g2))
 end
 
-function (/)(g1::RodriguesParam, g2::RodriguesParam)
+function Base.:/(g1::RodriguesParam, g2::RodriguesParam)
     g2 = params(g2)
     g1 = params(g1)
     RodriguesParam((g1-g2 + g2 × g1)/(1+g1'g2))
 end
 
 # ~~~~~~~~~~~~~~~ Rotation ~~~~~~~~~~~~~~~ #
-(*)(g::RodriguesParam, r::StaticVector) = QuatRotation(g)*r
-(\)(g::RodriguesParam, r::StaticVector) = inv(QuatRotation(g))*r
+Base.:*(g::RodriguesParam, r::StaticVector) = QuatRotation(g)*r
+Base.:\(g::RodriguesParam, r::StaticVector) = inv(QuatRotation(g))*r
 
 
 # ~~~~~~~~~~~~~~~ Kinematics ~~~~~~~~~~~~~~~ #

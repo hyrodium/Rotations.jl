@@ -10,7 +10,7 @@
 #########################
 
 for axis in [:X, :Y, :Z]
-    RotType = Symbol("Rot" * string(axis))
+    RotType = Symbol(:Rot, axis)
     @eval begin
         struct $RotType{T} <: Rotation{3,T}
             theta::T
@@ -203,11 +203,11 @@ end
 ######################
 
 for axis1 in [:X, :Y, :Z]
-    Rot1Type = Symbol("Rot" * string(axis1))
+    Rot1Type = Symbol(:Rot, axis1)
     for axis2 in filter(axis -> axis != axis1, [:X, :Y, :Z])
-        Rot2Type = Symbol("Rot" * string(axis2))
-        RotType = Symbol("Rot" * string(axis1) * string(axis2))
-        InvRotType = Symbol("Rot" * string(axis2) * string(axis1))
+        Rot2Type = Symbol(:Rot, axis2)
+        RotType = Symbol(:Rot, axis1, axis2)
+        InvRotType = Symbol(:Rot, axis2, axis1)
 
         @eval begin
             struct $RotType{T} <: Rotation{3,T}
@@ -474,20 +474,20 @@ end
 ########################
 
 for axis1 in [:X, :Y, :Z]
-    Rot1Type = Symbol("Rot" * string(axis1))
+    Rot1Type = Symbol(:Rot, axis1)
     for axis2 in filter(axis -> axis != axis1, [:X, :Y, :Z])
-        Rot2Type = Symbol("Rot" * string(axis2))
-        Rot12Type = Symbol("Rot" * string(axis1) * string(axis2))
+        Rot2Type = Symbol(:Rot, axis2)
+        Rot12Type = Symbol(:Rot, axis1, axis2)
         for axis3 in filter(axis -> axis != axis2, [:X, :Y, :Z])
-            Rot3Type = Symbol("Rot" * string(axis3))
-            Rot23Type = Symbol("Rot" * string(axis2) * string(axis3))
-            Rot13Type = Symbol("Rot" * string(axis1) * string(axis3))
-            RotType = Symbol("Rot" * string(axis1) * string(axis2) * string(axis3))
-            InvRotType = Symbol("Rot" * string(axis3) * string(axis2) * string(axis1))
+            Rot3Type = Symbol(:Rot, axis3)
+            Rot23Type = Symbol(:Rot, axis2, axis3)
+            Rot13Type = Symbol(:Rot, axis1, axis3)
+            RotType = Symbol(:Rot, axis1, axis2, axis3)
+            InvRotType = Symbol(:Rot, axis3, axis2, axis1)
 
             # Note that axis0 is used only if axis1==axis3
             axis0 = setdiff!([:X, :Y, :Z], [axis1, axis2])[1]
-            Rot0Type = Symbol("Rot" * string(axis0))
+            Rot0Type = Symbol(:Rot, axis0)
 
             @eval begin
                 struct $RotType{T} <: Rotation{3,T}

@@ -1,6 +1,6 @@
 @testset "Util" begin
     @testset "Perpendicular vector" begin
-        for i = 1 : 100
+        for i in 1 : 100
             vec = randn(SVector{3, Float64})
             perp = Rotations.perpendicular_vector(vec)
             @test norm(perp) >= maximum(abs.(vec))

@@ -32,7 +32,7 @@ equivalently minimizes `sum_i=1:n (sin(ϕ[i] / 2))^2`, where `ϕ[i] = rotation_a
 function Statistics.mean(qvec::AbstractVector{QuatRotation{T}}, method::Integer = 0) where T
     #if (method == 0)
         M = zeros(4, 4)
-        for i = 1:length(qvec)
+        for i in 1:length(qvec)
             q = qvec[i]
             Qi = @SVector [q.w, q.x, q.y, q.z]  # convert types to ensure we don't get quaternion multiplication
             M .+= Qi * (Qi')

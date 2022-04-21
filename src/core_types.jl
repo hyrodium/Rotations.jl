@@ -91,7 +91,7 @@ end
 @inline RotMatrix{N,T,L}(t::Tuple) where {N,T,L} = RotMatrix(SArray{Tuple{N,N},T}(t))
 
 # Create aliases RotMatrix2{T} = RotMatrix{2,T,4} and RotMatrix3{T} = RotMatrix{3,T,9}
-for N = 2:3
+for N in 2:3
     L = N*N
     RotMatrixN = Symbol(:RotMatrix, N)
     @eval begin
@@ -261,7 +261,7 @@ function Base.show(io::IO, ::MIME"text/plain", X::Rotation)
     if !isa(X, RotMatrix)
         n_fields = length(fieldnames(typeof(X)))
         print(io, "(")
-        for i = 1:n_fields
+        for i in 1:n_fields
             print(io, getfield(X, i))
             if i < n_fields
                 print(io, ", ")
@@ -274,4 +274,3 @@ function Base.show(io::IO, ::MIME"text/plain", X::Rotation)
     io = IOContext(io, :typeinfo => eltype(X))
     Base.print_array(io, X)
 end
-

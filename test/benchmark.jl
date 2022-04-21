@@ -61,7 +61,7 @@ end
 
 function rotate_mutable(R, X, n)
     Xb, Xo = zeros(3), zeros(3)
-    for i = 1:n
+    for i in 1:n
         A_mul_B!(Xb, R, Xo)
         Xo .= Xb
     end
@@ -70,7 +70,7 @@ end
 
 function rotate_immutable(R, X, n)
     Xo = X
-    for i = 1:n
+    for i in 1:n
         Xo = R * Xo
     end
     return Xo

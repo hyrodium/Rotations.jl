@@ -76,7 +76,7 @@ using Unitful
         for R in [RotMatrix{2,Float64}, Angle2d{Float64}]
             I = one(R)
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 r = rand(R)
                 @test isrotation(r)
                 @test inv(r) == adjoint(r)
@@ -96,7 +96,7 @@ using Unitful
         for R in [RotMatrix{2,Float64}, Angle2d{Float64}]
             I = one(R)
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 r = rand(R)
                 @test norm(r) ≈ norm(Matrix(r))
                 @test normalize(r) ≈ normalize(Matrix(r))
@@ -114,7 +114,7 @@ using Unitful
         repeats = 100
         for R in [RotMatrix{2}, Angle2d]
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 r = rand(R)
                 m = SMatrix(r)
                 v = randn(SVector{2})
@@ -136,7 +136,7 @@ using Unitful
         repeats = 100
         for R in [RotMatrix{2}, Angle2d]
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 r = rand(R)
                 m = SMatrix(r)
                 v = randn(SVector{2}) * u"m"
@@ -163,7 +163,7 @@ using Unitful
         repeats = 100
         for R in [RotMatrix{2}, Angle2d]
             Random.seed!(0)
-            for i = 1:repeats
+            for i in 1:repeats
                 r1 = rand(R)
                 m1 = SMatrix(r1)
 

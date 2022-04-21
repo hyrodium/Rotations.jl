@@ -12,7 +12,7 @@ using ForwardDiff
 
         # Quaternion to rotation matrix
         @testset "Jacobian (QuatRotation -> RotMatrix)" begin
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
                 q = rand(QuatRotation)  # a random quaternion
 
                 # test jacobian to a Rotation matrix
@@ -27,7 +27,7 @@ using ForwardDiff
 
         # MRP to UnitQuternion
         @testset "Jacobian (MRP -> QuatRotation)" begin
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
                 p = rand(MRP)  # a random MRP
 
                 # test jacobian to a Rotation matrix
@@ -42,7 +42,7 @@ using ForwardDiff
         end
 
         @testset "Jacobian (MRP -> QuatRotation) [Corner Cases]" begin
-            for p = [MRP(1.0, 0.0, 0.0), MRP(0.0, 1.0, 0.0), MRP(0.0, 0.0, 1.0)]
+            for p in [MRP(1.0, 0.0, 0.0), MRP(0.0, 1.0, 0.0), MRP(0.0, 0.0, 1.0)]
                 # test jacobian to a Rotation matrix
                 R_jac = Rotations.jacobian(QuatRotation, p)
                 FD_jac = ForwardDiff.jacobian(x -> (q = QuatRotation(MRP(x[1],x[2],x[3]));
@@ -56,7 +56,7 @@ using ForwardDiff
 
         # MRP to QuatRotation
         @testset "Jacobian (QuatRotation -> MRP)" begin
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
                 q = rand(QuatRotation)  # a random QuatRotation
 
                 # test jacobian to a Rotation matrix
@@ -72,7 +72,7 @@ using ForwardDiff
 
         # MRP to rotation matrix
         @testset "Jacobian (MRP -> RotMatrix)" begin
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
                 p = rand(MRP)  # a random MRP
 
                 # test jacobian to a Rotation matrix
@@ -93,7 +93,7 @@ using ForwardDiff
         # Quaternion multiplication
         @testset "Jacobian (Quaternion muliplication w.r.t. the right quaternion)" begin
 
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
 
                 ql = quatrand()    # a random quaternion (should work for non-unit quaternions)
                 qr = quatrand()    # a random quaternion (should work for non-unit quaternions)
@@ -114,7 +114,7 @@ using ForwardDiff
 
         @testset "Jacobian (Quaternion muliplication w.r.t. the left quaternion)" begin
 
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
 
                 ql = quatrand()    # a random quaternion (should work for non-unit quaternions)
                 qr = quatrand()    # a random quaternion (should work for non-unit quaternions)
@@ -135,7 +135,7 @@ using ForwardDiff
 
         # rotate a point by a RotMatrix
         @testset "Jacobian (RotMatrix rotation)" begin
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
                 r = rand(RotMatrix{3,Float64})    # a random quaternion
                 v = randn(SVector{3,Float64})
 
@@ -151,7 +151,7 @@ using ForwardDiff
 
         # rotate a point by a quaternion
         @testset "Jacobian (QuatRotation rotation)" begin
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
                 q = rand(QuatRotation)    # a random quaternion
                 v = randn(SVector{3,Float64})
 
@@ -167,7 +167,7 @@ using ForwardDiff
 
         # rotate a point by a MRP
         @testset "Jacobian (MRP rotation)" begin
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
                 p = rand(MRP)    # a random quaternion
                 v = randn(SVector{3,Float64})
 
@@ -184,7 +184,7 @@ using ForwardDiff
         # rotate a point by an MRP
         @testset "Jacobian (MRP rotation)" begin
 
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
 
                 spq = SpQuat(nquatrand())    # a random quaternion
                 X = randn(Vec{3,Float64})
@@ -215,14 +215,14 @@ using ForwardDiff
         # SpQuat to Quaternion
         @testset "Hessian (SpQuat -> Quaternion)" begin
 
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
 
                 q = nquatrand()                           # a random quaternion
                 spq = Rotations.quat_to_spquat_naive(q)   # I want to test the full domain of SpQuats, not just the one with ||.|| < 1
 
                 # test jacobian to a Rotation matrix
                 R_hess = Rotations.hessian(Quaternion, spq)
-                for d = 1:4
+                for d in 1:4
                     H(X) = vec(Quaternion(SpQuat(X...)))[d]   # transformation function
                     FD_hess = ForwardDiff.hessian(H, vec(spq))
 
@@ -236,13 +236,13 @@ using ForwardDiff
         # Quaternion to SpQuat
         @testset "Hessian (Quaternion -> SpQuat)" begin
 
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
 
                 q = nquatrand()                           # a random quaternion
 
                 # test jacobian to a Rotation matrix
                 R_hess = Rotations.hessian(SpQuat, q)
-                for d = 1:3
+                for d in 1:3
                     H(X) = vec(SpQuat(Quaternion(X...)))[d]   # transformation function
                     FD_hess = ForwardDiff.hessian(H, vec(q))
 
@@ -254,7 +254,7 @@ using ForwardDiff
 
         @testset "Hessian (Quaternion rotation)" begin
 
-            for i = 1:10   # do some repeats
+            for i in 1:10   # do some repeats
 
                 q = nquatrand()    # a random quaternion
                 X = randn(Vec{3,Float64})
@@ -262,7 +262,7 @@ using ForwardDiff
                 # transformation function
                 R_hess = Rotations.hessian(q, X)
 
-                for d = 1:3
+                for d in 1:3
                     H(q) = Vector(rotate(Quaternion(q...), X))[d]
 
                     # test
@@ -276,7 +276,7 @@ using ForwardDiff
 
         @testset "Hessian (SpQuat rotation)" begin
 
-            for i = 1:10    # do some repeats
+            for i in 1:10    # do some repeats
 
                 q = nquatrand()    # a random quaternion
                 spq = SpQuat(q)
@@ -285,7 +285,7 @@ using ForwardDiff
                 # transformation function
                 R_hess = Rotations.hessian(spq, X)
 
-                for d = 1:3
+                for d in 1:3
                     H(spq) = Vector(rotate(SpQuat(spq...), X))[d]
 
                     # test
