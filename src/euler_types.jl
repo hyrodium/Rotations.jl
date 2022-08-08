@@ -14,11 +14,11 @@ for axis in [:X, :Y, :Z]
     @eval begin
         struct $RotType{T} <: Rotation{3,T}
             theta::T
-            $RotType{T}(theta) where {T} = new{T}(theta)
+            $RotType{T}(theta::Number) where {T} = new{T}(theta)
             $RotType{T}(r::$RotType) where {T} = new{T}(r.theta)
         end
 
-        @inline function $RotType(theta)
+        @inline function $RotType(theta::Number)
             $RotType{rot_eltype(typeof(theta))}(theta)
         end
         @inline $RotType(r::$RotType{T}) where {T} = $RotType{T}(r)

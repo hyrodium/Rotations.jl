@@ -22,6 +22,7 @@ Base.one(::Type{<:RotationGenerator{N,T}}) where {N,T} = one(SMatrix{N,N,T})
 Base.ones(::Type{R}) where {R<:RotationGenerator} = ones(R, ()) # avoid StaticArray constructor
 Base.ones(::Type{R}, dims::Base.DimOrInd...) where {R<:RotationGenerator} = ones(typeof(one(R)),dims...)
 Base.ones(::Type{R}, dims::NTuple{N, Integer}) where {R<:RotationGenerator, N} = ones(typeof(one(R)),dims)
+Base.ones(::Type{R}, dims::Tuple{}) where {R<:RotationGenerator} = ones(typeof(one(R)),dims)
 
 # Generate zero rotation matrix
 Base.zero(r::RotationGenerator) = zero(typeof(r))
@@ -124,7 +125,7 @@ A 2×2 rotation generator matrix (i.e. skew-symmetric matrix).
 """
 struct Angle2dGenerator{T} <: RotationGenerator{2,T}
     v::T
-    Angle2dGenerator{T}(r) where T = new{T}(r)
+    Angle2dGenerator{T}(r::Number) where T = new{T}(r)
 end
 
 @inline function Angle2dGenerator(r::T) where T <: Number
