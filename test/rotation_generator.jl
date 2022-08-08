@@ -51,6 +51,7 @@
             r = one(T)
             @test r isa SMatrix
             @test r == one(r)
+            @test ones(T,()) isa Array{typeof(one(T)), 0}
             @test ones(T,2,3) == [one(T) for i in 1:2, j in 1:3]
             @test ones(T{BigFloat},2,3) == [one(T{BigFloat}) for i in 1:2, j in 1:3]
             @test ones(T,(2,3)) == [one(T) for i in 1:2, j in 1:3]
