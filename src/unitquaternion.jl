@@ -74,8 +74,9 @@ end
     check_length(q, 4)
     Q(q[1], q[2], q[3], q[4], normalize)
 end
-@inline (::Type{Q})(q::StaticVector{4}, normalize::Bool = true) where Q <: QuatRotation =
+@inline function (::Type{Q})(q::StaticVector{4}, normalize::Bool = true) where Q <: QuatRotation
     Q(q[1], q[2], q[3], q[4], normalize)
+end
 
 # Copy constructors
 QuatRotation(q::QuatRotation) = q
