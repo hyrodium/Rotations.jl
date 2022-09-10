@@ -4,14 +4,11 @@ using Rotations
 using StaticArrays
 using InteractiveUtils: subtypes
 using Quaternions
+using Aqua
 import Unitful
-
 import Random
 
-# Check that there are no ambiguities beyond those present in StaticArrays
-ramb = detect_ambiguities(Rotations, Base, Core)
-samb = detect_ambiguities(StaticArrays, Base, Core)
-@test isempty(setdiff(ramb, samb))
+Aqua.test_all(Rotations)
 
 include("util_tests.jl")
 include("2d.jl")
