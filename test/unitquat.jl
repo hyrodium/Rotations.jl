@@ -65,6 +65,8 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
     @test 2 * q == 2 * Matrix(q)
     @test q * 2 == 2 * Matrix(q)
 
+    @test_throws ErrorException QuatRotation(SVector(1, 2, 3, 4, 5))
+
     # Axis-angle
     ϕ = 0.1 * @SVector [1, 0, 0]
     q = expm(ϕ)
