@@ -77,6 +77,10 @@ end
 @inline function (::Type{Q})(q::StaticVector{4}, normalize::Bool = true) where Q <: QuatRotation
     Q(q[1], q[2], q[3], q[4], normalize)
 end
+function (::Type{Q})(q::StaticArray{S, T, 1} where {S<:Tuple, T}, normalize::Bool = true) where Q <: QuatRotation
+    # This method is just for avoiding ambiguities.
+    error("The input vector $q must have 4 elements.")
+end
 
 # Copy constructors
 QuatRotation(q::QuatRotation) = q
