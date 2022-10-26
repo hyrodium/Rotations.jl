@@ -20,17 +20,17 @@ struct QuatRotation{T} <: Rotation{3,T}
     @inline function QuatRotation{T}(w, x, y, z, normalize::Bool = true) where T
         if normalize
             inorm = inv(sqrt(w*w + x*x + y*y + z*z))
-            new{T}(Quaternion(w*inorm, x*inorm, y*inorm, z*inorm, true))
+            new{T}(Quaternion(w*inorm, x*inorm, y*inorm, z*inorm))
         else
-            new{T}(Quaternion(w, x, y, z, true))
+            new{T}(Quaternion(w, x, y, z))
         end
     end
 
-    @inline function QuatRotation{T}(q::Quaternion) where T
-        if q.norm
-            new{T}(q)
+    @inline function QuatRotation{T}(q::Quaternion, normalize::Bool = true) where T
+        if normalize
+            new{T}(sign(q))
         else
-            throw(InexactError(nameof(T), T, q))
+            new{T}(q)
         end
     end
     QuatRotation{T}(q::QuatRotation) where T = new{T}(q.q)
@@ -57,11 +57,11 @@ function QuatRotation(w,x,y,z, normalize::Bool = true)
     QuatRotation{eltype(types)}(w,x,y,z, normalize)
 end
 
-function QuatRotation(q::T) where T<:Quaternion
-    if q.norm
-        return QuatRotation(real(q), imag_part(q)..., false)
+function QuatRotation(q::Quaternion{T}, normalize::Bool = true) where T<:Real
+    if normalize
+        return QuatRotation{float(T)}(sign(q))
     else
-        throw(InexactError(nameof(T), T, q))
+        return QuatRotation{float(T)}(q)
     end
 end
 
