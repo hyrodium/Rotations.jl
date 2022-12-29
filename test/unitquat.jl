@@ -14,7 +14,7 @@ import Rotations: vmat, rmult, lmult, hmat, tmat
     @test QuatRotation(1.0, 0.0, 0.0, 0.0) isa QuatRotation{Float64}
     @test QuatRotation(1.0, 0, 0, 0) isa QuatRotation{Float64}
     @test QuatRotation(1.0, 0, 0, 0) isa QuatRotation{Float64}
-    @test QuatRotation(1, 0, 0, 0) isa QuatRotation{Int}
+    @test QuatRotation(1, 0, 0, 0) isa QuatRotation{Float64}
     @test QuatRotation(1.0f0, 0, 0, 0) isa QuatRotation{Float32}
 
     q = normalize(@SVector rand(4))
