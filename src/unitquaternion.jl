@@ -223,13 +223,13 @@ Rotations.params(p) == @SVector [1.0, 2.0, 3.0]  # true
 @inline params(q::QuatRotation) = SVector{4}(real(q.q), imag_part(q.q)...)
 
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
-@inline Base.one(::Type{Q}) where Q <: QuatRotation = Q(1.0, 0.0, 0.0, 0.0)
+@inline Base.one(::Type{Q}) where Q <: QuatRotation = Q(1.0, 0.0, 0.0, 0.0, false)
 
 
 # ~~~~~~~~~~~~~~~ Math Operations ~~~~~~~~~~~~~~~ #
 
 # Inverses
-Base.inv(q::Q) where Q <: QuatRotation = Q(conj(q.q))
+Base.inv(q::Q) where Q <: QuatRotation = Q(conj(q.q), false)
 
 function _normalize(q::Q) where Q <: QuatRotation
     w = real(q.q)
@@ -299,7 +299,7 @@ rmult(w) * SVector(q)
 Sets the output mapping equal to the mapping of `w`
 """
 function Base.:*(q1::QuatRotation, q2::QuatRotation)
-    return QuatRotation(q1.q*q2.q)
+    return QuatRotation(q1.q * q2.q, false)
 end
 
 """
