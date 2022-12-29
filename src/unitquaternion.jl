@@ -11,20 +11,11 @@ Follows the Hamilton convention for quaternions.
 QuatRotation(w,x,y,z)
 QuatRotation(q::AbstractVector)
 ```
-where `w` is the scalar (real) part, `x`,`y`, and `z` are the vector (imaginary) part,
+where `w` is the scalar (real) part, `x`, `y`, and `z` are the vector (imaginary) part,
 and `q = [w,x,y,z]`.
 """
 struct QuatRotation{T} <: Rotation{3,T}
     q::Quaternion{T}
-
-    @inline function QuatRotation{T}(w, x, y, z, normalize::Bool = true) where T
-        if normalize
-            inorm = inv(sqrt(w*w + x*x + y*y + z*z))
-            new{T}(Quaternion(w*inorm, x*inorm, y*inorm, z*inorm))
-        else
-            new{T}(Quaternion(w, x, y, z))
-        end
-    end
 
     @inline function QuatRotation{T}(q::Quaternion, normalize::Bool = true) where T
         if normalize
@@ -33,7 +24,6 @@ struct QuatRotation{T} <: Rotation{3,T}
             new{T}(q)
         end
     end
-    QuatRotation{T}(q::QuatRotation) where T = new{T}(q.q)
 end
 
 function Base.getproperty(q::QuatRotation, f::Symbol)
@@ -52,17 +42,16 @@ end
 
 # ~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~ #
 # Use default map
+function QuatRotation{T}(w,x,y,z, normalize::Bool = true) where T
+    QuatRotation{T}(Quaternion(w,x,y,z), normalize)
+end
 function QuatRotation(w,x,y,z, normalize::Bool = true)
     types = promote(w,x,y,z)
-    QuatRotation{eltype(types)}(w,x,y,z, normalize)
+    QuatRotation{float(eltype(types))}(w,x,y,z, normalize)
 end
 
 function QuatRotation(q::Quaternion{T}, normalize::Bool = true) where T<:Real
-    if normalize
-        return QuatRotation{float(T)}(sign(q))
-    else
-        return QuatRotation{float(T)}(q)
-    end
+    return QuatRotation{float(T)}(q, normalize)
 end
 
 function Quaternions.Quaternion(q::QuatRotation)
@@ -84,6 +73,7 @@ end
 
 # Copy constructors
 QuatRotation(q::QuatRotation) = q
+QuatRotation{T}(q::QuatRotation) where T = QuatRotation{T}(q.q)
 
 # QuatRotation <=> Quat
 # (::Type{Q})(q::Quat) where Q <: QuatRotation = Q(q.w, q.x, q.y, q.z, false)
@@ -261,11 +251,11 @@ Create a `Quaternion` with zero scalar part (i.e. `q.q.s == 0`).
 """
 function pure_quaternion(v::AbstractVector)
     check_length(v, 3)
-    Quaternion(zero(eltype(v)), v[1], v[2], v[3], false)
+    Quaternion(zero(eltype(v)), v[1], v[2], v[3])
 end
 
 @inline pure_quaternion(x::Real, y::Real, z::Real) =
-    Quaternion(zero(x), x, y, z, false)
+    Quaternion(zero(x), x, y, z)
 
 function expm(ϕ::AbstractVector)
     check_length(ϕ, 3)
