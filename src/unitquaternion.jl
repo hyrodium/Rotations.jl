@@ -231,14 +231,6 @@ Rotations.params(p) == @SVector [1.0, 2.0, 3.0]  # true
 # Inverses
 Base.inv(q::Q) where Q <: QuatRotation = Q(conj(q.q), false)
 
-function _normalize(q::Q) where Q <: QuatRotation
-    w = real(q.q)
-    x, y, z = imag_part(q.q)
-
-    n = norm(params(q))
-    Q(w/n, x/n, y/n, z/n)
-end
-
 # Identity
 (::Type{Q})(I::UniformScaling) where Q <: QuatRotation = one(Q)
 

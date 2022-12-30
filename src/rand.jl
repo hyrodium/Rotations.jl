@@ -66,5 +66,6 @@ end
 end
 
 function Random.rand(rng::AbstractRNG, ::Random.SamplerType{<:QuatRotation{T}}) where T
-    _normalize(QuatRotation{T}(randn(rng,T), randn(rng,T), randn(rng,T), randn(rng,T)))
+    q = Quaternion(randn(rng,T), randn(rng,T), randn(rng,T), randn(rng,T))
+    return QuatRotation{T}(sign(q))
 end
