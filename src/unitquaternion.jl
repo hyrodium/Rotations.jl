@@ -11,29 +11,19 @@ Follows the Hamilton convention for quaternions.
 QuatRotation(w,x,y,z)
 QuatRotation(q::AbstractVector)
 ```
-where `w` is the scalar (real) part, `x`,`y`, and `z` are the vector (imaginary) part,
+where `w` is the scalar (real) part, `x`, `y`, and `z` are the vector (imaginary) part,
 and `q = [w,x,y,z]`.
 """
 struct QuatRotation{T} <: Rotation{3,T}
     q::Quaternion{T}
 
-    @inline function QuatRotation{T}(w, x, y, z, normalize::Bool = true) where T
+    @inline function QuatRotation{T}(q::Quaternion, normalize::Bool = true) where T
         if normalize
-            inorm = inv(sqrt(w*w + x*x + y*y + z*z))
-            new{T}(Quaternion(w*inorm, x*inorm, y*inorm, z*inorm, true))
+            new{T}(sign(q))
         else
-            new{T}(Quaternion(w, x, y, z, true))
-        end
-    end
-
-    @inline function QuatRotation{T}(q::Quaternion) where T
-        if q.norm
             new{T}(q)
-        else
-            throw(InexactError(nameof(T), T, q))
         end
     end
-    QuatRotation{T}(q::QuatRotation) where T = new{T}(q.q)
 end
 
 function Base.getproperty(q::QuatRotation, f::Symbol)
@@ -52,17 +42,16 @@ end
 
 # ~~~~~~~~~~~~~~~ Constructors ~~~~~~~~~~~~~~~ #
 # Use default map
+function QuatRotation{T}(w,x,y,z, normalize::Bool = true) where T
+    QuatRotation{T}(Quaternion(w,x,y,z), normalize)
+end
 function QuatRotation(w,x,y,z, normalize::Bool = true)
     types = promote(w,x,y,z)
-    QuatRotation{eltype(types)}(w,x,y,z, normalize)
+    QuatRotation{float(eltype(types))}(w,x,y,z, normalize)
 end
 
-function QuatRotation(q::T) where T<:Quaternion
-    if q.norm
-        return QuatRotation(real(q), imag_part(q)..., false)
-    else
-        throw(InexactError(nameof(T), T, q))
-    end
+function QuatRotation(q::Quaternion{T}, normalize::Bool = true) where T<:Real
+    return QuatRotation{float(T)}(q, normalize)
 end
 
 function Quaternions.Quaternion(q::QuatRotation)
@@ -84,6 +73,7 @@ end
 
 # Copy constructors
 QuatRotation(q::QuatRotation) = q
+QuatRotation{T}(q::QuatRotation) where T = QuatRotation{T}(q.q)
 
 # QuatRotation <=> Quat
 # (::Type{Q})(q::Quat) where Q <: QuatRotation = Q(q.w, q.x, q.y, q.z, false)
@@ -233,21 +223,13 @@ Rotations.params(p) == @SVector [1.0, 2.0, 3.0]  # true
 @inline params(q::QuatRotation) = SVector{4}(real(q.q), imag_part(q.q)...)
 
 # ~~~~~~~~~~~~~~~ Initializers ~~~~~~~~~~~~~~~ #
-@inline Base.one(::Type{Q}) where Q <: QuatRotation = Q(1.0, 0.0, 0.0, 0.0)
+@inline Base.one(::Type{Q}) where Q <: QuatRotation = Q(1.0, 0.0, 0.0, 0.0, false)
 
 
 # ~~~~~~~~~~~~~~~ Math Operations ~~~~~~~~~~~~~~~ #
 
 # Inverses
-Base.inv(q::Q) where Q <: QuatRotation = Q(conj(q.q))
-
-function _normalize(q::Q) where Q <: QuatRotation
-    w = real(q.q)
-    x, y, z = imag_part(q.q)
-
-    n = norm(params(q))
-    Q(w/n, x/n, y/n, z/n)
-end
+Base.inv(q::Q) where Q <: QuatRotation = Q(conj(q.q), false)
 
 # Identity
 (::Type{Q})(I::UniformScaling) where Q <: QuatRotation = one(Q)
@@ -261,11 +243,11 @@ Create a `Quaternion` with zero scalar part (i.e. `q.q.s == 0`).
 """
 function pure_quaternion(v::AbstractVector)
     check_length(v, 3)
-    Quaternion(zero(eltype(v)), v[1], v[2], v[3], false)
+    Quaternion(zero(eltype(v)), v[1], v[2], v[3])
 end
 
 @inline pure_quaternion(x::Real, y::Real, z::Real) =
-    Quaternion(zero(x), x, y, z, false)
+    Quaternion(zero(x), x, y, z)
 
 function expm(ϕ::AbstractVector)
     check_length(ϕ, 3)
@@ -309,7 +291,7 @@ rmult(w) * SVector(q)
 Sets the output mapping equal to the mapping of `w`
 """
 function Base.:*(q1::QuatRotation, q2::QuatRotation)
-    return QuatRotation(q1.q*q2.q)
+    return QuatRotation(q1.q * q2.q, false)
 end
 
 """
