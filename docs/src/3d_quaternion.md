@@ -24,6 +24,8 @@ RotY(β) ≈ QuatRotation(cos(β/2),0,sin(β/2),0)  # These matrices are equal
 RotZ(γ) ≈ QuatRotation(cos(γ/2),0,0,sin(γ/2))  # These matrices are equal
 ```
 
+See also [Quaternions.jl documentation](https://juliageometry.github.io/Quaternions.jl/stable/examples/rotations/).
+
 ## `RodriguesParam`
 A 3-parameter representation of 3D rotations that has a singularity at ``180^{\circ}``.
 They can be interpreted as a projection of the unit quaternion onto the plane tangent to the quaternion identity.
