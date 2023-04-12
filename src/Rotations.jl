@@ -8,8 +8,6 @@ using StaticArrays
 using Random
 using Quaternions
 
-import Statistics
-
 include("util.jl")
 include("core_types.jl")
 include("unitquaternion.jl")
