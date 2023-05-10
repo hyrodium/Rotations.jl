@@ -21,3 +21,18 @@ function rotation_between(u::SVector{3}, v::SVector{3})
     v = abs(w) < 100 * eps(T) ? perpendicular_vector(u) : cross(u, v)
     @inbounds return QuatRotation(w, v[1], v[2], v[3]) # relies on normalization in constructor
 end
+
+function rotation_between(u::SVector{N}, v::SVector{N}) where N
+    e1 = normalize(u)
+    e2 = normalize(v-e1*dot(e1,v))
+    c = dot(e1, v)/norm(v)
+    s = sqrt(1-c^2)
+    P = svd([e1 e2]'; full=true).Vt
+    Q = one(MMatrix{N,N})
+    Q[1,1] = c
+    Q[1,2] = -s
+    Q[2,1] = s
+    Q[2,2] = c
+    R = RotMatrix(P'*Q*P)
+    return R
+end
