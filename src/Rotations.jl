@@ -26,6 +26,7 @@ include("rotation_generator.jl")
 include("logexp.jl")
 include("eigen.jl")
 include("rand.jl")
+include("rotation_between.jl")
 include("deprecated.jl")
 
 export
