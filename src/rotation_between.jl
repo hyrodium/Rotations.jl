@@ -4,6 +4,14 @@
 Compute the quaternion that rotates vector `u` so that it aligns with vector
 `v`, along the geodesic (shortest path).
 """
+function rotation_between end
+
+function rotation_between(u::SVector{2}, v::SVector{2})
+    normprod = sqrt(dot(u, u) * dot(v, v))
+    theta = asin((u[1]*v[2]-u[2]*v[1]) / normprod)
+    return Angle2d(theta)
+end
+
 function rotation_between(u::SVector{3}, v::SVector{3})
     # Robustified version of implementation from https://www.gamedev.net/topic/429507-finding-the-quaternion-betwee-two-vectors/#entry3856228
     normprod = sqrt(dot(u, u) * dot(v, v))
