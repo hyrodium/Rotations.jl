@@ -327,8 +327,6 @@ function rotation_between(from::SVector{3}, to::SVector{3})
     @inbounds return QuatRotation(w, v[1], v[2], v[3]) # relies on normalization in constructor
 end
 
-Base.@deprecate rotation_between(from::AbstractVector, to::AbstractVector) rotation_between(SVector{3}(from), SVector{3}(to))
-
 """
     slerp(R1::Rotaion{3}, R2::Rotaion{3}, t::Real)
 
