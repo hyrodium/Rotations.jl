@@ -24,15 +24,15 @@ end
 
 function rotation_between(u::SVector{N}, v::SVector{N}) where N
     e1 = normalize(u)
-    e2 = normalize(v-e1*dot(e1,v))
-    c = dot(e1, v)/norm(v)
+    e2 = normalize(v - e1 * dot(e1, v))
+    c = dot(e1, normalize(v))
     s = sqrt(1-c^2)
-    P = svd([e1 e2]'; full=true).Vt
+    P = [e1 e2 svd([e1 e2]'; full=true).Vt[StaticArrays.SUnitRange(3,N),:]']
     Q = one(MMatrix{N,N})
     Q[1,1] = c
     Q[1,2] = -s
     Q[2,1] = s
     Q[2,2] = c
-    R = RotMatrix(P'*Q*P)
+    R = RotMatrix(P*Q*P')
     return R
 end
