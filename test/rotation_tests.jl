@@ -395,6 +395,18 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
             end
         end
     end
+
+    @testset "$(N)-dimensional rotation_between" for N in 2:7
+        for _ in 1:100
+            u = randn(SVector{N})
+            v = randn(SVector{N})
+            R = rotation_between(u,v)
+            @test isrotation(R)
+            @test R isa Rotation
+            @test normalize(v) ≈ R * normalize(u)
+        end
+    end
+
 #########################################################################
     # Check that the eltype is inferred in Rot constructors
     @testset "Rot constructor eltype promotion" begin
