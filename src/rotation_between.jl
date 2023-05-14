@@ -7,8 +7,8 @@ Compute the quaternion that rotates vector `u` so that it aligns with vector
 function rotation_between end
 
 function rotation_between(u::SVector{2}, v::SVector{2})
-    normprod = sqrt(dot(u, u) * dot(v, v))
-    theta = asin((u[1]*v[2]-u[2]*v[1]) / normprod)
+    c = complex(v[1], v[2]) / complex(u[1], u[2])
+    theta = Base.angle(c)
     return Angle2d(theta)
 end
 
