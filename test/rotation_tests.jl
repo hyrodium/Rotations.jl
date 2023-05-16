@@ -397,13 +397,29 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
     end
 
     @testset "$(N)-dimensional rotation_between" for N in 2:7
-        for _ in 1:100
-            u = randn(SVector{N})
-            v = randn(SVector{N})
+        @testset "random check" begin
+            for _ in 1:100
+                u = randn(SVector{N})
+                v = randn(SVector{N})
+                R = rotation_between(u,v)
+                @test isrotation(R)
+                @test R isa Rotation
+                @test normalize(v) ≈ R * normalize(u)
+            end
+        end
+
+        @testset "mixed types" begin
+            u = randn(MVector{N})
+            v = randn(SizedVector{N})
             R = rotation_between(u,v)
             @test isrotation(R)
             @test R isa Rotation
             @test normalize(v) ≈ R * normalize(u)
+        end
+
+        @testset "zero-vector" begin
+            @test_throws ArgumentError rotation_between(zero(SVector{N}), rand(SVector{N}))
+            @test_throws ArgumentError rotation_between(rand(SVector{N}), zero(SVector{N}))
         end
     end
 
