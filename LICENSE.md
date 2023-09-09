@@ -1,7 +1,6 @@
-The MIT License (MIT)
+MIT License
 
-Copyright (c) 2016 Andrew Smith, 2016 Andy Ferris, 2021 Yuto Horikawa, and other contributers:
-https://github.com/JuliaGeometry/Rotations.jl/contributors
+Copyright (c) 2016 Andrew Smith, 2016 Andy Ferris, 2021 Yuto Horikawa, and other contributors: https://github.com/JuliaGeometry/Rotations.jl/contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
