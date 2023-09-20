@@ -72,11 +72,12 @@ Base.cbrt(r::RotY) = RotY(r.theta/3)
 Base.cbrt(r::RotZ) = RotZ(r.theta/3)
 Base.cbrt(r::AngleAxis) = AngleAxis(r.theta/3, r.axis_x, r.axis_y, r.axis_z)
 Base.cbrt(r::RotationVec) = RotationVec(r.sx/3, r.sy/3, r.sz/3)
-Base.cbrt(r::QuatRotation) = QuatRotation(cbrt(r.q))
-Base.cbrt(r::RotMatrix{3}) = RotMatrix{3}(cbrt(QuatRotation(r)))
-Base.cbrt(r::RodriguesParam) = RodriguesParam(cbrt(QuatRotation(r)))
-Base.cbrt(r::MRP) = MRP(cbrt(QuatRotation(r)))
-Base.cbrt(r::Rotation{3}) = cbrt(QuatRotation(r))
+# We can implement these `cbrt` methods when https://github.com/JuliaLang/julia/issues/36534 is resolved.
+# Base.cbrt(r::QuatRotation) = QuatRotation(cbrt(r.q))
+# Base.cbrt(r::RotMatrix{3}) = RotMatrix{3}(cbrt(QuatRotation(r)))
+# Base.cbrt(r::RodriguesParam) = RodriguesParam(cbrt(QuatRotation(r)))
+# Base.cbrt(r::MRP) = MRP(cbrt(QuatRotation(r)))
+# Base.cbrt(r::Rotation{3}) = cbrt(QuatRotation(r))
 
 # General dimensions
 Base.cbrt(r::Rotation{N}) where N = exp(log(r)/3)
