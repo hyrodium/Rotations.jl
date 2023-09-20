@@ -41,3 +41,38 @@ end
         @test exp(r) isa RotMatrix{N}
     end
 end
+
+@testset "sqrt" begin
+    all_types = (
+        RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
+        QuatRotation, RodriguesParam, MRP,
+        RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
+        RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ,
+        RotX, RotY, RotZ,
+        RotXY, RotYZ, RotZX, RotXZ, RotYX, RotZY,
+        RotMatrix2, RotMatrix{2}, Angle2d
+    )
+
+    compat_types = (
+        RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
+        QuatRotation, RodriguesParam, MRP,
+        RotX, RotY, RotZ,
+        RotMatrix2, RotMatrix{2}, Angle2d
+    )
+
+    @testset "$(T)" for T in all_types, F in (one, rand)
+        R = F(T)
+        @test R ≈ sqrt(R) * sqrt(R)
+        @test sqrt(R) isa Rotation
+    end
+
+    @testset "$(T)-compat" for T in compat_types
+        R = one(T)
+        @test sqrt(R) isa T
+    end
+
+    @testset "$(T)-noncompat3d" for T in setdiff(all_types, compat_types)
+        R = one(T)
+        @test sqrt(R) isa QuatRotation
+    end
+end
