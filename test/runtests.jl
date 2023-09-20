@@ -23,7 +23,7 @@ include("distribution_tests.jl")
 include("eigen.jl")
 include("nearest_rotation.jl")
 include("rotation_generator.jl")
-include("logexp.jl")
+include("elementary_functions.jl")
 include("deprecated.jl")
 
 include(joinpath(@__DIR__, "..", "perf", "runbenchmarks.jl"))
