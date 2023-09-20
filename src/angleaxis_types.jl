@@ -125,9 +125,6 @@ end
 @inline Base.:*(aa1::AngleAxis, aa2::AngleAxis) = QuatRotation(aa1) * QuatRotation(aa2)
 
 @inline Base.inv(aa::AngleAxis) = AngleAxis(-aa.theta, aa.axis_x, aa.axis_y, aa.axis_z)
-@inline Base.:^(aa::AngleAxis, t::Real) = AngleAxis(aa.theta*t, aa.axis_x, aa.axis_y, aa.axis_z)
-@inline Base.:^(aa::AngleAxis, t::Integer) = AngleAxis(aa.theta*t, aa.axis_x, aa.axis_y, aa.axis_z) # to avoid ambiguity
-
 
 # define identity rotations for convenience
 @inline Base.one(::Type{AngleAxis}) = AngleAxis(0.0, 1.0, 0.0, 0.0)
@@ -204,8 +201,6 @@ end
 @inline Base.:*(rv1::RotationVec, rv2::RotationVec) = QuatRotation(rv1) * QuatRotation(rv2)
 
 @inline Base.inv(rv::RotationVec) = RotationVec(-rv.sx, -rv.sy, -rv.sz)
-@inline Base.:^(rv::RotationVec, t::Real) = RotationVec(rv.sx*t, rv.sy*t, rv.sz*t)
-@inline Base.:^(rv::RotationVec, t::Integer) = RotationVec(rv.sx*t, rv.sy*t, rv.sz*t) # to avoid ambiguity
 
 # rotation properties
 @inline rotation_angle(rv::RotationVec) = sqrt(rv.sx * rv.sx + rv.sy * rv.sy + rv.sz * rv.sz)

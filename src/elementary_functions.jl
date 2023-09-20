@@ -80,3 +80,36 @@ Base.cbrt(r::Rotation{3}) = cbrt(QuatRotation(r))
 
 # General dimensions
 Base.cbrt(r::Rotation{N}) where N = exp(log(r)/3)
+
+## power
+# 2d
+Base.:^(r::Angle2d, p::Real) = Angle2d(r.theta*p)
+Base.:^(r::Angle2d, p::Integer) = Angle2d(r.theta*p)
+Base.:^(r::RotMatrix{2}, p::Real) = RotMatrix(Angle2d(r)^p)
+Base.:^(r::RotMatrix{2}, p::Integer) = RotMatrix(Angle2d(r)^p)
+
+# 3d
+Base.:^(r::RotX, p::Real) = RotX(r.theta*p)
+Base.:^(r::RotX, p::Integer) = RotX(r.theta*p)
+Base.:^(r::RotY, p::Real) = RotY(r.theta*p)
+Base.:^(r::RotY, p::Integer) = RotY(r.theta*p)
+Base.:^(r::RotZ, p::Real) = RotZ(r.theta*p)
+Base.:^(r::RotZ, p::Integer) = RotZ(r.theta*p)
+Base.:^(r::AngleAxis, p::Real) = AngleAxis(r.theta*p, r.axis_x, r.axis_y, r.axis_z)
+Base.:^(r::AngleAxis, p::Integer) = AngleAxis(r.theta*p, r.axis_x, r.axis_y, r.axis_z)
+Base.:^(r::RotationVec, p::Real) = RotaitonVec(r.sx*p, r.sy*p, r.sz*p)
+Base.:^(r::RotationVec, p::Integer) = RotaitonVec(r.sx*p, r.sy*p, r.sz*p)
+Base.:^(r::QuatRotation, p::Real) = QuatRotation((r.q)^p)
+Base.:^(r::QuatRotation, p::Integer) = QuatRotation((r.q)^p)
+Base.:^(r::RotMatrix{3}, p::Real) = RotMatrix{3}(QuatRotation(r)^p)
+Base.:^(r::RotMatrix{3}, p::Integer) = RotMatrix{3}(QuatRotation(r)^p)
+Base.:^(r::RodriguesParam, p::Real) = RodriguesParam(QuatRotation(r)^p)
+Base.:^(r::RodriguesParam, p::Integer) = RodriguesParam(QuatRotation(r)^p)
+Base.:^(r::MRP, p::Real) = MRP(QuatRotation(r)^p)
+Base.:^(r::MRP, p::Integer) = MRP(QuatRotation(r)^p)
+Base.:^(r::Rotation{3}, p::Real) = QuatRotation(r)^p
+Base.:^(r::Rotation{3}, p::Integer) = QuatRotation(r)^p
+
+# General dimensions
+Base.:^(r::Rotation{N}, p::Real) where N = exp(log(r)*p)
+Base.:^(r::Rotation{N}, p::Integer) where N = Rotation{N}(r^p)
