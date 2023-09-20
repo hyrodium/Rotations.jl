@@ -40,3 +40,23 @@ Base.exp(R::RotMatrixGenerator{3}) = RotMatrix(exp(RotationVecGenerator(R)))
 
 # General dimensions
 Base.exp(R::RotMatrixGenerator{N}) where N = RotMatrix(exp(SMatrix(R)))
+
+## sqrt
+# 2d
+Base.sqrt(r::Angle2d) = Angle2d(r.theta/2)
+Base.sqrt(r::RotMatrix{2}) = RotMatrix(sqrt(Angle2d(r)))
+
+# 3d
+Base.sqrt(r::RotX) = RotX(r.theta/2)
+Base.sqrt(r::RotY) = RotY(r.theta/2)
+Base.sqrt(r::RotZ) = RotZ(r.theta/2)
+Base.sqrt(r::AngleAxis) = AngleAxis(r.theta/2, r.axis_x, r.axis_y, r.axis_z)
+Base.sqrt(r::RotationVec) = RotaitonVec(r.sx, r.sy, r.sz)
+Base.sqrt(r::QuatRotation) = QuatRotation(sqrt(r.q))
+Base.sqrt(r::RotMatrix{3}) = RotMatrix{3}(sqrt(QuatRotation(r)))
+Base.sqrt(r::RodriguesParam) = RodriguesParam(sqrt(QuatRotation(r)))
+Base.sqrt(r::MRP) = MRP(sqrt(QuatRotation(r)))
+Base.sqrt(r::Rotation{3}) = sqrt(QuatRotation(r))
+
+# General dimensions
+Base.sqrt(r::Rotation{N}) where N = RotMatrix(sqrt(r))
