@@ -60,3 +60,23 @@ Base.sqrt(r::Rotation{3}) = sqrt(QuatRotation(r))
 
 # General dimensions
 Base.sqrt(r::Rotation{N}) where N = RotMatrix(sqrt(r))
+
+## cbrt
+# 2d
+Base.cbrt(r::Angle2d) = Angle2d(r.theta/3)
+Base.cbrt(r::RotMatrix{2}) = RotMatrix(cbrt(Angle2d(r)))
+
+# 3d
+Base.cbrt(r::RotX) = RotX(r.theta/3)
+Base.cbrt(r::RotY) = RotY(r.theta/3)
+Base.cbrt(r::RotZ) = RotZ(r.theta/3)
+Base.cbrt(r::AngleAxis) = AngleAxis(r.theta/3, r.axis_x, r.axis_y, r.axis_z)
+Base.cbrt(r::RotationVec) = RotaitonVec(r.sx/3, r.sy/3, r.sz/3)
+Base.cbrt(r::QuatRotation) = QuatRotation(cbrt(r.q))
+Base.cbrt(r::RotMatrix{3}) = RotMatrix{3}(cbrt(QuatRotation(r)))
+Base.cbrt(r::RodriguesParam) = RodriguesParam(cbrt(QuatRotation(r)))
+Base.cbrt(r::MRP) = MRP(cbrt(QuatRotation(r)))
+Base.cbrt(r::Rotation{3}) = cbrt(QuatRotation(r))
+
+# General dimensions
+Base.cbrt(r::Rotation{N}) where N = exp(log(r)/3)
