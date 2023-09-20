@@ -76,3 +76,17 @@ end
         @test sqrt(R) isa QuatRotation
     end
 end
+
+@testset "cbrt" begin
+    supported_types = (
+        AngleAxis, RotationVec,
+        RotX, RotY, RotZ,
+        RotMatrix2, RotMatrix{2}, Angle2d
+    )
+
+    @testset "$(T)" for T in supported_types, F in (one, rand)
+        R = F(T)
+        @test R ≈ cbrt(R) * cbrt(R) * cbrt(R)
+        @test cbrt(R) isa Rotation
+    end
+end
