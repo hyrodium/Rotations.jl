@@ -75,6 +75,13 @@ end
         R = one(T)
         @test sqrt(R) isa QuatRotation
     end
+
+    @testset "$(N)-dim" for N in 1:5
+        M = @SMatrix rand(N,N)
+        R = nearest_rotation(M)
+        @test R ≈ sqrt(R) * sqrt(R)
+        @test sqrt(R) isa RotMatrix{N}
+    end
 end
 
 @testset "cbrt" begin
@@ -88,6 +95,13 @@ end
         R = F(T)
         @test R ≈ cbrt(R) * cbrt(R) * cbrt(R)
         @test cbrt(R) isa Rotation
+    end
+
+    @testset "$(N)-dim" for N in 1:5
+        M = @SMatrix rand(N,N)
+        R = nearest_rotation(M)
+        @test R ≈ cbrt(R) * cbrt(R) * cbrt(R)
+        @test cbrt(R) isa RotMatrix{N}
     end
 end
 
@@ -126,5 +140,14 @@ end
         R = one(T)
         @test R^2 isa QuatRotation
         @test R^1.5 isa QuatRotation
+    end
+
+    @testset "$(N)-dim" for N in 1:5
+        M = @SMatrix rand(N,N)
+        R = nearest_rotation(M)
+        @test R^2 ≈ R * R
+        @test R^1.5 ≈ sqrt(R) * sqrt(R) * sqrt(R)
+        @test R^2 isa RotMatrix{N}
+        @test R^1.5 isa RotMatrix{N}
     end
 end
