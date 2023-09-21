@@ -59,7 +59,7 @@ Base.sqrt(r::MRP) = MRP(sqrt(QuatRotation(r)))
 Base.sqrt(r::Rotation{3}) = sqrt(QuatRotation(r))
 
 # General dimensions
-Base.sqrt(r::Rotation{N}) where N = RotMatrix(sqrt(r))
+Base.sqrt(r::Rotation{N}) where N = RotMatrix(sqrt(SMatrix(r)))
 
 ## cbrt
 # 2d
@@ -113,4 +113,5 @@ Base.:^(r::Rotation{3}, p::Integer) = QuatRotation(r)^p
 
 # General dimensions
 Base.:^(r::Rotation{N}, p::Real) where N = exp(log(r)*p)
-Base.:^(r::Rotation{N}, p::Integer) where N = Rotation{N}(r^p)
+# There is the same implementation of ^(r::Rotation{N}, p::Integer) as in Base
+Base.:^(A::Rotation{N}, p::Integer) where N = p < 0 ? Base.power_by_squaring(inv(A), -p) : Base.power_by_squaring(A, p)
