@@ -11,6 +11,7 @@ makedocs(;
         prettyurls=get(ENV, "CI", "false") == "true",
         canonical="https://JuliaGeometry.github.io/Rotations.jl",
         assets = ["assets/custom.css"],
+        repolink = "https://github.com/JuliaGeometry/Rotations.jl",
     ),
     pages=[
         "Home" => "index.md",
