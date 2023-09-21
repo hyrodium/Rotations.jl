@@ -6,6 +6,7 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaGeometry.github.io/Rotations.jl/dev)
 [![Build Status](https://github.com/JuliaGeometry/Rotations.jl/workflows/CI/badge.svg)](https://github.com/JuliaGeometry/Rotations.jl/actions?query=workflow%3ACI)
 [![Coverage](https://codecov.io/gh/JuliaGeometry/Rotations.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaGeometry/Rotations.jl)
+[![DOI](https://zenodo.org/badge/53457088.svg)](https://zenodo.org/badge/latestdoi/53457088)
 
 This package implements various 3D rotation parameterizations and defines
 conversions between them. At their heart, each rotation parameterization *is*
