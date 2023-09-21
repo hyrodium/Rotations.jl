@@ -5,7 +5,7 @@ Compute a vector perpendicular to `vec` by switching the two elements with
 largest absolute value, flipping the sign of the second largest, and setting the
 remaining element to zero.
 """
-function perpendicular_vector(vec::SVector{3})
+function perpendicular_vector(vec::StaticVector{3})
     T = eltype(vec)
 
     # find indices of the two elements of vec with the largest absolute values:
