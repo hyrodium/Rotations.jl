@@ -90,3 +90,41 @@ end
         @test cbrt(R) isa Rotation
     end
 end
+
+@testset "power" begin
+    all_types = (
+        RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
+        QuatRotation, RodriguesParam, MRP,
+        RotXYZ, RotYZX, RotZXY, RotXZY, RotYXZ, RotZYX,
+        RotXYX, RotYZY, RotZXZ, RotXZX, RotYXY, RotZYZ,
+        RotX, RotY, RotZ,
+        RotXY, RotYZ, RotZX, RotXZ, RotYX, RotZY,
+        RotMatrix2, RotMatrix{2}, Angle2d
+    )
+
+    compat_types = (
+        RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
+        QuatRotation, RodriguesParam, MRP,
+        RotX, RotY, RotZ,
+        RotMatrix2, RotMatrix{2}, Angle2d
+    )
+
+    @testset "$(T)" for T in all_types, F in (one, rand)
+        R = F(T)
+        @test R^2 ≈ R * R
+        @test R^1.5 ≈ sqrt(R) * sqrt(R) * sqrt(R)
+        @test R isa Rotation
+    end
+
+    @testset "$(T)-compat" for T in compat_types
+        R = one(T)
+        @test R^2 isa T
+        @test R^1.5 isa T
+    end
+
+    @testset "$(T)-noncompat3d" for T in setdiff(all_types, compat_types)
+        R = one(T)
+        @test R^2 isa QuatRotation
+        @test R^1.5 isa QuatRotation
+    end
+end
