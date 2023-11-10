@@ -154,7 +154,7 @@ end
 params(aa::RotationVec) = SVector{3}(aa.sx, aa.sy, aa.sz)
 
 # StaticArrays will take over *all* the constructors and put everything in a tuple...
-# but this isn't quite what we mean when we have 4 inputs (not 9).
+# but this isn't quite what we mean when we have 3 inputs (not 9).
 @inline RotationVec(x::X, y::Y, z::Z) where {X,Y,Z} = RotationVec{promote_type(promote_type(X, Y), Z)}(x, y, z)
 
 # These functions are enough to satisfy the entire StaticArrays interface:
