@@ -154,8 +154,7 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
                 r1 = rand(R)
                 r2 = rand(R)
                 v = @SVector rand(3)
-                @test inv(r1) == adjoint(r1)
-                @test inv(r1) == transpose(r1)
+                @test inv(r1) === adjoint(r1) === transpose(r1)
                 @test inv(r1)*r1 ≈ I
                 @test r1*inv(r1) ≈ I
                 @test r1/r1 ≈ I
@@ -334,7 +333,23 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
         end
         @test norm(rotation_axis(QuatRotation(1.0, 0.0, 0.0, 0.0))) ≈ 1.0
 
+
         # TODO RotX, RotXY?
+    end
+
+    @testset "RotationVec->QuatRotation, especially near zero" begin
+        for i = 1:10
+            p = rand(RotationVec)
+            all(iszero, Rotations.params(p)) && continue
+            @test QuatRotation(p) ≈ QuatRotation(AngleAxis(p))
+        end
+
+        @test rotation_angle(RotationVec(0.0, 0.0, 0.0)) ≈ 0.0
+        @test rotation_axis(RotationVec(0.0, 0.0, 0.0)) ≈ [1.0, 0.0, 0.0]
+        @test QuatRotation(RotationVec(0.0, 0.0, 0.0)) == QuatRotation(1.0, 0.0, 0.0, 0.0)
+        qr = QuatRotation(RotationVec(2e-30, 0.0, 0.0))
+        @test qr.w ≈ 1
+        @test qr.x ≈ 1e-30
     end
 
     #########################################################################
