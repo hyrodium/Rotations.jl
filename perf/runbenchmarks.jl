@@ -1,5 +1,6 @@
 using Rotations
-using BenchmarkTools
+import BenchmarkTools
+import BenchmarkTools: @benchmarkable, BenchmarkGroup, loadparams!, tune!
 import Base.Iterators: product
 import Random
 
