@@ -2,31 +2,33 @@ module RotationsRecipesBaseExt
 
 using RecipesBase
 using Rotations
+using StaticArrays
 
-@recipe function f(R::Rotation{3}; origin=SVector(0,0,0), boxsize=0.2)
-    r = boxsize
+@recipe function f(R::Rotation{3}; origin=SVector(0,0,0), boxsize=0.2, axissize=1.0)
+    l = boxsize
+    L = axissize
     e₁ = R[:,1]
     e₂ = R[:,2]
     e₃ = R[:,3]
     ox, oy, oz = origin
-    ps = vec([SVector(ox,oy,oz)+R*SVector(x,y,z) for x in (-r,r), y in (-r,r), z in (-r,r)])
+    ps = vec([SVector(ox,oy,oz)+R*SVector(x,y,z) for x in (-l,l), y in (-l,l), z in (-l,l)])
     xs = getindex.(ps,1)
     ys = getindex.(ps,2)
     zs = getindex.(ps,3)
     @series begin
         primary := false
-        color := RGB(1,0,0)
-        [e₁[1]*r+ox,e₁[1]+ox],[e₁[2]*r+oy,e₁[2]+oy],[e₁[3]*r+oz,e₁[3]+oz]
+        color := :red
+        [e₁[1]*l+ox,e₁[1]*L+ox],[e₁[2]*l+oy,e₁[2]*L+oy],[e₁[3]*l+oz,e₁[3]*L+oz]
     end
     @series begin
         primary := false
-        color := RGB(0,1,0)
-        [e₂[1]*r+ox,e₂[1]+ox],[e₂[2]*r+oy,e₂[2]+oy],[e₂[3]*r+oz,e₂[3]+oz]
+        color := :green
+        [e₂[1]*l+ox,e₂[1]*L+ox],[e₂[2]*l+oy,e₂[2]*L+oy],[e₂[3]*l+oz,e₂[3]*L+oz]
     end
     @series begin
         primary := false
-        color := RGB(0,0,1)
-        [e₃[1]*r+ox,e₃[1]+ox],[e₃[2]*r+oy,e₃[2]+oy],[e₃[3]*r+oz,e₃[3]+oz]
+        color := :blue
+        [e₃[1]*l+ox,e₃[1]*L+ox],[e₃[2]*l+oy,e₃[2]*L+oy],[e₃[3]*l+oz,e₃[3]*L+oz]
     end
     seriestype := :mesh3d
     connections := (
