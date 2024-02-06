@@ -15,12 +15,12 @@ using StaticArrays
     ys = getindex.(ps,2)
     @series begin
         primary := false
-        color := :red
+        color := :red1
         [e₁[1]*l+ox,e₁[1]*L+ox],[e₁[2]*l+oy,e₁[2]*L+oy]
     end
     @series begin
         primary := false
-        color := :green
+        color := :green1
         [e₂[1]*l+ox,e₂[1]*L+ox],[e₂[2]*l+oy,e₂[2]*L+oy]
     end
     fill := true
@@ -43,17 +43,17 @@ end
     zs = getindex.(ps,3)
     @series begin
         primary := false
-        color := :red
+        color := :red1
         [e₁[1]*l+ox,e₁[1]*L+ox],[e₁[2]*l+oy,e₁[2]*L+oy],[e₁[3]*l+oz,e₁[3]*L+oz]
     end
     @series begin
         primary := false
-        color := :green
+        color := :green1
         [e₂[1]*l+ox,e₂[1]*L+ox],[e₂[2]*l+oy,e₂[2]*L+oy],[e₂[3]*l+oz,e₂[3]*L+oz]
     end
     @series begin
         primary := false
-        color := :blue
+        color := :blue1
         [e₃[1]*l+ox,e₃[1]*L+ox],[e₃[2]*l+oy,e₃[2]*L+oy],[e₃[3]*l+oz,e₃[3]*L+oz]
     end
     seriestype := :mesh3d
