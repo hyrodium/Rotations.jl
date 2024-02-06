@@ -5,6 +5,7 @@ using StaticArrays
 using InteractiveUtils: subtypes
 using Quaternions
 using Aqua
+using Plots
 import Unitful
 import Random
 
@@ -25,5 +26,6 @@ include("nearest_rotation.jl")
 include("rotation_generator.jl")
 include("elementary_functions.jl")
 include("deprecated.jl")
+include("plots.jl")
 
 include(joinpath(@__DIR__, "..", "perf", "runbenchmarks.jl"))
