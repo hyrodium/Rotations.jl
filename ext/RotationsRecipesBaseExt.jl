@@ -4,6 +4,32 @@ using RecipesBase
 using Rotations
 using StaticArrays
 
+@recipe function f(R::Rotation{2}; origin=SVector(0,0), boxsize=0.2, axissize=1.0)
+    l = boxsize
+    L = axissize
+    e₁ = R[:,1]
+    e₂ = R[:,2]
+    ox, oy = origin
+    ps = vec([SVector(ox,oy)+R*SVector(x,y) for x in (-l,l), y in (-l,l)])
+    xs = getindex.(ps,1)
+    ys = getindex.(ps,2)
+    @series begin
+        primary := false
+        color := :red
+        [e₁[1]*l+ox,e₁[1]*L+ox],[e₁[2]*l+oy,e₁[2]*L+oy]
+    end
+    @series begin
+        primary := false
+        color := :green
+        [e₂[1]*l+ox,e₂[1]*L+ox],[e₂[2]*l+oy,e₂[2]*L+oy]
+    end
+    fill := true
+    delete!(plotattributes, :origin)
+    delete!(plotattributes, :boxsize)
+    delete!(plotattributes, :axissize)
+    xs[[1,3,4,2,1]], ys[[1,3,4,2,1]]
+end
+
 @recipe function f(R::Rotation{3}; origin=SVector(0,0,0), boxsize=0.2, axissize=1.0)
     l = boxsize
     L = axissize
@@ -43,6 +69,7 @@ using StaticArrays
     # connections := [(1,2,6),(1,6,5),(1,4,2),(1,3,4),(1,7,3),(1,5,7),(8,4,3),(8,3,7),(8,7,5),(8,5,6),(8,6,2),(8,2,4)]
     delete!(plotattributes, :origin)
     delete!(plotattributes, :boxsize)
+    delete!(plotattributes, :axissize)
     xs,ys,zs
 end
 
