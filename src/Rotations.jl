@@ -78,4 +78,8 @@ export
     # derivatives (names clash with ForwarDiff?)
     #jacobian, hessian
 
+if !isdefined(Base, :get_extension)
+    include("../ext/RotationsRecipesBaseExt.jl")
+end
+
 end # module
