@@ -209,6 +209,28 @@ all_types = (RotMatrix3, RotMatrix{3}, AngleAxis, RotationVec,
         end
     end
 
+    @testset "Rotation result eltype" begin
+        QuantityF64 = typeof(1.0u"m")
+        QuantityF32 = typeof(1.0f0u"m")
+        @testset "$(R)" for R in all_types
+            r1 = rand(R{Float64})
+            r2 = rand(R{Float32})
+            v1 = rand(SVector{3,Float64})
+            v2 = rand(SVector{3,Float32})
+            v3 = rand(SVector{3,QuantityF64})
+            v4 = rand(SVector{3,QuantityF32})
+
+            @test eltype(r1*v1) <: Float64
+            @test eltype(r1*v2) <: Float64
+            @test eltype(r1*v3) <: QuantityF64
+            @test eltype(r1*v4) <: QuantityF64
+            @test eltype(r2*v1) <: Float64
+            @test eltype(r2*v2) <: Float32
+            @test eltype(r2*v3) <: QuantityF64
+            @test eltype(r2*v4) <: QuantityF32
+        end
+    end
+
     @testset "Quaternion double cover" begin
         repeats = 100
         Q = QuatRotation
